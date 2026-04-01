@@ -1,0 +1,1679 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta
+    name="description"
+    content="Progress Tracker Pro is a premium single-page app for tracking any custom goal with manual progress logging, analytics, and local persistence."
+  />
+  <title>Progress Tracker Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark" data-auth="loading">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="ambient ambient-c"></div>
+  <div class="noise"></div>
+
+  <section class="auth-shell" id="authShell" aria-labelledby="authTitle">
+    <div class="auth-layout">
+      <section class="panel auth-showcase">
+        <div class="auth-showcase-copy">
+          <p class="eyebrow">Local workspace access</p>
+          <h1>Progress Tracker Pro</h1>
+          <p class="subtle">
+            A premium progress system for gaming climbs, study plans, workouts, reading goals,
+            habits, and custom milestones. Your data stays on this device unless you export it.
+          </p>
+        </div>
+
+        <div class="auth-showcase-grid" aria-label="Workspace preview">
+          <article class="auth-showcase-card">
+            <span>Trackers ready</span>
+            <strong id="authPreviewTrackers">3</strong>
+            <p class="subtle">Sample gaming, study, and exercise trackers are preloaded.</p>
+          </article>
+          <article class="auth-showcase-card">
+            <span>Manual entries</span>
+            <strong id="authPreviewLogs">0</strong>
+            <p class="subtle">Log custom progress, corrections, notes, and proof images.</p>
+          </article>
+          <article class="auth-showcase-card">
+            <span>Categories</span>
+            <strong id="authPreviewCategories">3</strong>
+            <p class="subtle">Unlimited tracker types with your own labels and units.</p>
+          </article>
+        </div>
+
+        <div class="auth-badges" aria-label="Key product highlights">
+          <span class="hero-chip">Local-first storage</span>
+          <span class="hero-chip">Proof image uploads</span>
+          <span class="hero-chip">Mobile-optimized workspace</span>
+          <span class="hero-chip">Import / export backups</span>
+        </div>
+      </section>
+
+      <section class="panel auth-panel" aria-live="polite">
+        <div class="auth-panel-copy">
+          <p class="eyebrow" id="authEyebrow">Create verified access</p>
+          <h2 id="authTitle">Open your progress workspace.</h2>
+          <p class="subtle" id="authSubtitle">
+            Create a verified account to unlock your saved trackers from the backend.
+          </p>
+        </div>
+
+        <div class="auth-help-row">
+          <button class="ghost-button ghost-button-small" type="button" id="openGuideFromAuthBtn">
+            How It Works
+          </button>
+          <p class="subtle">
+            See a visual walkthrough before you create access.
+          </p>
+        </div>
+
+        <div class="auth-toggle" role="tablist" aria-label="Authentication mode">
+          <button
+            class="auth-toggle-button is-active"
+            type="button"
+            id="authCreateModeBtn"
+            data-auth-mode="create"
+            aria-pressed="true"
+          >
+            Create Access
+          </button>
+          <button
+            class="auth-toggle-button"
+            type="button"
+            id="authLoginModeBtn"
+            data-auth-mode="login"
+            aria-pressed="false"
+          >
+            Sign In
+          </button>
+        </div>
+
+        <form class="auth-form" id="authForm" novalidate>
+          <label class="field">
+            <span>Username</span>
+            <input
+              type="text"
+              id="authNameInput"
+              maxlength="40"
+              placeholder="Ayaan"
+              autocomplete="username"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>Email address</span>
+            <input
+              type="email"
+              id="authEmailInput"
+              maxlength="120"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input
+              type="password"
+              id="authPasswordInput"
+              minlength="6"
+              placeholder="At least 6 characters"
+              autocomplete="current-password"
+              required
+            />
+          </label>
+
+          <div class="auth-inline-actions auth-login-actions hidden" id="authLoginActions">
+            <button class="ghost-button ghost-button-small" type="button" id="authForgotPasswordBtn">
+              Forgot password?
+            </button>
+          </div>
+
+          <label class="field hidden" id="authConfirmField">
+            <span>Confirm password</span>
+            <input
+              type="password"
+              id="authConfirmInput"
+              minlength="6"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+            />
+          </label>
+
+          <div class="auth-meta-row">
+            <span class="soft-pill" id="authModePill">New verified workspace</span>
+            <p class="subtle" id="authHintText">
+              Verification OTPs are delivered to your email inbox and your workspace syncs with the backend.
+            </p>
+          </div>
+
+          <section class="auth-otp-shell hidden" id="authOtpShell" aria-live="polite">
+            <div class="auth-otp-head">
+              <span class="soft-pill" id="authOtpStatus">Waiting to send OTP</span>
+              <div class="auth-inline-actions">
+                <button class="ghost-button ghost-button-small" type="button" id="authResendOtpBtn">
+                  Resend OTP
+                </button>
+                <button class="ghost-button ghost-button-small" type="button" id="authResetOtpBtn">
+                  Edit Email
+                </button>
+              </div>
+            </div>
+
+            <label class="field">
+              <span>One-time password</span>
+              <input
+                type="text"
+                id="authOtpInput"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                placeholder="Enter 6-digit code"
+              />
+            </label>
+
+            <p class="subtle" id="authOtpDeliveryText">
+              Verification codes are delivered to your email inbox.
+            </p>
+          </section>
+
+          <button class="primary-button" type="submit" id="authSubmitBtn">
+            Create Workspace Access
+          </button>
+        </form>
+
+        <section class="auth-otp-shell auth-reset-shell hidden" id="authResetShell" aria-live="polite">
+          <div class="auth-otp-head">
+            <span class="soft-pill" id="authResetStatus">Reset link detected</span>
+            <div class="auth-inline-actions">
+              <button class="ghost-button ghost-button-small" type="button" id="authResetBackBtn">
+                Back to Sign In
+              </button>
+            </div>
+          </div>
+
+          <p class="subtle" id="authResetHelpText">
+            Choose a new password for your verified workspace, then sign in again.
+          </p>
+
+          <label class="field hidden" id="authForgotEmailField">
+            <span>Email address</span>
+            <input
+              type="email"
+              id="authForgotEmailInput"
+              maxlength="120"
+              placeholder="you@example.com"
+              required
+            />
+          </label>
+
+          <label class="field" id="authResetPasswordField">
+            <span>New password</span>
+            <input
+              type="password"
+              id="authResetPasswordInput"
+              minlength="6"
+              placeholder="Enter a new password"
+              autocomplete="new-password"
+            />
+          </label>
+
+          <label class="field" id="authResetConfirmField">
+            <span>Confirm new password</span>
+            <input
+              type="password"
+              id="authResetConfirmInput"
+              minlength="6"
+              placeholder="Repeat your new password"
+              autocomplete="new-password"
+            />
+          </label>
+
+          <button class="primary-button" type="button" id="authResetSubmitBtn">
+            Save New Password
+          </button>
+        </section>
+
+        <article class="auth-mail-card" id="authMailPreviewCard" aria-live="polite">
+          <div class="auth-mail-head">
+            <div>
+              <p class="eyebrow">Email delivery</p>
+              <h3 id="authMailPreviewSubject">No delivery yet</h3>
+            </div>
+            <span class="panel-pill" id="authMailPreviewState">Standby</span>
+          </div>
+
+          <p class="subtle" id="authMailPreviewBody">
+            Enter an email address and request secure access to generate your first OTP delivery.
+          </p>
+
+          <div class="auth-mail-meta">
+            <span class="soft-pill" id="authMailPreviewMeta">SMTP-backed delivery</span>
+            <strong class="auth-mail-code" id="authMailPreviewCode">------</strong>
+          </div>
+        </article>
+      </section>
+    </div>
+  </section>
+
+  <div class="app-shell">
+    <aside class="sidebar panel" aria-label="Sidebar">
+      <div class="brand">
+        <div class="brand-mark">PT</div>
+        <div>
+          <p class="eyebrow">Premium Manual Tracking</p>
+          <h1>Progress Tracker Pro</h1>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Primary">
+        <button class="nav-button is-active" type="button" data-view-target="dashboard">
+          <span>Dashboard</span>
+          <small>Overview and momentum</small>
+        </button>
+        <button class="nav-button" type="button" data-view-target="trackers">
+          <span>All Trackers</span>
+          <small>Search, filter, manage</small>
+        </button>
+        <button class="nav-button" type="button" data-view-target="graphs">
+          <span>Graph</span>
+          <small>Visual insights</small>
+        </button>
+        <button class="nav-button" type="button" data-view-target="history">
+          <span>History</span>
+          <small>Timeline and corrections</small>
+        </button>
+      </nav>
+
+      <section class="sidebar-card sidebar-card-highlight">
+        <p class="eyebrow">Workspace Pulse</p>
+        <div class="sidebar-pulse">
+          <div
+            class="progress-ring progress-ring-small"
+            id="sidebarRing"
+            aria-label="Overall completion"
+          >
+            <span id="sidebarCompletionLabel">0%</span>
+          </div>
+          <div>
+            <h2 id="sidebarTrackerCount">0 trackers</h2>
+            <p class="subtle" id="sidebarSummary">
+              Your custom progress system is ready for anything.
+            </p>
+          </div>
+        </div>
+        <button class="primary-button wide-button" type="button" id="sidebarCreateBtn">
+          Create Tracker
+        </button>
+      </section>
+
+      <section class="sidebar-card">
+        <p class="eyebrow">Backup & Restore</p>
+        <p class="subtle">
+          Export your workspace anytime or import a saved snapshot with one click.
+        </p>
+        <div class="sidebar-actions">
+          <button class="ghost-button" type="button" id="sidebarExportBtn">Export JSON</button>
+          <button class="ghost-button" type="button" id="sidebarImportBtn">Import JSON</button>
+        </div>
+      </section>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar panel">
+        <div class="topbar-copy">
+          <p class="eyebrow">Manual progress, premium interface</p>
+          <div class="topbar-title-row">
+            <h2>Track absolutely anything.</h2>
+            <span class="date-chip" id="todayChip"></span>
+          </div>
+          <p class="subtle" id="topbarSubtitle">
+            A flexible system for goals, ranks, workouts, syllabi, habits, skills, and custom milestones.
+          </p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="account-chip" id="accountChip" aria-label="Current user">
+            <span class="account-avatar" id="accountAvatar">Y</span>
+            <div class="account-copy">
+              <strong id="accountNameLabel">You</strong>
+              <small id="accountMetaLabel">Local workspace owner</small>
+            </div>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            id="themeToggleBtn"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          >
+            <span id="themeToggleIcon">☀</span>
+          </button>
+          <button
+            class="icon-button mail-center-button"
+            type="button"
+            id="mailCenterBtn"
+            aria-label="Open secure mail"
+            title="Open secure mail"
+          >
+            <span>✉</span>
+            <span class="mail-center-badge hidden" id="mailCenterUnreadCount">0</span>
+          </button>
+          <button
+            class="icon-button"
+            type="button"
+            id="openGuideModalBtn"
+            aria-label="Open instructions"
+            title="Open instructions"
+          >
+            <span>?</span>
+          </button>
+          <button class="ghost-button" type="button" id="importBtn">Import</button>
+          <button class="ghost-button" type="button" id="exportBtn">Export</button>
+          <button class="ghost-button" type="button" id="logoutBtn">Log Out</button>
+          <button class="primary-button" type="button" id="openTrackerModalBtn">
+            Create Tracker
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace-main">
+        <section
+          class="view-panel is-active"
+          data-view-panel="dashboard"
+          aria-labelledby="dashboardHeading"
+        >
+          <section class="priority-strip" aria-label="Daily priorities">
+            <article class="priority-card panel priority-card-progress">
+              <div class="priority-card-head">
+                <div>
+                  <p class="eyebrow">Daily check-in</p>
+                  <h4>Today's Progress</h4>
+                </div>
+                <span class="panel-pill" id="todayProgressPercent">0%</span>
+              </div>
+              <strong class="priority-value" id="todayProgressValue">0 tasks</strong>
+              <p class="priority-note" id="todayProgressNote">No activity logged yet today.</p>
+              <div class="priority-progress">
+                <span class="priority-progress-fill" id="todayProgressFill"></span>
+              </div>
+              <div class="priority-card-foot">
+                <span class="priority-warning" id="todayProgressWarning">Warning: no activity today</span>
+                <button class="ghost-button" type="button" id="todayQuickLogBtn">Quick Add</button>
+              </div>
+            </article>
+
+            <article class="priority-card panel priority-card-streak">
+              <div class="priority-card-head">
+                <div>
+                  <p class="eyebrow">Consistency</p>
+                  <h4>Current Streak</h4>
+                </div>
+                <span class="panel-pill streak-pill" id="globalStreakPill">🔥 0 days</span>
+              </div>
+              <strong class="priority-value" id="globalStreakValue">0 days</strong>
+              <p class="priority-note" id="globalStreakNote">Log progress today to start your streak.</p>
+            </article>
+
+            <article class="priority-card panel priority-card-active">
+              <div class="priority-card-head">
+                <div>
+                  <p class="eyebrow">Live goals</p>
+                  <h4>Active Goals</h4>
+                </div>
+                <span class="panel-pill" id="priorityActiveGoalsPill">0 live</span>
+              </div>
+              <strong class="priority-value" id="priorityActiveGoalsValue">0</strong>
+              <p class="priority-note" id="priorityActiveGoalsNote">Create a tracker to open your next focus lane.</p>
+            </article>
+          </section>
+
+          <section class="hero panel">
+            <div class="hero-copy">
+              <p class="eyebrow">Welcome aboard</p>
+              <h3 id="dashboardHeading">
+                A polished command center for progress that never forces you into rigid categories.
+              </h3>
+              <p class="subtle">
+                Sample gaming, study, and exercise trackers are preloaded so the product feels alive on first launch.
+                Keep them, edit them, or create fully custom trackers with your own units, targets, colors, fields, and notes.
+              </p>
+
+              <div class="hero-actions">
+                <button class="primary-button" type="button" id="heroCreateBtn">Create Tracker</button>
+                <button class="ghost-button" type="button" id="heroTrackersBtn">Browse Trackers</button>
+                <button class="ghost-button notion-button" type="button" id="openNotionBtn">Open Notion</button>
+              </div>
+
+              <div class="hero-chips">
+                <span class="hero-chip">Unlimited custom trackers</span>
+                <span class="hero-chip">Manual logs and corrections</span>
+                <span class="hero-chip">Local-first persistence</span>
+                <span class="hero-chip">Import / export backups</span>
+              </div>
+            </div>
+
+            <div class="hero-visual">
+              <article class="hero-metric-card">
+                <div
+                  class="progress-ring progress-ring-hero"
+                  id="heroRing"
+                  aria-label="Overall completion percentage"
+                >
+                  <span id="heroRingLabel">0%</span>
+                </div>
+                <div>
+                  <p class="metric-overline">Overall completion</p>
+                  <strong class="hero-metric-value" id="heroCompletionValue">0%</strong>
+                  <p class="subtle" id="heroCompletionNote">Across all live trackers</p>
+                </div>
+              </article>
+
+              <div class="hero-mini-grid">
+                <article class="mini-card">
+                  <span>Today</span>
+                  <strong id="heroTodayMetric">0</strong>
+                  <p id="heroTodayNote">No progress logged yet</p>
+                </article>
+                <article class="mini-card">
+                  <span>Due Soon</span>
+                  <strong id="heroDueSoonMetric">0</strong>
+                  <p id="heroDueSoonNote">No pressing deadlines</p>
+                </article>
+                <article class="mini-card">
+                  <span>Top Category</span>
+                  <strong id="heroTopCategoryMetric">-</strong>
+                  <p id="heroTopCategoryNote">Starts once you log data</p>
+                </article>
+                <article class="mini-card">
+                  <span>Weekly Push</span>
+                  <strong id="heroWeeklyMetric">0</strong>
+                  <p id="heroWeeklyNote">Fresh week, fresh momentum</p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="stats-grid" aria-label="Overview stats">
+            <article class="stat-card panel">
+              <div class="stat-topline">
+                <span>Total trackers</span>
+                <small>Workspace</small>
+              </div>
+              <strong class="stat-value" id="statTotalTrackers">0</strong>
+              <p class="stat-meta" id="statTotalTrackersMeta">Across every category</p>
+            </article>
+
+            <article class="stat-card panel">
+              <div class="stat-topline">
+                <span>Active goals</span>
+                <small>In motion</small>
+              </div>
+              <strong class="stat-value" id="statActiveGoals">0</strong>
+              <p class="stat-meta" id="statActiveGoalsMeta">Trackers moving toward target</p>
+            </article>
+
+            <article class="stat-card panel">
+              <div class="stat-topline">
+                <span>Completed goals</span>
+                <small>Wins</small>
+              </div>
+              <strong class="stat-value" id="statCompletedGoals">0</strong>
+              <p class="stat-meta" id="statCompletedGoalsMeta">Ready for the next milestone</p>
+            </article>
+
+            <article class="stat-card panel">
+              <div class="stat-topline">
+                <span>Today's logs</span>
+                <small>Net progress</small>
+              </div>
+              <strong class="stat-value" id="statTodayProgress">0</strong>
+              <p class="stat-meta" id="statTodayProgressMeta">Across 0 entries</p>
+            </article>
+
+            <article class="stat-card panel">
+              <div class="stat-topline">
+                <span>Weekly summary</span>
+                <small>Last 7 days</small>
+              </div>
+              <strong class="stat-value" id="statWeeklyProgress">0</strong>
+              <p class="stat-meta" id="statWeeklyProgressMeta">Compared with the previous week</p>
+            </article>
+
+            <article class="stat-card panel">
+              <div class="stat-topline">
+                <span>Overall completion</span>
+                <small>Weighted</small>
+              </div>
+              <strong class="stat-value" id="statOverallCompletion">0%</strong>
+              <p class="stat-meta" id="statOverallCompletionMeta">Across active trackers</p>
+            </article>
+          </section>
+
+          <section class="dashboard-grid">
+            <article class="dashboard-panel panel dashboard-panel-wide">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">This week</p>
+                  <h4>Weekly progress summary</h4>
+                </div>
+                <span class="panel-pill" id="weeklyDeltaLabel">0 vs last week</span>
+              </header>
+              <div class="weekly-chart" id="weeklyChart"></div>
+              <p class="panel-footnote" id="weeklySummaryText">
+                Log progress to see your last seven days come alive.
+              </p>
+            </article>
+
+            <article class="dashboard-panel panel">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Category mix</p>
+                  <h4>Category breakdown</h4>
+                </div>
+              </header>
+              <div class="stack-list" id="categoryBreakdown"></div>
+            </article>
+
+            <article class="dashboard-panel panel">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Upcoming</p>
+                  <h4>Deadlines and milestones</h4>
+                </div>
+              </header>
+              <div class="stack-list" id="upcomingList"></div>
+            </article>
+
+            <article class="dashboard-panel panel">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Activity</p>
+                  <h4>Recent activity feed</h4>
+                </div>
+              </header>
+              <div class="stack-list" id="recentActivityList"></div>
+            </article>
+
+            <article class="dashboard-panel panel dashboard-panel-insights">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Insights</p>
+                  <h4>Rule-based weekly readout</h4>
+                </div>
+                <span class="panel-pill" id="insightsSummaryPill">0 signals</span>
+              </header>
+              <p class="panel-footnote" id="insightsSummaryText">
+                Weekly consistency, missed days, and best-day patterns will appear here.
+              </p>
+              <div class="insights-grid" id="insightsGrid"></div>
+            </article>
+
+            <article class="dashboard-panel panel dashboard-panel-focus">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Focus mode</p>
+                  <h4>Session timer</h4>
+                </div>
+                <span class="panel-pill" id="focusModeState">Idle</span>
+              </header>
+              <label class="field">
+                <span>Focus tracker</span>
+                <select id="focusTrackerSelect"></select>
+              </label>
+              <div class="focus-timer-shell">
+                <strong class="focus-timer-value" id="focusTimerValue">00:00:00</strong>
+                <p class="panel-footnote" id="focusTimerNote">
+                  Start a timer and Progress Tracker Pro will auto-log the session to your selected tracker.
+                </p>
+              </div>
+              <div class="focus-actions">
+                <button class="primary-button" type="button" id="focusStartBtn">Start Session</button>
+                <button class="ghost-button" type="button" id="focusStopBtn">Stop &amp; Save</button>
+              </div>
+            </article>
+
+            <article class="dashboard-panel panel dashboard-panel-wide mail-dashboard-panel">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Secure relay</p>
+                  <h4>Email update stream</h4>
+                </div>
+                <button class="ghost-button" type="button" id="openMailCenterFromDashboardBtn">
+                  Open Mail Center
+                </button>
+              </header>
+              <p class="panel-footnote" id="dashboardMailSummary">
+                OTP deliveries and tracker updates will appear here.
+              </p>
+              <div class="mail-stream mail-stream-compact" id="dashboardMailList"></div>
+            </article>
+
+            <article class="dashboard-panel panel dashboard-panel-wide">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Consistency</p>
+                  <h4>28 day activity heatmap</h4>
+                </div>
+                <span class="panel-pill" id="heatmapLegendLabel">Lighter means quieter</span>
+              </header>
+              <div class="heatmap-wrap">
+                <div class="heatmap-grid" id="heatmapGrid"></div>
+                <div class="heatmap-legend">
+                  <span>Calm</span>
+                  <div class="heatmap-scale">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span>Heavy</span>
+                </div>
+              </div>
+            </article>
+          </section>
+        </section>
+
+        <section class="view-panel" data-view-panel="trackers" aria-labelledby="trackersHeading">
+          <header class="section-heading">
+            <div>
+              <p class="eyebrow">Manage everything</p>
+              <h3 id="trackersHeading">All trackers</h3>
+              <p class="subtle" id="trackersSummaryText">
+                Search, filter, sort, archive, and open any tracker instantly.
+              </p>
+            </div>
+            <button class="primary-button" type="button" id="trackersCreateBtn">New Tracker</button>
+          </header>
+
+          <section class="filter-toolbar panel" aria-label="Tracker filters">
+            <label class="field field-search">
+              <span>Search trackers</span>
+              <input
+                type="search"
+                id="trackerSearchInput"
+                placeholder="Search title, category, notes, tags, or metadata"
+              />
+            </label>
+
+            <label class="field">
+              <span>Category</span>
+              <select id="categoryFilter"></select>
+            </label>
+
+            <label class="field">
+              <span>Status</span>
+              <select id="statusFilter">
+                <option value="all">All statuses</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+                <option value="archived">Archived</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Priority</span>
+              <select id="priorityFilter">
+                <option value="all">All priorities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Sort by</span>
+              <select id="sortFilter">
+                <option value="recentlyUpdated">Recently updated</option>
+                <option value="newest">Newest</option>
+                <option value="deadline">Deadline</option>
+                <option value="highestProgress">Highest progress</option>
+                <option value="lowestProgress">Lowest progress</option>
+              </select>
+            </label>
+          </section>
+
+          <div class="tracker-grid" id="trackerGrid"></div>
+
+          <section class="empty-state panel hidden" id="trackerEmptyState">
+            <div class="empty-state-icon">◎</div>
+            <h4>No trackers match this view</h4>
+            <p class="subtle" id="trackerEmptyText">
+              Change the filters or create a new tracker to get moving.
+            </p>
+            <button class="primary-button" type="button" id="emptyCreateBtn">Create Tracker</button>
+          </section>
+        </section>
+
+        <section class="view-panel" data-view-panel="graphs" aria-labelledby="graphsHeading">
+          <header class="section-heading">
+            <div>
+              <p class="eyebrow">Visual analytics</p>
+              <h3 id="graphsHeading">Progress graphs</h3>
+              <p class="subtle" id="graphsSummaryText">
+                See your progress trends, category momentum, completion balance, and tracker-by-tracker visuals in one place.
+              </p>
+            </div>
+            <button class="ghost-button" type="button" id="graphsOpenTrackersBtn">Open Trackers</button>
+          </header>
+
+          <section class="stats-grid graph-metrics-grid" id="graphMetrics" aria-label="Graph summary metrics"></section>
+
+          <section class="graph-grid">
+            <article class="dashboard-panel panel graph-panel graph-panel-wide">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Momentum</p>
+                  <h4>7 day progress graph</h4>
+                </div>
+                <span class="panel-pill" id="graphWeeklyDeltaLabel">0 vs last week</span>
+              </header>
+              <div class="graph-weekly-chart" id="graphWeeklyVisual"></div>
+              <p class="panel-footnote" id="graphWeeklyNote">
+                Track daily movement across your whole workspace.
+              </p>
+            </article>
+
+            <article class="dashboard-panel panel graph-panel">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Tracker comparison</p>
+                  <h4>Completion by tracker</h4>
+                </div>
+              </header>
+              <div class="graph-compare-list" id="graphTrackerCompare"></div>
+            </article>
+
+            <article class="dashboard-panel panel graph-panel">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Category overview</p>
+                  <h4>Category performance</h4>
+                </div>
+              </header>
+              <div class="graph-category-list" id="graphCategoryCompare"></div>
+            </article>
+
+            <article class="dashboard-panel panel graph-panel graph-panel-wide">
+              <header class="panel-header">
+                <div>
+                  <p class="eyebrow">Consistency</p>
+                  <h4>Activity heatmap graph</h4>
+                </div>
+                <span class="panel-pill" id="graphHeatmapLegend">0 active days</span>
+              </header>
+              <div class="heatmap-wrap">
+                <div class="heatmap-grid graph-heatmap-grid" id="graphHeatmapGrid"></div>
+                <div class="heatmap-legend">
+                  <span>Calm</span>
+                  <div class="heatmap-scale">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span>Heavy</span>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section class="dashboard-panel panel graph-gallery-panel">
+            <header class="panel-header">
+              <div>
+                <p class="eyebrow">Tracker graph gallery</p>
+                <h4>Visual boards for every tracker</h4>
+              </div>
+              <span class="panel-pill" id="graphGalleryCount">0 trackers</span>
+            </header>
+            <div class="graph-tracker-grid" id="graphTrackerBoards"></div>
+          </section>
+        </section>
+
+        <section class="view-panel" data-view-panel="history" aria-labelledby="historyHeading">
+          <header class="section-heading">
+            <div>
+              <p class="eyebrow">Full logbook</p>
+              <h3 id="historyHeading">Progress history</h3>
+              <p class="subtle" id="historySummaryText">
+                Review every entry, correction, and milestone across your workspace.
+              </p>
+            </div>
+            <button class="ghost-button" type="button" id="historyExportBtn">Export Backup</button>
+          </header>
+
+          <section class="history-toolbar panel" aria-label="History filters">
+            <label class="field">
+              <span>Tracker</span>
+              <select id="historyTrackerFilter"></select>
+            </label>
+
+            <label class="field field-search">
+              <span>Search notes</span>
+              <input
+                type="search"
+                id="historySearchInput"
+                placeholder="Search by note, tag, title, or category"
+              />
+            </label>
+
+            <label class="field">
+              <span>Entry type</span>
+              <select id="historyTypeFilter">
+                <option value="all">All entries</option>
+                <option value="progress">Positive progress</option>
+                <option value="correction">Corrections</option>
+                <option value="system">System syncs</option>
+              </select>
+            </label>
+          </section>
+
+          <section class="history-layout">
+            <article class="panel history-summary-card">
+              <p class="eyebrow">Snapshot</p>
+              <h4 id="historySnapshotTitle">0 log entries</h4>
+              <p class="subtle" id="historySnapshotText">
+                Create or update trackers to build your timeline.
+              </p>
+            </article>
+
+            <article class="panel history-timeline-panel">
+              <div class="history-timeline" id="historyTimeline"></div>
+              <div class="empty-state hidden" id="historyEmptyState">
+                <div class="empty-state-icon">◌</div>
+                <h4>No history entries yet</h4>
+                <p class="subtle">As you log progress, your timeline will appear here.</p>
+              </div>
+            </article>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="mobile-tabbar" id="mobileTabbar" aria-label="Mobile navigation">
+    <button class="mobile-tab-button is-active" type="button" data-view-target="dashboard">
+      <span>Dashboard</span>
+      <small>Overview</small>
+    </button>
+    <button class="mobile-tab-button" type="button" data-view-target="trackers">
+      <span>Trackers</span>
+      <small>Manage</small>
+    </button>
+    <button class="mobile-tab-button" type="button" data-view-target="graphs">
+      <span>Graph</span>
+      <small>Visuals</small>
+    </button>
+    <button class="mobile-tab-button" type="button" id="mobileCreateBtn">
+      <span>Create</span>
+      <small>New tracker</small>
+    </button>
+    <button class="mobile-tab-button" type="button" data-view-target="history">
+      <span>History</span>
+      <small>Activity</small>
+    </button>
+  </nav>
+
+  <div class="drawer-scrim" id="drawerScrim" hidden></div>
+  <aside
+    class="detail-drawer"
+    id="detailDrawer"
+    aria-hidden="true"
+    aria-labelledby="detailTitle"
+  >
+    <header class="drawer-header">
+      <div class="drawer-title-group">
+        <div class="badge badge-large" id="detailBadge">PT</div>
+        <div>
+          <p class="eyebrow" id="detailCategoryLabel">Tracker</p>
+          <h3 id="detailTitle">Tracker Details</h3>
+          <p class="subtle" id="detailSubtitle">Open a tracker to inspect its progress and history.</p>
+        </div>
+      </div>
+
+      <button
+        class="icon-button"
+        type="button"
+        id="closeDetailBtn"
+        aria-label="Close tracker details"
+      >
+        ×
+      </button>
+    </header>
+
+    <div class="drawer-body" id="drawerBody">
+      <section class="panel detail-hero" id="detailHeroCard"></section>
+
+      <section class="panel detail-section detail-log-section">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Quick entry</p>
+            <h4>Manual progress logging</h4>
+          </div>
+          <div class="quick-entry-meta">
+            <span class="panel-pill" id="logFormStateLabel">Add a fresh entry</span>
+            <button class="ghost-button ghost-button-small" type="button" id="logProofTriggerBtn">
+              Attach Proof
+            </button>
+          </div>
+        </header>
+
+        <form id="logForm" class="log-form" novalidate>
+          <input type="hidden" id="logTrackerId" />
+          <input type="hidden" id="editingLogId" />
+          <input type="file" id="logProofInput" accept="image/*" hidden />
+
+          <div class="proof-inline-status">
+            <span class="soft-pill" id="logProofStatusBadge">No proof attached</span>
+            <p class="subtle" id="logProofStatusText">
+              Click Attach Proof, then save the log entry. The image will appear in Timeline below.
+            </p>
+          </div>
+
+          <div class="proof-upload-panel">
+            <div>
+              <p class="eyebrow">Progress proof image</p>
+              <strong id="logProofUploadTitle">No image selected yet</strong>
+              <p class="subtle" id="logProofUploadText">
+                Add a screenshot or photo here. After you save the log, it will show in Timeline below.
+              </p>
+            </div>
+            <button class="primary-button" type="button" id="logProofInlineBtn">Choose Image</button>
+          </div>
+
+          <div class="log-proof-preview hidden" id="logProofPreview">
+            <div class="log-proof-preview-media">
+              <img id="logProofThumb" alt="Selected progress proof preview" />
+            </div>
+            <div class="log-proof-preview-copy">
+              <strong id="logProofName">Proof image selected</strong>
+              <p class="subtle">This image will be attached to the log entry and saved locally in your browser.</p>
+            </div>
+            <button class="ghost-button" type="button" id="removeLogProofBtn">Remove Image</button>
+          </div>
+
+          <label class="field">
+            <span>Progress amount</span>
+            <input type="number" id="logAmountInput" step="0.1" placeholder="12.5" required />
+          </label>
+
+          <label class="field">
+            <span>Date and time</span>
+            <input type="datetime-local" id="logDateInput" required />
+          </label>
+
+          <label class="field">
+            <span>Tag / session</span>
+            <input type="text" id="logTagInput" maxlength="40" placeholder="Week 4 mock test" />
+          </label>
+
+          <label class="field field-wide">
+            <span>Note</span>
+            <textarea
+              id="logNoteInput"
+              rows="3"
+              maxlength="240"
+              placeholder="What changed, what worked, or why you adjusted the numbers..."
+            ></textarea>
+          </label>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit" id="logSubmitBtn">Add Log Entry</button>
+            <button class="ghost-button hidden" type="button" id="cancelLogEditBtn">
+              Cancel Edit
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel detail-section detail-visuals-section">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Progress visuals</p>
+            <h4>Visual progress board</h4>
+          </div>
+          <span class="panel-pill">Unified tracker charts</span>
+        </header>
+
+        <div id="detailProgressVisuals"></div>
+      </section>
+
+      <section class="panel detail-section detail-meta-section">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Metadata</p>
+            <h4>Tracker details</h4>
+          </div>
+        </header>
+
+        <div class="detail-meta-grid" id="detailMetaGrid"></div>
+        <div class="detail-notes" id="detailNotes"></div>
+        <div class="detail-custom-fields" id="detailCustomFields"></div>
+      </section>
+
+      <section class="panel detail-section detail-history-section">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Timeline</p>
+            <h4>Entry history</h4>
+          </div>
+          <span class="panel-pill" id="detailHistoryCount">0 entries</span>
+        </header>
+
+        <div class="detail-log-list" id="detailLogList"></div>
+      </section>
+
+      <section class="panel detail-section detail-manage-section">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Manage</p>
+            <h4>Tracker controls</h4>
+          </div>
+        </header>
+
+        <div class="detail-actions">
+          <button
+            class="primary-button detail-save-button"
+            type="submit"
+            id="detailSaveLogBtn"
+            form="logForm"
+          >
+            Add Log Entry
+          </button>
+          <button class="ghost-button" type="button" id="editSelectedTrackerBtn">Edit Tracker</button>
+          <button class="ghost-button" type="button" id="archiveSelectedTrackerBtn">Archive</button>
+          <button class="ghost-button" type="button" id="resetSelectedTrackerBtn">Reset Progress</button>
+          <button class="danger-button" type="button" id="deleteSelectedTrackerBtn">Delete</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <section
+    class="modal-shell"
+    id="trackerModal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="trackerModalTitle"
+  >
+    <div class="modal-card panel">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">Tracker setup</p>
+          <h3 id="trackerModalTitle">Create Tracker</h3>
+          <p class="subtle" id="trackerModalSubtitle">
+            Configure a fully custom tracker with your own units, target, styling, and metadata.
+          </p>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          id="closeTrackerModalBtn"
+          aria-label="Close tracker form"
+        >
+          ×
+        </button>
+      </header>
+
+      <section class="modal-helper-card hidden" id="trackerModalHelperCard" aria-live="polite">
+        <div>
+          <p class="eyebrow">Proof images</p>
+          <h4>Attach screenshots in the progress logger</h4>
+          <p class="subtle" id="trackerModalHelperText">
+            Proof images are added per log entry, not in tracker setup.
+          </p>
+        </div>
+        <button class="ghost-button" type="button" id="openLoggerFromModalBtn">
+          Open Progress Logger
+        </button>
+      </section>
+
+      <form id="trackerForm" class="tracker-form" novalidate>
+        <input type="hidden" id="trackerIdInput" />
+
+        <div class="form-grid">
+          <label class="field field-wide">
+            <span>Template</span>
+            <select id="trackerTemplateSelect">
+              <option value="">Start from scratch</option>
+              <option value="Coding">Coding</option>
+              <option value="Trading">Trading</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Study">Study</option>
+            </select>
+            <small class="field-help" id="trackerTemplateHint">
+              Apply a starter structure with tuned labels, units, colors, and custom fields.
+            </small>
+          </label>
+
+          <label class="field field-wide">
+            <span>Title</span>
+            <input
+              type="text"
+              id="trackerTitleInput"
+              maxlength="80"
+              placeholder="Climb to Diamond"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>Created by / username</span>
+            <input
+              type="text"
+              id="trackerCreatorInput"
+              maxlength="40"
+              placeholder="You"
+            />
+          </label>
+
+          <label class="field">
+            <span>Category</span>
+            <input
+              type="text"
+              id="trackerCategoryInput"
+              list="categorySuggestions"
+              maxlength="40"
+              placeholder="Gaming"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>Specific item / subcategory</span>
+            <input
+              type="text"
+              id="trackerItemInput"
+              maxlength="80"
+              placeholder="Valorant ranked push"
+            />
+          </label>
+
+          <label class="field">
+            <span>Goal type</span>
+            <input
+              type="text"
+              id="trackerGoalTypeInput"
+              list="goalTypeSuggestions"
+              maxlength="40"
+              placeholder="Target progress"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>Unit type</span>
+            <select id="trackerUnitTypeSelect" required>
+              <option value="hours">Hours</option>
+              <option value="pages">Pages</option>
+              <option value="chapters">Chapters</option>
+              <option value="levels">Levels</option>
+              <option value="%">%</option>
+              <option value="tasks">Tasks</option>
+              <option value="reps">Reps</option>
+              <option value="sets">Sets</option>
+              <option value="kg">kg</option>
+              <option value="km">km</option>
+              <option value="sessions">Sessions</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
+
+          <label class="field hidden" id="customUnitField">
+            <span>Custom unit label</span>
+            <input
+              type="text"
+              id="trackerCustomUnitInput"
+              maxlength="20"
+              placeholder="RR, missions, lessons..."
+            />
+          </label>
+
+          <label class="field">
+            <span>Starting value</span>
+            <input type="number" id="trackerStartValueInput" step="0.1" value="0" required />
+          </label>
+
+          <label class="field">
+            <span>Current value</span>
+            <input type="number" id="trackerCurrentValueInput" step="0.1" value="0" required />
+          </label>
+
+          <label class="field">
+            <span>Target value</span>
+            <input type="number" id="trackerTargetValueInput" step="0.1" value="100" required />
+          </label>
+
+          <label class="field">
+            <span>Deadline</span>
+            <input type="date" id="trackerDeadlineInput" />
+          </label>
+
+          <label class="field">
+            <span>Priority</span>
+            <select id="trackerPrioritySelect">
+              <option value="Medium">Medium</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Low">Low</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Accent color</span>
+            <div class="color-input-wrap">
+              <input type="color" id="trackerAccentInput" value="#5de4c7" />
+              <span id="trackerAccentPreview">#5de4c7</span>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Icon or badge</span>
+            <input
+              type="text"
+              id="trackerIconInput"
+              maxlength="4"
+              placeholder="🎮"
+            />
+          </label>
+
+          <div class="field field-wide">
+            <span>Quick icon choices</span>
+            <div class="icon-choice-row" id="iconChoiceRow">
+              <button type="button" class="icon-choice" data-icon-choice="🎮">🎮</button>
+              <button type="button" class="icon-choice" data-icon-choice="📚">📚</button>
+              <button type="button" class="icon-choice" data-icon-choice="🏃">🏃</button>
+              <button type="button" class="icon-choice" data-icon-choice="💪">💪</button>
+              <button type="button" class="icon-choice" data-icon-choice="🧠">🧠</button>
+              <button type="button" class="icon-choice" data-icon-choice="🎯">🎯</button>
+              <button type="button" class="icon-choice" data-icon-choice="🚀">🚀</button>
+              <button type="button" class="icon-choice" data-icon-choice="🛠️">🛠️</button>
+              <button type="button" class="icon-choice" data-icon-choice="📝">📝</button>
+              <button type="button" class="icon-choice" data-icon-choice="🏆">🏆</button>
+              <button type="button" class="icon-choice" data-icon-choice="⚡">⚡</button>
+              <button type="button" class="icon-choice" data-icon-choice="🌿">🌿</button>
+            </div>
+          </div>
+
+          <label class="field field-wide">
+            <span>Notes</span>
+            <textarea
+              id="trackerNotesInput"
+              rows="4"
+              maxlength="400"
+              placeholder="Add context, milestones, training notes, game plans, or anything else that matters..."
+            ></textarea>
+          </label>
+        </div>
+
+        <section class="custom-fields-editor">
+          <div class="custom-fields-header">
+            <div>
+              <p class="eyebrow">Optional metadata</p>
+              <h4>Custom fields</h4>
+            </div>
+            <button class="ghost-button" type="button" id="addCustomFieldBtn">Add Field</button>
+          </div>
+          <div class="custom-field-list" id="customFieldList"></div>
+        </section>
+
+        <footer class="modal-actions">
+          <button class="ghost-button" type="button" id="cancelTrackerModalBtn">Cancel</button>
+          <button class="primary-button" type="submit" id="saveTrackerBtn">Save Tracker</button>
+        </footer>
+      </form>
+    </div>
+  </section>
+
+  <section
+    class="modal-shell"
+    id="mailModal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="mailModalTitle"
+  >
+    <div class="modal-card panel mail-modal-card">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">Secure Mail</p>
+          <h3 id="mailModalTitle">Email delivery center</h3>
+          <p class="subtle" id="mailModalSummary">
+            Verification OTPs are delivered by email, and this workspace center shows update summaries.
+          </p>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          id="closeMailModalBtn"
+          aria-label="Close secure mail"
+        >
+          ×
+        </button>
+      </header>
+
+      <section class="mail-modal-status-grid" aria-label="Mail status">
+        <article class="mail-status-card">
+          <span>Verified address</span>
+          <strong id="mailModalAddress">No email connected</strong>
+        </article>
+        <article class="mail-status-card">
+          <span>Unread</span>
+          <strong id="mailModalUnread">0</strong>
+        </article>
+        <article class="mail-status-card">
+          <span>Latest delivery</span>
+          <strong id="mailModalLastDelivery">No messages yet</strong>
+        </article>
+      </section>
+
+      <div class="mail-stream mail-stream-full" id="mailModalList"></div>
+    </div>
+  </section>
+
+  <section
+    class="modal-shell"
+    id="guideModal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="guideModalTitle"
+  >
+    <div class="modal-card panel guide-modal-card">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">How To Use Progress Tracker Pro</p>
+          <h3 id="guideModalTitle">A visual walkthrough for new users</h3>
+          <p class="subtle" id="guideModalSubtitle">
+            Understand what the website is for, how to log progress, and where to see your graphs, history, proof uploads, and backups.
+          </p>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          id="closeGuideModalBtn"
+          aria-label="Close instructions"
+        >
+          ×
+        </button>
+      </header>
+
+      <section class="guide-hero-banner">
+        <div class="guide-hero-copy">
+          <p class="eyebrow">What this website is for</p>
+          <h4>Track absolutely anything in one backend-connected workspace.</h4>
+          <p class="subtle">
+            Use this website to manage study plans, game ranks, workouts, reading goals, habits, projects,
+            or any custom milestone. You create trackers, log updates manually, attach proof images, and
+            review everything from dashboard, graphs, and history.
+          </p>
+        </div>
+
+        <div class="guide-hero-chips">
+          <span class="hero-chip">Custom trackers</span>
+          <span class="hero-chip">Manual quick logs</span>
+          <span class="hero-chip">Proof image uploads</span>
+          <span class="hero-chip">Visual graph view</span>
+          <span class="hero-chip">Local-first backup</span>
+        </div>
+      </section>
+
+      <section class="guide-grid" aria-label="Visual walkthrough">
+        <article class="guide-step-card">
+          <div class="guide-shot guide-shot-dashboard" aria-hidden="true">
+            <div class="guide-shot-sidebar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="guide-shot-main">
+              <div class="guide-shot-topline"></div>
+              <div class="guide-shot-title"></div>
+              <div class="guide-shot-stat-row">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div class="guide-shot-chart"></div>
+            </div>
+          </div>
+          <div class="guide-step-copy">
+            <span class="panel-pill">1. Dashboard</span>
+            <h4>See your whole workspace at a glance</h4>
+            <p class="subtle">
+              Start on Dashboard to check total trackers, today’s progress, due milestones, overall completion,
+              recent movement, and the strongest category in your workspace.
+            </p>
+          </div>
+        </article>
+
+        <article class="guide-step-card">
+          <div class="guide-shot guide-shot-form" aria-hidden="true">
+            <div class="guide-shot-field wide"></div>
+            <div class="guide-shot-field"></div>
+            <div class="guide-shot-field"></div>
+            <div class="guide-shot-field"></div>
+            <div class="guide-shot-field"></div>
+            <div class="guide-shot-button"></div>
+          </div>
+          <div class="guide-step-copy">
+            <span class="panel-pill">2. Create Tracker</span>
+            <h4>Build any custom tracker you want</h4>
+            <p class="subtle">
+              Use Create Tracker to define a title, category, unit, target, deadline, color, icon, notes,
+              creator name, and custom fields that match your goal.
+            </p>
+          </div>
+        </article>
+
+        <article class="guide-step-card">
+          <div class="guide-shot guide-shot-log" aria-hidden="true">
+            <div class="guide-shot-pill-row">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="guide-shot-proof"></div>
+            <div class="guide-shot-two-col">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="guide-shot-note"></div>
+            <div class="guide-shot-button short"></div>
+          </div>
+          <div class="guide-step-copy">
+            <span class="panel-pill">3. Quick Log + Proof</span>
+            <h4>Open a tracker, add progress, then attach proof</h4>
+            <p class="subtle">
+              The detail drawer lets you update amount, date, tag, and note. You can also upload a screenshot
+              or photo as proof, then save it so it appears in Timeline and History.
+            </p>
+          </div>
+        </article>
+
+        <article class="guide-step-card">
+          <div class="guide-shot guide-shot-graphs" aria-hidden="true">
+            <div class="guide-shot-donut"></div>
+            <div class="guide-shot-bars">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="guide-shot-waffle">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+          <div class="guide-step-copy">
+            <span class="panel-pill">4. Graph View</span>
+            <h4>Use the Graph page for visual progress insights</h4>
+            <p class="subtle">
+              Open Graph to compare trackers, review weekly movement, read category performance,
+              and understand your progress with clearer visual boards.
+            </p>
+          </div>
+        </article>
+
+        <article class="guide-step-card">
+          <div class="guide-shot guide-shot-history" aria-hidden="true">
+            <div class="guide-shot-history-card"></div>
+            <div class="guide-shot-history-card"></div>
+            <div class="guide-shot-history-card"></div>
+            <div class="guide-shot-button"></div>
+          </div>
+          <div class="guide-step-copy">
+            <span class="panel-pill">5. History + Backup</span>
+            <h4>Review old entries and keep local backups</h4>
+            <p class="subtle">
+              Use History to find every log, correction, note, and proof image. Export JSON whenever you want
+              a backup or import a saved snapshot to restore your workspace later.
+            </p>
+          </div>
+        </article>
+
+        <article class="guide-step-card guide-step-card-checklist">
+          <div class="guide-step-copy">
+            <span class="panel-pill">Best flow</span>
+            <h4>Recommended first-use path</h4>
+            <ol class="guide-checklist">
+              <li>Open the sample trackers and see how they are structured.</li>
+              <li>Create your own tracker with custom labels and units.</li>
+              <li>Use Quick Log to save progress regularly.</li>
+              <li>Upload proof images when you want visual evidence.</li>
+              <li>Visit Graph and History to review momentum over time.</li>
+            </ol>
+            <p class="subtle" id="guideAuthHint">
+              This workspace now uses real backend auth, email OTP verification, and synced tracker data.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <footer class="modal-actions guide-modal-actions">
+        <button class="ghost-button" type="button" id="guideCloseBtn">Close</button>
+        <button class="ghost-button" type="button" id="guideOpenGraphsBtn">Open Graph</button>
+        <button class="primary-button" type="button" id="guideCreateTrackerBtn">Create Tracker</button>
+      </footer>
+    </div>
+  </section>
+
+  <section
+    class="modal-shell modal-shell-compact"
+    id="confirmModal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="confirmModalTitle"
+  >
+    <div class="modal-card panel">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">Please confirm</p>
+          <h3 id="confirmModalTitle">Confirm action</h3>
+        </div>
+      </header>
+
+      <div class="confirm-copy">
+        <p class="subtle" id="confirmModalMessage">
+          This action will make a meaningful change to your workspace.
+        </p>
+      </div>
+
+      <footer class="modal-actions">
+        <button class="ghost-button" type="button" id="confirmCancelBtn">Cancel</button>
+        <button class="danger-button" type="button" id="confirmAcceptBtn">Confirm</button>
+      </footer>
+    </div>
+  </section>
+
+  <section
+    class="modal-shell"
+    id="proofModal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="proofModalCaption"
+  >
+    <div class="modal-card panel proof-modal-card">
+      <header class="modal-header proof-modal-header">
+        <div>
+          <p class="eyebrow">Proof viewer</p>
+          <h3 id="proofModalCaption">Progress proof</h3>
+        </div>
+        <button
+          class="icon-button"
+          type="button"
+          id="closeProofModalBtn"
+          aria-label="Close proof viewer"
+        >
+          ×
+        </button>
+      </header>
+
+      <figure class="proof-modal-figure">
+        <img id="proofModalImage" alt="Progress proof image" />
+      </figure>
+    </div>
+  </section>
+
+  <template id="customFieldRowTemplate">
+    <div class="custom-field-row">
+      <input type="text" data-custom-label maxlength="32" placeholder="Field label" />
+      <input type="text" data-custom-value maxlength="80" placeholder="Value" />
+      <button
+        type="button"
+        class="icon-button icon-button-small"
+        data-remove-custom-field
+        aria-label="Remove custom field"
+      >
+        ×
+      </button>
+    </div>
+  </template>
+
+  <datalist id="categorySuggestions">
+    <option value="Gaming"></option>
+    <option value="Study"></option>
+    <option value="Exercise"></option>
+    <option value="Reading"></option>
+    <option value="Habits"></option>
+    <option value="Skills"></option>
+    <option value="Projects"></option>
+    <option value="Wellness"></option>
+    <option value="Finance"></option>
+    <option value="Custom"></option>
+  </datalist>
+
+  <datalist id="goalTypeSuggestions">
+    <option value="Target progress"></option>
+    <option value="Milestone ladder"></option>
+    <option value="Syllabus coverage"></option>
+    <option value="Consistency streak"></option>
+    <option value="Project completion"></option>
+    <option value="Performance climb"></option>
+    <option value="Custom"></option>
+  </datalist>
+
+  <input type="file" id="importFileInput" accept="application/json" hidden />
+
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
