@@ -5,7 +5,18 @@ const VIEW_NAMES = ["dashboard", "trackers", "graphs", "history"];
 const AUTH_MODES = ["create", "login"];
 const OTP_TTL_MINUTES = 10;
 const MAIL_FEED_LIMIT = 60;
-const BACKEND_API_BASE = window.PROGRESS_TRACKER_API_BASE || "https://progresstracker-1.onrender.com";
+// REFACTOR
+// Resolve the API base from the current site origin in production so the premium
+// frontend and backend stay on the same Render service without separate config.
+const RUNTIME_ORIGIN = /^https?:$/i.test(window.location.protocol)
+  ? window.location.origin
+  : "http://localhost:5000";
+const BACKEND_API_BASE = (() => {
+  const configuredBase = String(window.PROGRESS_TRACKER_API_BASE || "").trim();
+  const rawBase = configuredBase || RUNTIME_ORIGIN;
+  const normalizedBase = rawBase.replace(/\/+$/, "");
+  return /\/api$/i.test(normalizedBase) ? normalizedBase : `${normalizedBase}/api`;
+})();
 const BACKEND_ORIGIN = BACKEND_API_BASE.replace(/\/api\/?$/, "");
 const BACKEND_FETCH_TIMEOUT_MS = 9000;
 // REFACTOR

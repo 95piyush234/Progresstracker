@@ -3,6 +3,15 @@ import path from "node:path";
 
 dotenv.config();
 
+const defaultClientUrl = process.env.CLIENT_URL || process.env.RENDER_EXTERNAL_URL || "http://localhost:5000";
+const defaultClientOrigins = Array.from(new Set([
+  defaultClientUrl,
+  process.env.RENDER_EXTERNAL_URL,
+  "http://localhost:5000",
+  "http://localhost:5173",
+  "http://127.0.0.1:5173"
+].filter(Boolean)));
+
 function toNumber(value, fallback) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -41,8 +50,8 @@ export const config = {
   isProduction: (process.env.NODE_ENV || "development") === "production",
   port: toNumber(process.env.PORT, 5000),
   mongoUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/progress-tracker-saas",
-  clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
-  clientOrigins: toList(process.env.CLIENT_ORIGINS, ["http://localhost:5173", "http://127.0.0.1:5173"]),
+  clientUrl: defaultClientUrl,
+  clientOrigins: toList(process.env.CLIENT_ORIGINS, defaultClientOrigins),
   accessTokenSecret: process.env.JWT_ACCESS_SECRET || "replace-with-a-long-random-access-secret",
   refreshTokenSecret: process.env.JWT_REFRESH_SECRET || "replace-with-a-long-random-refresh-secret",
   accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
