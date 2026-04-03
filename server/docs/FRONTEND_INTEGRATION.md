@@ -7,7 +7,7 @@ The React client in [C:\Users\pc\Documents\tracker\client](C:\Users\pc\Documents
 Set [C:\Users\pc\Documents\tracker\client\.env.example](C:\Users\pc\Documents\tracker\client\.env.example):
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=https://progresstracker-1.onrender.com
 ```
 
 ## Axios setup
