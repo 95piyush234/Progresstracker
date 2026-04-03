@@ -1,11 +1,11 @@
-﻿const STORAGE_KEY = "progress-tracker-pro.v1";
+const STORAGE_KEY = "progress-tracker-pro.v1";
 const DEFAULT_THEME = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 const PRIORITY_VALUES = ["Critical", "High", "Medium", "Low"];
 const VIEW_NAMES = ["dashboard", "trackers", "graphs", "history"];
 const AUTH_MODES = ["create", "login"];
 const OTP_TTL_MINUTES = 10;
 const MAIL_FEED_LIMIT = 60;
-const BACKEND_API_BASE = window.PROGRESS_TRACKER_API_BASE || "http://localhost:5000/api";
+const BACKEND_API_BASE = window.PROGRESS_TRACKER_API_BASE || "https://progresstracker-1.onrender.com";
 const BACKEND_ORIGIN = BACKEND_API_BASE.replace(/\/api\/?$/, "");
 const BACKEND_FETCH_TIMEOUT_MS = 9000;
 // REFACTOR
