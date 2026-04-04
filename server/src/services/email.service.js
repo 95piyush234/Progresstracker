@@ -4,6 +4,22 @@ import { logger } from "../config/logger.js";
 
 let transporter = null;
 
+function parseMailFromHeader(mailFrom) {
+  const raw = String(mailFrom || "").trim();
+  const match = raw.match(/^(.*?)<([^>]+)>$/);
+  if (match) {
+    return {
+      name: match[1].trim().replace(/^"|"$/g, ""),
+      email: match[2].trim()
+    };
+  }
+
+  return {
+    name: "Progress Tracker",
+    email: raw
+  };
+}
+
 function getTransporter() {
   if (!isMailConfigured()) {
     return null;
@@ -62,6 +78,42 @@ async function sendWithResend({ to, subject, text, html }) {
   };
 }
 
+async function sendWithBrevo({ to, subject, text, html }) {
+  const sender = parseMailFromHeader(config.mail.from);
+  const recipients = (Array.isArray(to) ? to : [to]).map((email) => ({ email }));
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": config.mail.brevoApiKey
+    },
+    body: JSON.stringify({
+      sender,
+      to: recipients,
+      subject,
+      textContent: text,
+      htmlContent: html
+    })
+  });
+
+  const payload = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const detail = payload?.message
+      || payload?.code
+      || payload?.error
+      || "Brevo API request failed.";
+    throw new Error(detail);
+  }
+
+  return {
+    delivered: true,
+    preview: false,
+    provider: "brevo",
+    id: payload?.messageId || ""
+  };
+}
+
 function mapResendError(error) {
   const message = String(error?.message || "").trim();
 
@@ -78,6 +130,24 @@ function mapResendError(error) {
   }
 
   return message || "Resend email delivery failed.";
+}
+
+function mapBrevoError(error) {
+  const message = String(error?.message || "").trim();
+
+  if (/sender .*not valid/i.test(message) || /sender .*not verified/i.test(message)) {
+    return "Brevo rejected the sender address. Verify the sender email in Brevo and set MAIL_FROM to that verified address.";
+  }
+
+  if (/not enough credit/i.test(message) || /quota/i.test(message) || /limit/i.test(message)) {
+    return "Brevo sending limit was reached. Free plans usually have a daily cap, so wait for the reset or upgrade the account.";
+  }
+
+  if (/invalid api key/i.test(message) || /unauthorized/i.test(message)) {
+    return "Brevo API key is invalid or missing. Check BREVO_API_KEY in Render.";
+  }
+
+  return message || "Brevo email delivery failed.";
 }
 
 function mapSmtpError(error) {
@@ -115,6 +185,19 @@ export async function sendEmail({ to, subject, text, html }) {
         delivered: false,
         preview: false,
         error: mapResendError(error)
+      };
+    }
+  }
+
+  if (config.mail.provider === "brevo") {
+    try {
+      return await sendWithBrevo({ to, subject, text, html });
+    } catch (error) {
+      logger.error(`Brevo delivery failed: ${error.message}`);
+      return {
+        delivered: false,
+        preview: false,
+        error: mapBrevoError(error)
       };
     }
   }
