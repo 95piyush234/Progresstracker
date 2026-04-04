@@ -14,6 +14,10 @@ function getTransporter() {
       host: config.mail.host,
       port: config.mail.port,
       secure: config.mail.secure,
+      connectionTimeout: config.mail.requestTimeoutMs,
+      greetingTimeout: config.mail.requestTimeoutMs,
+      socketTimeout: config.mail.requestTimeoutMs,
+      dnsTimeout: config.mail.requestTimeoutMs,
       auth: {
         user: config.mail.user,
         pass: config.mail.pass
@@ -24,11 +28,82 @@ function getTransporter() {
   return transporter;
 }
 
-export async function sendEmail({ to, subject, text, html }) {
-  const activeTransporter = getTransporter();
+async function sendWithResend({ to, subject, text, html }) {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.mail.resendApiKey}`
+    },
+    body: JSON.stringify({
+      from: config.mail.from,
+      to: Array.isArray(to) ? to : [to],
+      subject,
+      text,
+      html
+    })
+  });
 
+  const payload = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const detail = payload?.message
+      || payload?.error
+      || payload?.name
+      || "Resend API request failed.";
+    throw new Error(detail);
+  }
+
+  return {
+    delivered: true,
+    preview: false,
+    provider: "resend",
+    id: payload?.id || ""
+  };
+}
+
+function mapSmtpError(error) {
+  const code = String(error?.code || "").toUpperCase();
+  const message = String(error?.message || "").trim();
+  const renderBlockedPorts = process.env.RENDER && [25, 465, 587].includes(Number(config.mail.port));
+
+  if (renderBlockedPorts && ["ESOCKET", "ETIMEDOUT", "ECONNECTION", "ECONNRESET", "EDNS"].includes(code)) {
+    return "SMTP delivery timed out on Render. Configure RESEND_API_KEY for production email delivery, or move to a plan that allows outbound SMTP.";
+  }
+
+  if (["EAUTH", "EENVELOPE"].includes(code)) {
+    return "The configured mail credentials or sender address were rejected. Check SMTP credentials and MAIL_FROM.";
+  }
+
+  return message || "Email delivery failed.";
+}
+
+export async function sendEmail({ to, subject, text, html }) {
+  if (!isMailConfigured()) {
+    logger.error(`Email delivery is not configured. Delivery skipped for ${to}.`);
+    return {
+      delivered: false,
+      preview: false,
+      error: "Email delivery is not configured on the server."
+    };
+  }
+
+  if (config.mail.provider === "resend") {
+    try {
+      return await sendWithResend({ to, subject, text, html });
+    } catch (error) {
+      logger.error(`Resend delivery failed: ${error.message}`);
+      return {
+        delivered: false,
+        preview: false,
+        error: error.message || "Resend email delivery failed."
+      };
+    }
+  }
+
+  const activeTransporter = getTransporter();
   if (!activeTransporter) {
-    logger.error(`SMTP is not configured. Email delivery skipped for ${to}.`);
+    logger.error(`SMTP transport is not configured. Delivery skipped for ${to}.`);
     return {
       delivered: false,
       preview: false,
@@ -45,13 +120,13 @@ export async function sendEmail({ to, subject, text, html }) {
       html
     });
 
-    return { delivered: true, preview: false };
+    return { delivered: true, preview: false, provider: "smtp" };
   } catch (error) {
     logger.error(`SMTP delivery failed: ${error.message}`);
     return {
       delivered: false,
       preview: false,
-      error: error.message
+      error: mapSmtpError(error)
     };
   }
 }

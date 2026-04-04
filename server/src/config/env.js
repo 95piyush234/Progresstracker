@@ -43,6 +43,8 @@ function isPlaceholderValue(value) {
   return [
     "yourgmail@gmail.com",
     "your_16_character_gmail_app_password",
+    "re_xxxxxxxxxxxxxxxxxxxxxxxxx",
+    "your_resend_api_key",
     "replace-with-a-long-random-access-secret",
     "replace-with-a-long-random-refresh-secret"
   ].includes(normalized);
@@ -68,6 +70,7 @@ export const config = {
   rateLimitMax: toNumber(process.env.RATE_LIMIT_MAX, 200),
   authRateLimitMax: toNumber(process.env.AUTH_RATE_LIMIT_MAX, 20),
   mail: {
+    provider: (process.env.MAIL_PROVIDER || (process.env.RESEND_API_KEY ? "resend" : "smtp")).trim().toLowerCase(),
     from: process.env.MAIL_FROM && !process.env.MAIL_FROM.includes("example.com")
       ? process.env.MAIL_FROM
       : (process.env.SMTP_USER ? `Progress Tracker <${process.env.SMTP_USER}>` : "Progress Tracker <no-reply@example.com>"),
@@ -75,7 +78,9 @@ export const config = {
     port: toNumber(process.env.SMTP_PORT, 587),
     secure: toBoolean(process.env.SMTP_SECURE, false),
     user: process.env.SMTP_USER || "",
-    pass: process.env.SMTP_PASS || ""
+    pass: process.env.SMTP_PASS || "",
+    resendApiKey: process.env.RESEND_API_KEY || "",
+    requestTimeoutMs: toNumber(process.env.MAIL_REQUEST_TIMEOUT_MS, 15000)
   },
   emailOtpExpiresMinutes: toNumber(process.env.EMAIL_OTP_EXPIRES_MINUTES, 10),
   passwordResetExpiresMinutes: toNumber(process.env.PASSWORD_RESET_EXPIRES_MINUTES, 30),
@@ -84,6 +89,14 @@ export const config = {
 };
 
 export function isMailConfigured() {
+  if (
+    config.mail.provider === "resend"
+    && config.mail.resendApiKey
+    && !isPlaceholderValue(config.mail.resendApiKey)
+  ) {
+    return true;
+  }
+
   return Boolean(
     config.mail.host
     && config.mail.user

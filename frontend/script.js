@@ -1252,13 +1252,27 @@ async function apiRequest(path, { method = "GET", body, token = "", headers = {}
 
     return json;
   } catch (error) {
-    if (error.name === "AbortError") {
-      error.message = "The server took too long to respond. Render may be waking up, so please wait a few seconds and try again.";
-      error.backendUnavailable = true;
-    } else if (error instanceof TypeError) {
-      error.message = error.message || "The server could not be reached. Check your internet connection and try again.";
-      error.backendUnavailable = true;
+    if (
+      error.name === "AbortError"
+      || /aborted without reason/i.test(String(error?.message || ""))
+    ) {
+      const wrappedError = new Error(
+        "The server took too long to respond. In production this usually means the backend is waking up or waiting on email delivery. Please try again in a few seconds."
+      );
+      wrappedError.backendUnavailable = true;
+      wrappedError.status = error.status || 0;
+      throw wrappedError;
     }
+
+    if (error instanceof TypeError) {
+      const wrappedError = new Error(
+        error.message || "The server could not be reached. Check your internet connection and try again."
+      );
+      wrappedError.backendUnavailable = true;
+      wrappedError.status = error.status || 0;
+      throw wrappedError;
+    }
+
     throw error;
   } finally {
     window.clearTimeout(timeoutId);
