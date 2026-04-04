@@ -4,9 +4,12 @@ import path from "node:path";
 dotenv.config();
 
 const defaultClientUrl = process.env.CLIENT_URL || process.env.RENDER_EXTERNAL_URL || "http://localhost:5000";
+const configuredClientOrigins = toList(process.env.CLIENT_ORIGINS, []);
 const defaultClientOrigins = Array.from(new Set([
   defaultClientUrl,
   process.env.RENDER_EXTERNAL_URL,
+  "https://progresstracker-1.onrender.com",
+  "https://progresstracker-chi.vercel.app",
   "http://localhost:5000",
   "http://localhost:5173",
   "http://127.0.0.1:5173"
@@ -51,7 +54,10 @@ export const config = {
   port: toNumber(process.env.PORT, 5000),
   mongoUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/progress-tracker-saas",
   clientUrl: defaultClientUrl,
-  clientOrigins: toList(process.env.CLIENT_ORIGINS, defaultClientOrigins),
+  clientOrigins: Array.from(new Set([
+    ...defaultClientOrigins,
+    ...configuredClientOrigins
+  ])),
   accessTokenSecret: process.env.JWT_ACCESS_SECRET || "replace-with-a-long-random-access-secret",
   refreshTokenSecret: process.env.JWT_REFRESH_SECRET || "replace-with-a-long-random-refresh-secret",
   accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
