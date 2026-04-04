@@ -62,6 +62,24 @@ async function sendWithResend({ to, subject, text, html }) {
   };
 }
 
+function mapResendError(error) {
+  const message = String(error?.message || "").trim();
+
+  if (/only send testing emails to your own email address/i.test(message)) {
+    return "Resend is in testing mode. It can only send to your Resend account email right now. For testing, use that same email address, or verify a domain in Resend and set MAIL_FROM to an address on that domain.";
+  }
+
+  if (/verify a domain/i.test(message) || /from address/i.test(message)) {
+    return "Resend rejected the sender address. Set MAIL_FROM to onboarding@resend.dev for testing, or verify your own domain in Resend and use an address from that domain.";
+  }
+
+  if (/api key/i.test(message) || /unauthorized/i.test(message)) {
+    return "Resend API key is invalid or missing. Check RESEND_API_KEY in Render.";
+  }
+
+  return message || "Resend email delivery failed.";
+}
+
 function mapSmtpError(error) {
   const code = String(error?.code || "").toUpperCase();
   const message = String(error?.message || "").trim();
@@ -96,7 +114,7 @@ export async function sendEmail({ to, subject, text, html }) {
       return {
         delivered: false,
         preview: false,
-        error: error.message || "Resend email delivery failed."
+        error: mapResendError(error)
       };
     }
   }
