@@ -8283,6 +8283,14 @@ body[data-theme="light"] .modal-shell {
   gap: 6px;
 }
 
+body[data-active-view]:not([data-active-view="dashboard"]) .topbar-copy {
+  display: none;
+}
+
+body[data-active-view]:not([data-active-view="dashboard"]) .topbar {
+  align-items: center;
+}
+
 .topbar h2 {
   font-size: clamp(24px, 3vw, 34px) !important;
 }
@@ -8383,6 +8391,10 @@ body[data-theme="light"] .modal-shell {
 }
 
 @media (max-width: 1180px) {
+  body[data-active-view]:not([data-active-view="dashboard"]) .topbar {
+    display: none !important;
+  }
+
   .topbar {
     position: relative !important;
     top: auto !important;
@@ -8458,7 +8470,7 @@ body[data-theme="light"] .modal-shell {
   }
 
   .mobile-tab-button .mobile-tab-icon {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
   }
 
@@ -8492,5 +8504,9 @@ body[data-theme="light"] .modal-shell {
   .topbar-actions .primary-button,
   .topbar-actions .account-chip {
     grid-column: 1 / -1;
+  }
+
+  body[data-active-view]:not([data-active-view="dashboard"]) .topbar {
+    display: none !important;
   }
 }

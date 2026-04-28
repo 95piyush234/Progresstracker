@@ -3164,6 +3164,8 @@ function renderApp() {
 }
 
 function renderViewState() {
+  document.body.dataset.activeView = ui.activeView;
+
   dom.navButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.viewTarget === ui.activeView);
   });
