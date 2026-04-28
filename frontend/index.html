@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
@@ -30,7 +30,7 @@
           <h1>Progress Tracker Pro</h1>
           <p class="subtle">
             A premium progress system for gaming climbs, study plans, workouts, reading goals,
-            habits, and custom milestones. Your data stays on this device unless you export it.
+            habits, and custom milestones. Your workspace stays focused, fast, and ready for daily execution.
           </p>
         </div>
 
@@ -56,7 +56,7 @@
           <span class="hero-chip">Local-first storage</span>
           <span class="hero-chip">Proof image uploads</span>
           <span class="hero-chip">Mobile-optimized workspace</span>
-          <span class="hero-chip">Import / export backups</span>
+          <span class="hero-chip">Email-verified access</span>
         </div>
       </section>
 
@@ -279,25 +279,6 @@
         </div>
       </div>
 
-      <nav class="sidebar-nav" aria-label="Primary">
-        <button class="nav-button is-active" type="button" data-view-target="dashboard">
-          <span>Dashboard</span>
-          <small>Overview and momentum</small>
-        </button>
-        <button class="nav-button" type="button" data-view-target="trackers">
-          <span>All Trackers</span>
-          <small>Search, filter, manage</small>
-        </button>
-        <button class="nav-button" type="button" data-view-target="graphs">
-          <span>Graph</span>
-          <small>Visual insights</small>
-        </button>
-        <button class="nav-button" type="button" data-view-target="history">
-          <span>History</span>
-          <small>Timeline and corrections</small>
-        </button>
-      </nav>
-
       <section class="sidebar-card sidebar-card-highlight">
         <p class="eyebrow">Workspace Pulse</p>
         <div class="sidebar-pulse">
@@ -320,7 +301,7 @@
         </button>
       </section>
 
-      <section class="sidebar-card">
+      <section class="sidebar-card sidebar-card-backup">
         <p class="eyebrow">Backup & Restore</p>
         <p class="subtle">
           Export your workspace anytime or import a saved snapshot with one click.
@@ -344,6 +325,64 @@
             A flexible system for goals, ranks, workouts, syllabi, habits, skills, and custom milestones.
           </p>
         </div>
+
+        <nav class="sidebar-nav topbar-nav" aria-label="Primary">
+          <button class="nav-button is-active" type="button" data-view-target="dashboard">
+            <span class="nav-button-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 13h8V3H3z"></path>
+                <path d="M13 21h8v-6h-8z"></path>
+                <path d="M13 11h8V3h-8z"></path>
+                <path d="M3 21h8v-4H3z"></path>
+              </svg>
+            </span>
+            <span class="nav-button-copy">
+              <span>Dashboard</span>
+              <small>Overview and momentum</small>
+            </span>
+          </button>
+          <button class="nav-button" type="button" data-view-target="trackers">
+            <span class="nav-button-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <path d="M7 8h10"></path>
+                <path d="M7 12h6"></path>
+                <path d="M7 16h8"></path>
+              </svg>
+            </span>
+            <span class="nav-button-copy">
+              <span>All Trackers</span>
+              <small>Search, filter, manage</small>
+            </span>
+          </button>
+          <button class="nav-button" type="button" data-view-target="graphs">
+            <span class="nav-button-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19h16"></path>
+                <path d="M7 16V9"></path>
+                <path d="M12 16V5"></path>
+                <path d="M17 16v-3"></path>
+              </svg>
+            </span>
+            <span class="nav-button-copy">
+              <span>Graph</span>
+              <small>Visual insights</small>
+            </span>
+          </button>
+          <button class="nav-button" type="button" data-view-target="history">
+            <span class="nav-button-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8v5l3 3"></path>
+                <path d="M3.05 11A9 9 0 1 1 6 17.3"></path>
+                <path d="M3 4v7h7"></path>
+              </svg>
+            </span>
+            <span class="nav-button-copy">
+              <span>History</span>
+              <small>Timeline and corrections</small>
+            </span>
+          </button>
+        </nav>
 
         <div class="topbar-actions">
           <div class="account-chip" id="accountChip" aria-label="Current user">
@@ -462,7 +501,7 @@
                 <span class="hero-chip">Unlimited custom trackers</span>
                 <span class="hero-chip">Manual logs and corrections</span>
                 <span class="hero-chip">Local-first persistence</span>
-                <span class="hero-chip">Import / export backups</span>
+                <span class="hero-chip">Clean activity history</span>
               </div>
             </div>
 
@@ -909,22 +948,27 @@
 
   <nav class="mobile-tabbar" id="mobileTabbar" aria-label="Mobile navigation">
     <button class="mobile-tab-button is-active" type="button" data-view-target="dashboard">
+      <span class="mobile-tab-icon" aria-hidden="true">◫</span>
       <span>Dashboard</span>
       <small>Overview</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="trackers">
+      <span class="mobile-tab-icon" aria-hidden="true">▤</span>
       <span>Trackers</span>
       <small>Manage</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="graphs">
+      <span class="mobile-tab-icon" aria-hidden="true">◔</span>
       <span>Graph</span>
       <small>Visuals</small>
     </button>
     <button class="mobile-tab-button" type="button" id="mobileCreateBtn">
+      <span class="mobile-tab-icon" aria-hidden="true">＋</span>
       <span>Create</span>
       <small>New tracker</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="history">
+      <span class="mobile-tab-icon" aria-hidden="true">◷</span>
       <span>History</span>
       <small>Activity</small>
     </button>
