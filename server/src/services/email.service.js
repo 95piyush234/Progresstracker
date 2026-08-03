@@ -143,7 +143,7 @@ function mapBrevoError(error) {
     return "Brevo sending limit was reached. Free plans usually have a daily cap, so wait for the reset or upgrade the account.";
   }
 
-  if (/invalid api key/i.test(message) || /unauthorized/i.test(message)) {
+  if (/invalid api key/i.test(message) || /unauthorized/i.test(message) || /key not found/i.test(message)) {
     return "Brevo API key is invalid or missing. Check BREVO_API_KEY in Render.";
   }
 

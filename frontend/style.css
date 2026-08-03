@@ -8510,3 +8510,110 @@ body[data-active-view]:not([data-active-view="dashboard"]) .topbar {
     display: none !important;
   }
 }
+
+@media (max-width: 900px) {
+  #trackerModal {
+    display: grid !important;
+    height: 100dvh;
+    padding: 0 !important;
+    place-items: stretch !important;
+    overflow: hidden !important;
+    overscroll-behavior: contain;
+  }
+
+  #trackerModal .modal-card {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: block;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  #trackerModal .tracker-form {
+    gap: 16px;
+    min-height: max-content;
+    overflow: visible !important;
+  }
+
+  #trackerModal .form-grid,
+  #trackerModal .custom-fields-editor,
+  #trackerModal .custom-field-list {
+    overflow: visible !important;
+  }
+
+  #trackerModal .modal-actions {
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #trackerModal .modal-header,
+  #trackerModal .modal-helper-card,
+  #trackerModal .tracker-form,
+  #trackerModal .custom-fields-editor,
+  #trackerModal .custom-field-list,
+  #trackerModal .modal-actions {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* UI UPDATE: dedicated password recovery shell */
+body[data-auth-flow^="reset-"] .auth-layout {
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+}
+
+body[data-auth-flow^="reset-"] .auth-showcase,
+body[data-auth-flow^="reset-"] .auth-help-row,
+body[data-auth-flow^="reset-"] .auth-toggle,
+body[data-auth-flow^="reset-"] #authForm,
+body[data-auth-flow^="reset-"] #authMailPreviewCard {
+  display: none !important;
+}
+
+body[data-auth-flow^="reset-"] .auth-panel {
+  width: min(100%, 520px);
+  min-height: auto !important;
+  max-width: 520px;
+  justify-self: center !important;
+  align-self: center !important;
+  gap: 20px;
+  padding: 32px !important;
+}
+
+body[data-auth-flow^="reset-"] .auth-panel-copy {
+  gap: 10px;
+}
+
+body[data-auth-flow^="reset-"] .auth-panel h2 {
+  max-width: none;
+  font-size: clamp(30px, 4vw, 42px) !important;
+  line-height: 1.02 !important;
+}
+
+body[data-auth-flow^="reset-"] #authResetShell {
+  display: grid !important;
+  gap: 16px;
+}
+
+body[data-auth-flow="reset-token"] #authResetBackBtn {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  body[data-auth-flow^="reset-"] .auth-shell {
+    padding: 16px;
+  }
+
+  body[data-auth-flow^="reset-"] .auth-panel {
+    width: 100%;
+    padding: 24px !important;
+  }
+}

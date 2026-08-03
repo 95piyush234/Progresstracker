@@ -2301,60 +2301,97 @@ function getPasswordResetBaseUrl() {
   return BACKEND_ORIGIN;
 }
 
-function openForgotPasswordFlow() {
+function getPasswordResetTokenFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("resetToken") || urlParams.get("token") || "";
+}
+
+function applyPasswordRecoveryView(mode, resetToken = "") {
+  const isTokenFlow = mode === "token";
+  dom.body.dataset.authFlow = isTokenFlow ? "reset-token" : "reset-request";
   dom.authForm.classList.add("hidden");
   dom.authOtpShell.classList.add("hidden");
   dom.authResetShell.classList.remove("hidden");
-  
-  // Show email field, hide password fields for forgot password flow
-  dom.authForgotEmailField.classList.remove("hidden");
-  dom.authResetPasswordField.classList.add("hidden");
-  dom.authResetConfirmField.classList.add("hidden");
-  
-  dom.authForgotEmailInput.value = dom.authEmailInput.value;
-  dom.authResetSubmitBtn.textContent = "Send Password Reset Email";
-  dom.authResetStatus.textContent = "Recover your account";
-  dom.authResetHelpText.textContent = "Enter your email address and we'll send a password reset link to your inbox.";
-  
-  dom.authForgotEmailInput.focus();
+
+  dom.authForgotEmailField.classList.toggle("hidden", isTokenFlow);
+  dom.authResetPasswordField.classList.toggle("hidden", !isTokenFlow);
+  dom.authResetConfirmField.classList.toggle("hidden", !isTokenFlow);
+
+  dom.authEyebrow.textContent = isTokenFlow ? "Password reset" : "Recover access";
+  dom.authTitle.textContent = isTokenFlow ? "Reset your password." : "Recover your workspace.";
+  dom.authSubtitle.textContent = isTokenFlow
+    ? "Choose a new password for your verified workspace."
+    : "Enter your email and we will send a secure password reset link.";
+
+  dom.authResetStatus.textContent = isTokenFlow ? "Reset your password" : "Recover your account";
+  dom.authResetHelpText.textContent = isTokenFlow
+    ? "Enter a new password and confirm it below."
+    : "Enter your email address and we'll send a password reset link to your inbox.";
+
+  if (isTokenFlow) {
+    dom.authForgotEmailInput.value = "";
+    dom.authResetPasswordInput.value = "";
+    dom.authResetConfirmInput.value = "";
+    dom.authResetPasswordInput.dataset.resetToken = resetToken;
+    dom.authResetSubmitBtn.textContent = "Save New Password";
+    window.setTimeout(() => dom.authResetPasswordInput.focus(), 40);
+  } else {
+    dom.authForgotEmailInput.value = dom.authEmailInput.value;
+    dom.authResetPasswordInput.value = "";
+    dom.authResetConfirmInput.value = "";
+    dom.authResetPasswordInput.removeAttribute("data-reset-token");
+    dom.authResetSubmitBtn.textContent = "Send Password Reset Email";
+    window.setTimeout(() => dom.authForgotEmailInput.focus(), 40);
+  }
+
   dom.body.classList.add("is-locked");
 }
 
-function closeForgotPasswordFlow() {
+function clearPasswordRecoveryView({ clearUrl = false } = {}) {
+  delete dom.body.dataset.authFlow;
   dom.authForm.classList.remove("hidden");
   dom.authResetShell.classList.add("hidden");
   dom.authForgotEmailInput.value = "";
   dom.authResetPasswordInput.value = "";
   dom.authResetConfirmInput.value = "";
   dom.authResetPasswordInput.removeAttribute("data-reset-token");
-  if (window.location.search.includes("token=") || window.location.search.includes("resetToken=")) {
+
+  if (clearUrl) {
     window.history.replaceState({}, document.title, getPasswordResetBaseUrl());
   }
+
   dom.body.classList.remove("is-locked");
 }
 
-function checkForPasswordResetToken() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const resetToken = urlParams.get("resetToken") || urlParams.get("token");
-
+function syncPasswordRecoveryView() {
+  const resetToken = getPasswordResetTokenFromUrl();
   if (resetToken) {
-    dom.authForm.classList.add("hidden");
-    dom.authResetShell.classList.remove("hidden");
-    
-    // Show password fields, hide email field for reset flow
-    dom.authForgotEmailField.classList.add("hidden");
-    dom.authResetPasswordField.classList.remove("hidden");
-    dom.authResetConfirmField.classList.remove("hidden");
-    
-    dom.authResetPasswordInput.value = "";
-    dom.authResetConfirmInput.value = "";
-    dom.authResetPasswordInput.dataset.resetToken = resetToken;
-    dom.authResetSubmitBtn.textContent = "Save New Password";
-    dom.authResetStatus.textContent = "Reset your password";
-    dom.authResetHelpText.textContent = "Enter a new password for your account and confirm it below.";
-    
-    dom.authResetPasswordInput.focus();
-    dom.body.classList.add("is-locked");
+    applyPasswordRecoveryView("token", resetToken);
+    return true;
+  }
+
+  if (dom.body.dataset.authFlow === "reset-request") {
+    applyPasswordRecoveryView("request");
+    return true;
+  }
+
+  return false;
+}
+
+function openForgotPasswordFlow() {
+  applyPasswordRecoveryView("request");
+}
+
+function closeForgotPasswordFlow() {
+  clearPasswordRecoveryView({
+    clearUrl: Boolean(getPasswordResetTokenFromUrl())
+  });
+}
+
+function checkForPasswordResetToken() {
+  const resetToken = getPasswordResetTokenFromUrl();
+  if (resetToken) {
+    applyPasswordRecoveryView("token", resetToken);
   }
 }
 
@@ -3138,6 +3175,7 @@ function renderApp() {
   setAuthMode(getDefaultAuthMode(), false);
   syncAuthUi();
   renderMailSurfaces();
+  syncPasswordRecoveryView();
 
   if (!isAuthenticated()) {
     ui.guideAutoQueued = false;
@@ -5215,6 +5253,12 @@ function openTrackerModal(mode = "create", trackerId = "") {
   updateTrackerTemplateHint();
   dom.trackerModal.classList.add("is-open");
   dom.trackerModal.setAttribute("aria-hidden", "false");
+  dom.trackerModal.scrollTop = 0;
+  const trackerModalCard = dom.trackerModal.querySelector(".modal-card");
+  if (trackerModalCard) {
+    trackerModalCard.scrollTop = 0;
+    trackerModalCard.scrollLeft = 0;
+  }
   syncOverlayLock();
   window.setTimeout(() => dom.trackerTitleInput.focus(), 80);
 }
