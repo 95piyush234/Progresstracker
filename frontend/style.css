@@ -6044,6 +6044,8 @@ body[data-theme="light"] .graph-week-label {
   width: min(1120px, 100%);
   display: grid;
   gap: 22px;
+  max-height: min(92vh, calc(100vh - 60px));
+  overflow-y: auto;
 }
 
 .guide-hero-banner {
