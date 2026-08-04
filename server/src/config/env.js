@@ -56,7 +56,8 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || "development",
   isProduction: (process.env.NODE_ENV || "development") === "production",
   port: toNumber(process.env.PORT, 5000),
-  mongoUri: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/progress-tracker-saas",
+  // MONGO_URI is supported for existing Render services that used that variable name.
+  mongoUri: process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017/progress-tracker-saas",
   clientUrl: defaultClientUrl,
   clientOrigins: Array.from(new Set([
     ...defaultClientOrigins,
