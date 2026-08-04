@@ -6408,6 +6408,10 @@ body[data-theme="light"] .guide-checklist {
   color: var(--text-soft);
 }
 
+.guide-step-card-full {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 980px) {
   .guide-grid {
     grid-template-columns: 1fr;
