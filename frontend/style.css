@@ -238,6 +238,27 @@ body::after {
   box-shadow: 0 14px 40px rgba(2,6,18,0.42);
 }
 
+/* Make the guide modal content scrollable: allow the guide grid to flex and scroll inside the modal */
+#guideModal .modal-card {
+  display: flex;
+  flex-direction: column;
+}
+
+#guideModal .guide-hero-banner {
+  flex: 0 0 auto;
+}
+
+#guideModal .guide-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 6px; /* room for scrollbar */
+}
+
+#guideModal .guide-step-card {
+  overflow: visible;
+}
+
 .guide-stepper-controls {
   display: flex;
   gap: 10px;
