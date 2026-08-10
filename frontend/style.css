@@ -3158,6 +3158,27 @@ body[data-theme="light"] .detail-drawer {
     transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Make modal content layout flexible so long forms can scroll internally */
+.modal-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-card > form,
+.modal-card > .modal-helper-card,
+.modal-card > .mail-stream,
+.modal-card > .modal-body,
+.modal-card .modal-body {
+  flex: 1 1 auto;
+  overflow: auto;
+  min-height: 0; /* allow flexed children to shrink and scroll */
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-card .modal-header {
+  flex: 0 0 auto;
+}
+
 .modal-shell.is-open .modal-card {
   opacity: 1;
   transform: translateY(0) scale(1);
