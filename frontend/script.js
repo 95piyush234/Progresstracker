@@ -2557,13 +2557,8 @@ function collectGuideSteps() {
 function buildInteractiveGuide() {
   if (__guideStepper) return;
   __guideSteps = collectGuideSteps();
-
-  const overlay = document.createElement("div");
-  overlay.className = "guide-stepper-overlay";
-  overlay.id = "guideStepperOverlay";
-
   const card = document.createElement("div");
-  card.className = "guide-stepper-card";
+  card.className = "guide-stepper-card guide-stepper-inline";
   card.innerHTML = `
     <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
       <div>
@@ -2585,8 +2580,7 @@ function buildInteractiveGuide() {
     </div>
   `;
 
-  overlay.appendChild(card);
-  __guideStepper = { overlay, card };
+  __guideStepper = { card };
 
   // attach handlers
   card.querySelector("#guidePrevBtn").addEventListener("click", prevGuideStep);
@@ -2608,9 +2602,16 @@ function showInteractiveGuide() {
     buildInteractiveGuide();
     if (!__guideStepper) return;
     // append overlay to the modal shell (not inside the modal-card) so it does not block modal-card scrolling
-    const container = dom.guideModal || document.body;
-    if (container.querySelector && container.querySelector("#guideStepperOverlay")) return;
-    container.appendChild(__guideStepper.overlay);
+      const container = dom.guideModal?.querySelector('.modal-card') || dom.guideModal || document.body;
+      // place inline before the hero banner so it doesn't overlap modal content
+      const hero = container.querySelector('.guide-hero-banner');
+      if (container.querySelector && container.querySelector('#guideStepperInline')) return;
+      __guideStepper.card.id = 'guideStepperInline';
+      if (hero) {
+        container.insertBefore(__guideStepper.card, hero);
+      } else {
+        container.appendChild(__guideStepper.card);
+      }
     __guideIndex = 0;
     renderGuideStep(__guideIndex);
     document.addEventListener("keydown", handleGuideKeydown);
@@ -2622,7 +2623,7 @@ function showInteractiveGuide() {
 
 function hideInteractiveGuide() {
   if (!__guideStepper) return;
-  __guideStepper.overlay.remove();
+  __guideStepper.card.remove();
   document.removeEventListener("keydown", handleGuideKeydown);
 }
 

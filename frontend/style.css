@@ -230,6 +230,14 @@ body::after {
   margin: 12px;
 }
 
+/* Inline variant for the guide stepper inside the modal */
+.guide-stepper-inline {
+  width: 100%;
+  max-width: 880px;
+  margin: 8px auto 18px auto;
+  box-shadow: 0 14px 40px rgba(2,6,18,0.42);
+}
+
 .guide-stepper-controls {
   display: flex;
   gap: 10px;
