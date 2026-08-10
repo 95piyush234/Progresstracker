@@ -249,6 +249,9 @@ body::after {
 }
 
 #guideModal .guide-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
@@ -256,7 +259,37 @@ body::after {
 }
 
 #guideModal .guide-step-card {
-  overflow: visible;
+  overflow: hidden;
+}
+
+#guideModal .guide-step-card .guide-step-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#guideModal .guide-stepper-body {
+  max-height: 320px;
+  overflow: auto;
+  padding-right: 8px;
+  margin: 14px 0;
+}
+
+#guideModal .guide-stepper-body::-webkit-scrollbar,
+#guideModal .guide-grid::-webkit-scrollbar {
+  width: 10px;
+}
+
+#guideModal .guide-stepper-body::-webkit-scrollbar-track,
+#guideModal .guide-grid::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.04);
+  border-radius: 999px;
+}
+
+#guideModal .guide-stepper-body::-webkit-scrollbar-thumb,
+#guideModal .guide-grid::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
 }
 
 .guide-stepper-controls {
