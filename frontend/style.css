@@ -745,7 +745,7 @@ body[data-auth="locked"] .app-shell,
 body[data-auth="locked"] .mobile-tabbar,
 body[data-auth="locked"] .drawer-scrim,
 body[data-auth="locked"] .detail-drawer,
-body[data-auth="locked"] .modal-shell {
+body[data-auth="locked"] .modal-shell:not(#guideModal) {
   display: none !important;
 }
 
