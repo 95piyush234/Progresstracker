@@ -514,6 +514,13 @@ function bindEvents() {
   dom.authLoginModeBtn.addEventListener("click", () => setAuthMode("login"));
   dom.authForm.addEventListener("submit", handleAuthSubmit);
   dom.openGuideFromAuthBtn.addEventListener("click", () => openGuideModal("auth"));
+  // fallback delegation in case the auth guide button is not present at bind time
+  if (!dom.openGuideFromAuthBtn) {
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest && e.target.closest("#openGuideFromAuthBtn");
+      if (btn) openGuideModal("auth");
+    });
+  }
   dom.authResendOtpBtn.addEventListener("click", () => {
     void issueAuthOtp(true);
   });
@@ -2600,9 +2607,9 @@ function showInteractiveGuide() {
   try {
     buildInteractiveGuide();
     if (!__guideStepper) return;
-    const container = dom.guideModal.querySelector(".modal-card") || dom.guideModal;
-    // avoid duplicates
-    if (container.querySelector("#guideStepperOverlay")) return;
+    // append overlay to the modal shell (not inside the modal-card) so it does not block modal-card scrolling
+    const container = dom.guideModal || document.body;
+    if (container.querySelector && container.querySelector("#guideStepperOverlay")) return;
     container.appendChild(__guideStepper.overlay);
     __guideIndex = 0;
     renderGuideStep(__guideIndex);

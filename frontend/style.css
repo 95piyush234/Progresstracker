@@ -214,17 +214,20 @@ body::after {
 }
 
 .guide-stepper-card {
-  width: min(720px, 96%);
+  width: min(680px, 92%);
+  max-height: 72vh;
+  overflow: auto;
   background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
-  padding: 22px;
-  box-shadow: 0 28px 80px rgba(2,6,18,0.6);
-  backdrop-filter: blur(10px) saturate(118%);
-  -webkit-backdrop-filter: blur(10px) saturate(118%);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 20px 48px rgba(2,6,18,0.5);
+  backdrop-filter: blur(6px) saturate(110%);
+  -webkit-backdrop-filter: blur(6px) saturate(110%);
   pointer-events: auto;
   display: grid;
-  gap: 14px;
+  gap: 12px;
+  margin: 12px;
 }
 
 .guide-stepper-controls {
