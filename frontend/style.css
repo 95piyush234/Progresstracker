@@ -259,6 +259,23 @@ body::after {
   .guide-stepper-card { width: calc(100% - 28px); padding: 16px; border-radius: 14px; }
 }
 
+/* Desktop modal improvements: align near top and allow larger max-height so internal scrolling works reliably */
+@media (min-width: 900px) {
+  .modal-shell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .modal-card {
+    max-height: calc(100vh - 96px);
+    width: min(980px, 92%);
+    border-radius: 18px;
+  }
+}
+
 /* Mobile performance optimizations: reduce heavy blur, shadows, and animations */
 @media (max-width: 780px), (pointer: coarse) {
   /* reduce backdrop blur on modals and panels */
