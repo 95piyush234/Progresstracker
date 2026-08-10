@@ -2661,6 +2661,24 @@ function renderGuideStep(index) {
   const nextBtn = __guideStepper.card.querySelector("#guideNextBtn");
   prevBtn.disabled = index <= 0;
   nextBtn.disabled = index >= __guideSteps.length - 1;
+
+  // Also ensure the visual representation for this step is visible
+  try {
+    const visualNode = step.node;
+    if (visualNode) {
+      // scroll the guide grid container so the selected card is visible
+      const grid = visualNode.closest('.guide-grid');
+      if (grid) {
+        // Smoothly scroll the card into view within the grid container
+        visualNode.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+      } else {
+        // fallback to scrolling the page
+        visualNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  } catch (e) {
+    // ignore scrolling errors
+  }
 }
 
 function nextGuideStep() {
