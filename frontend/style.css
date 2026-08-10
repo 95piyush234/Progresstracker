@@ -188,22 +188,108 @@ body::after {
   position: fixed;
   inset: 0;
   z-index: 8;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: 1;
-  transition: opacity 260ms ease;
-}
-
-.cursor-fx.is-hidden {
-  opacity: 0;
-}
-
-.cursor-halo,
-.cursor-dot,
-.cursor-drop {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.025), transparent 38%, rgba(255, 255, 255, 0.02) 100%),
+    var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 18px 48px rgba(2, 6, 12, 0.44),
+    0 6px 18px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px) saturate(112%);
+  -webkit-backdrop-filter: blur(8px) saturate(112%);
   position: absolute;
   left: 0;
   top: 0;
+
+/* Interactive guide stepper overlay (glass style) */
+.guide-stepper-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 24;
+  pointer-events: none;
+}
+
+.guide-stepper-card {
+  width: min(720px, 96%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 28px 80px rgba(2,6,18,0.6);
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
+  pointer-events: auto;
+  display: grid;
+  gap: 14px;
+}
+
+.guide-stepper-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.guide-stepper-progress {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.guide-stepper-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+}
+
+.guide-stepper-dot.is-active {
+  background: linear-gradient(90deg, var(--brand-start), var(--brand-end));
+  box-shadow: 0 6px 18px rgba(29,38,113,0.26);
+}
+
+@media (max-width: 640px) {
+  .guide-stepper-card { width: calc(100% - 28px); padding: 16px; border-radius: 14px; }
+}
+
+/* Mobile performance optimizations: reduce heavy blur, shadows, and animations */
+@media (max-width: 780px), (pointer: coarse) {
+  /* reduce backdrop blur on modals and panels */
+  .modal-shell,
+  .panel,
+  .modal-card,
+  .guide-stepper-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.32) !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+  }
+
+  /* simplify ambient blobs and lower opacity */
+  .ambient {
+    filter: blur(18px) !important;
+    opacity: 0.16 !important;
+    animation-duration: 60s !important;
+  }
+
+  .ambient-a, .ambient-b, .ambient-c { display: block; transform: translateZ(0); }
+
+  /* hide cursor fx on touch devices */
+  .cursor-fx { display: none !important; }
+
+  /* reduce reveal animations to instant appearance */
+  .reveal-on-scroll { transition: none !important; transform: none !important; opacity: 1 !important; filter: none !important; }
+
+  /* reduce noise layer and heavy gradients */
+  .noise { opacity: 0.03 !important; }
+
+  /* inputs and buttons slightly larger and simpler */
+  input, select, textarea, button { padding: 12px 12px !important; border-radius: 12px !important; }
+}
   border-radius: 50%;
   transform: translate3d(-50%, -50%, 0);
   pointer-events: none;

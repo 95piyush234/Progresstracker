@@ -2525,12 +2525,160 @@ function openGuideModal(source = "manual") {
   if (source === "auto" || source === "workspace" || source === "auth") {
     rememberGuideOpened();
   }
+  // Build and show the interactive stepper overlay for the guide
+  showInteractiveGuide();
 }
 
 function closeGuideModal() {
   dom.guideModal.classList.remove("is-open");
   dom.guideModal.setAttribute("aria-hidden", "true");
   syncOverlayLock();
+  // Ensure interactive overlay is removed when guide closes
+  hideInteractiveGuide();
+}
+
+// Interactive guide stepper implementation
+let __guideStepper = null;
+let __guideSteps = [];
+let __guideIndex = 0;
+
+function collectGuideSteps() {
+  const nodes = Array.from(document.querySelectorAll("#guideModal .guide-step-card"));
+  return nodes.map((node) => ({ node }));
+}
+
+function buildInteractiveGuide() {
+  if (__guideStepper) return;
+  __guideSteps = collectGuideSteps();
+
+  const overlay = document.createElement("div");
+  overlay.className = "guide-stepper-overlay";
+  overlay.id = "guideStepperOverlay";
+
+  const card = document.createElement("div");
+  card.className = "guide-stepper-card";
+  card.innerHTML = `
+    <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div>
+        <p class="eyebrow" id="guideStepperEyebrow">How It Works</p>
+        <h3 id="guideStepperTitle">Step</h3>
+      </div>
+      <div class="guide-stepper-progress" id="guideStepperProgress"></div>
+    </header>
+    <div id="guideStepperBody"></div>
+    <div class="guide-stepper-controls">
+      <div>
+        <button type="button" class="ghost-button" id="guidePrevBtn">← Previous</button>
+        <button type="button" class="ghost-button" id="guideNextBtn">Next →</button>
+      </div>
+      <div>
+        <button type="button" class="ghost-button" id="guideSkipBtn">Skip Guide</button>
+        <button type="button" class="primary-button" id="guideDoneBtn">Got It ✓</button>
+      </div>
+    </div>
+  `;
+
+  overlay.appendChild(card);
+  __guideStepper = { overlay, card };
+
+  // attach handlers
+  card.querySelector("#guidePrevBtn").addEventListener("click", prevGuideStep);
+  card.querySelector("#guideNextBtn").addEventListener("click", nextGuideStep);
+  card.querySelector("#guideSkipBtn").addEventListener("click", () => closeGuideModal());
+  card.querySelector("#guideDoneBtn").addEventListener("click", () => {
+    // mark seen and close
+    if (!state?.settings) state = state || {};
+    if (!state.settings) state.settings = {};
+    if (!state.settings.guide) state.settings.guide = { seenAt: null, lastOpenedAt: null };
+    state.settings.guide.seenAt = new Date().toISOString();
+    saveState();
+    closeGuideModal();
+  });
+}
+
+function showInteractiveGuide() {
+  try {
+    buildInteractiveGuide();
+    if (!__guideStepper) return;
+    const container = dom.guideModal.querySelector(".modal-card") || dom.guideModal;
+    // avoid duplicates
+    if (container.querySelector("#guideStepperOverlay")) return;
+    container.appendChild(__guideStepper.overlay);
+    __guideIndex = 0;
+    renderGuideStep(__guideIndex);
+    document.addEventListener("keydown", handleGuideKeydown);
+  } catch (e) {
+    // fail silently to avoid breaking existing guide modal
+    console.error(e);
+  }
+}
+
+function hideInteractiveGuide() {
+  if (!__guideStepper) return;
+  __guideStepper.overlay.remove();
+  document.removeEventListener("keydown", handleGuideKeydown);
+}
+
+function renderGuideStep(index) {
+  const step = __guideSteps[index];
+  const body = __guideStepper.card.querySelector("#guideStepperBody");
+  const title = __guideStepper.card.querySelector("#guideStepperTitle");
+  const progress = __guideStepper.card.querySelector("#guideStepperProgress");
+
+  if (!step) return;
+
+  // Prepare content: clone the original guide-step-copy for accurate text
+  const copy = step.node.querySelector(".guide-step-copy");
+  body.innerHTML = "";
+  if (copy) {
+    body.appendChild(copy.cloneNode(true));
+  } else {
+    body.textContent = step.node.textContent || "";
+  }
+
+  // Title
+  const heading = copy?.querySelector("h4")?.textContent || `Step ${index + 1}`;
+  title.textContent = `${heading}`;
+
+  // Progress dots
+  progress.innerHTML = "";
+  __guideSteps.forEach((_, i) => {
+    const dot = document.createElement("span");
+    dot.className = `guide-stepper-dot ${i === index ? "is-active" : ""}`;
+    progress.appendChild(dot);
+  });
+
+  // update prev/next states
+  const prevBtn = __guideStepper.card.querySelector("#guidePrevBtn");
+  const nextBtn = __guideStepper.card.querySelector("#guideNextBtn");
+  prevBtn.disabled = index <= 0;
+  nextBtn.disabled = index >= __guideSteps.length - 1;
+}
+
+function nextGuideStep() {
+  if (__guideIndex < __guideSteps.length - 1) {
+    __guideIndex += 1;
+    renderGuideStep(__guideIndex);
+  } else {
+    // finalize
+    closeGuideModal();
+  }
+}
+
+function prevGuideStep() {
+  if (__guideIndex > 0) {
+    __guideIndex -= 1;
+    renderGuideStep(__guideIndex);
+  }
+}
+
+function handleGuideKeydown(e) {
+  if (e.key === "ArrowRight") {
+    nextGuideStep();
+  }
+  if (e.key === "ArrowLeft") {
+    prevGuideStep();
+  }
 }
 
 function maybeOpenGuideOnboarding() {
