@@ -2567,7 +2567,7 @@ function buildInteractiveGuide() {
       </div>
       <div class="guide-stepper-progress" id="guideStepperProgress"></div>
     </header>
-    <div id="guideStepperBody"></div>
+    <div id="guideStepperBody" class="guide-stepper-body"></div>
     <div class="guide-stepper-controls">
       <div>
         <button type="button" class="ghost-button" id="guidePrevBtn">← Previous</button>
@@ -2601,17 +2601,16 @@ function showInteractiveGuide() {
   try {
     buildInteractiveGuide();
     if (!__guideStepper) return;
-    // append overlay to the modal shell (not inside the modal-card) so it does not block modal-card scrolling
-      const container = dom.guideModal?.querySelector('.modal-card') || dom.guideModal || document.body;
-      // place inline before the hero banner so it doesn't overlap modal content
-      const hero = container.querySelector('.guide-hero-banner');
-      if (container.querySelector && container.querySelector('#guideStepperInline')) return;
-      __guideStepper.card.id = 'guideStepperInline';
-      if (hero) {
-        container.insertBefore(__guideStepper.card, hero);
-      } else {
-        container.appendChild(__guideStepper.card);
-      }
+    // append overlay to the modal shell so it sits above guide content and does not create visual overlap
+    const container = dom.guideModal || document.body;
+    const modalCard = dom.guideModal?.querySelector('.modal-card');
+    if (container.querySelector && container.querySelector('#guideStepperInline')) return;
+    __guideStepper.card.id = 'guideStepperInline';
+    if (modalCard) {
+      container.insertBefore(__guideStepper.card, modalCard);
+    } else {
+      container.appendChild(__guideStepper.card);
+    }
     __guideIndex = 0;
     renderGuideStep(__guideIndex);
     document.addEventListener("keydown", handleGuideKeydown);
