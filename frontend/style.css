@@ -218,21 +218,19 @@ body::after {
   width: min(680px, 92%);
   max-height: none;
   overflow: visible;
-  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(8, 13, 22, 0.96);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 14px;
   padding: 18px;
-  box-shadow: 0 20px 48px rgba(2,6,18,0.5);
-  backdrop-filter: blur(6px) saturate(110%);
-  -webkit-backdrop-filter: blur(6px) saturate(110%);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
   pointer-events: auto;
   display: grid;
   gap: 12px;
   margin: 12px;
-}
-
-#guideModal .guide-stepper-card {
-  max-height: none;
+  position: relative;
+  z-index: 1;
   overflow: visible;
 }
 
