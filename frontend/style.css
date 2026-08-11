@@ -6236,10 +6236,12 @@ body[data-theme="light"] .graph-week-label {
 
 .guide-modal-card {
   width: min(1120px, 100%);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 22px;
   max-height: min(92vh, calc(100vh - 60px));
-  overflow-y: auto;
+  height: min(92vh, calc(100vh - 60px));
+  overflow: hidden;
 }
 
 .guide-hero-banner {
