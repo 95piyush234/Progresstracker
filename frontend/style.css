@@ -216,8 +216,8 @@ body::after {
 
 .guide-stepper-card {
   width: min(680px, 92%);
-  max-height: 72vh;
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
@@ -229,6 +229,16 @@ body::after {
   display: grid;
   gap: 12px;
   margin: 12px;
+}
+
+#guideModal .guide-stepper-card {
+  max-height: none;
+  overflow: visible;
+}
+
+#guideModal .guide-stepper-body {
+  max-height: none;
+  overflow: visible;
 }
 
 /* Inline variant for the guide stepper inside the modal */
@@ -291,8 +301,8 @@ body::after {
 }
 
 #guideModal .guide-stepper-body {
-  max-height: 320px;
-  overflow: auto;
+  max-height: none !important;
+  overflow: visible !important;
   padding-right: 8px;
   margin: 14px 0;
 }
