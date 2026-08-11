@@ -237,6 +237,17 @@ body::after {
   max-width: 880px;
   margin: 8px auto 18px auto;
   box-shadow: 0 14px 40px rgba(2,6,18,0.42);
+  min-height: 180px;
+}
+
+#guideModal .guide-stepper-card {
+  width: 100%;
+  max-width: none;
+}
+
+#guideModal .guide-stepper-body {
+  max-height: none;
+  min-height: 140px;
 }
 
 /* Make the guide modal content scrollable: allow the guide grid to flex and scroll inside the modal */
