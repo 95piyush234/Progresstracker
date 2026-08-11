@@ -218,7 +218,7 @@ body::after {
   width: min(680px, 92%);
   max-height: none;
   overflow: visible;
-  background: rgba(8, 13, 22, 0.96);
+  background: rgba(8, 13, 22, 1);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 14px;
   padding: 18px;
@@ -230,7 +230,7 @@ body::after {
   gap: 12px;
   margin: 12px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   overflow: visible;
 }
 
