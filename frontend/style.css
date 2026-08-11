@@ -234,15 +234,16 @@ body::after {
 /* Inline variant for the guide stepper inside the modal */
 .guide-stepper-inline {
   width: 100%;
-  max-width: 880px;
-  margin: 8px auto 18px auto;
+  max-width: 100%;
+  margin: 8px 0 18px 0;
   box-shadow: 0 14px 40px rgba(2,6,18,0.42);
   min-height: 180px;
 }
 
 #guideModal .guide-stepper-card {
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 #guideModal .guide-stepper-body {
