@@ -264,6 +264,10 @@ body::after {
   padding-right: 6px; /* room for scrollbar */
 }
 
+#guideModal .guide-grid > .guide-step-card:first-child {
+  grid-column: 1 / -1;
+}
+
 #guideModal .guide-step-card {
   overflow: visible;
 }
