@@ -242,6 +242,10 @@ body::after {
 #guideModal .modal-card {
   display: flex;
   flex-direction: column;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 #guideModal .guide-hero-banner {
