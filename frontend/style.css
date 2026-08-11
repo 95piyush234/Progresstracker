@@ -202,6 +202,7 @@ body::after {
   position: absolute;
   left: 0;
   top: 0;
+}
 
 /* Interactive guide stepper overlay (glass style) */
 .guide-stepper-overlay {
