@@ -204,137 +204,80 @@ body::after {
   top: 0;
 }
 
-/* Interactive guide stepper overlay (glass style) */
+/* Interactive guide stepper — inline inside modal-card */
 .guide-stepper-overlay {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  z-index: 24;
-  pointer-events: none;
+  display: none; /* legacy overlay wrapper — no longer used */
 }
 
+/* Base stepper card styles (desktop + inline within modal) */
 .guide-stepper-card {
-  width: min(680px, 92%);
-  max-height: none;
-  overflow: visible;
-  background: rgba(8, 13, 22, 1);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
-  pointer-events: auto;
-  display: grid;
-  gap: 12px;
-  margin: 12px;
-  position: relative;
-  z-index: 2;
-  overflow: visible;
-}
-
-#guideModal .guide-stepper-body {
-  max-height: none;
-  overflow: visible;
-}
-
-/* Inline variant for the guide stepper inside the modal */
-.guide-stepper-inline {
-  width: 100%;
-  max-width: 100%;
-  margin: 8px 0 18px 0;
-  box-shadow: 0 14px 40px rgba(2,6,18,0.42);
-  min-height: 180px;
-}
-
-#guideModal .guide-stepper-card {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  overflow: visible;
+  background: rgba(8, 13, 22, 0.96);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 14px 40px rgba(2,6,18,0.42);
+  pointer-events: auto;
+  display: grid;
+  gap: 14px;
   position: relative;
-  z-index: 9999;
-  background: rgba(8, 13, 22, 1) !important;
+  z-index: 2;
 }
 
-#guideModal .guide-stepper-card * {
-  position: relative;
-  z-index: 9999;
+/* Inline variant: sits at top of modal-card, replaces static content */
+.guide-stepper-inline {
+  margin: 0 0 16px 0;
+  min-height: 200px;
 }
 
-#guideModal .guide-stepper-body {
-  max-height: none;
-  min-height: 140px;
-  overflow: visible !important;
+/* Hide static guide sections while stepper is active */
+[data-guide-hidden="1"] {
+  display: none !important;
 }
 
-/* Make the guide modal content scrollable: allow the guide grid to flex and scroll inside the modal */
+/* guideModal modal-card: flex column so stepper + actions are contained */
 #guideModal .modal-card {
   display: flex;
   flex-direction: column;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-}
-
-#guideModal .guide-hero-banner {
-  flex: 0 0 auto;
-}
-
-#guideModal .guide-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  flex: 1 1 auto;
-  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 6px; /* room for scrollbar */
-}
-
-#guideModal .guide-grid > .guide-step-card:first-child {
-  grid-column: 1 / -1;
-}
-
-#guideModal .guide-step-card {
-  overflow: visible;
-}
-
-#guideModal .guide-step-card .guide-step-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 #guideModal .guide-stepper-body {
-  max-height: none !important;
-  overflow: visible !important;
-  padding-right: 8px;
-  margin: 14px 0;
+  min-height: 120px;
+  max-height: none;
+  overflow: visible;
+  padding: 4px 0 8px;
 }
 
-#guideModal .guide-stepper-body::-webkit-scrollbar,
-#guideModal .guide-grid::-webkit-scrollbar {
-  width: 10px;
+/* Guide stepper header */
+.guide-stepper-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-#guideModal .guide-stepper-body::-webkit-scrollbar-track,
-#guideModal .guide-grid::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.04);
-  border-radius: 999px;
-}
-
-#guideModal .guide-stepper-body::-webkit-scrollbar-thumb,
-#guideModal .guide-grid::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.18);
-  border-radius: 999px;
-}
-
+/* Stepper controls: two groups side by side */
 .guide-stepper-controls {
   display: flex;
   gap: 10px;
   justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.guide-stepper-nav,
+.guide-stepper-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -342,6 +285,7 @@ body::after {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .guide-stepper-dot {
@@ -349,6 +293,7 @@ body::after {
   height: 10px;
   border-radius: 50%;
   background: rgba(255,255,255,0.12);
+  flex-shrink: 0;
 }
 
 .guide-stepper-dot.is-active {
@@ -356,11 +301,18 @@ body::after {
   box-shadow: 0 6px 18px rgba(29,38,113,0.26);
 }
 
-@media (max-width: 640px) {
-  .guide-stepper-card { width: calc(100% - 28px); padding: 16px; border-radius: 14px; }
+/* Desktop: guide grid visible below stepper when no stepper active */
+#guideModal .guide-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
 }
 
-/* Desktop modal improvements: align near top and allow larger max-height so internal scrolling works reliably */
+#guideModal .guide-grid > .guide-step-card:first-child {
+  grid-column: 1 / -1;
+}
+
+/* Desktop modal improvements */
 @media (min-width: 900px) {
   .modal-shell {
     display: flex;
@@ -377,7 +329,7 @@ body::after {
   }
 }
 
-/* Mobile performance optimizations: reduce heavy blur, shadows, and animations */
+/* Mobile performance optimizations */
 @media (max-width: 780px), (pointer: coarse) {
   /* reduce backdrop blur on modals and panels */
   .modal-shell,
@@ -388,6 +340,60 @@ body::after {
     -webkit-backdrop-filter: none !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.32) !important;
     border: 1px solid rgba(255,255,255,0.04) !important;
+  }
+
+  /* Guide stepper mobile fixes */
+  #guideModal .modal-card {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .guide-stepper-card {
+    padding: 14px;
+    border-radius: 12px;
+    gap: 12px;
+    min-height: auto;
+    margin-bottom: 12px;
+    background: rgba(8, 13, 22, 1) !important;
+  }
+
+  /* Stack controls vertically on small screens */
+  .guide-stepper-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .guide-stepper-nav,
+  .guide-stepper-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .guide-stepper-nav button,
+  .guide-stepper-actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  /* Single column guide grid on mobile */
+  #guideModal .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #guideModal .guide-grid > .guide-step-card:first-child {
+    grid-column: auto;
+  }
+
+  /* Compact guide hero on mobile */
+  #guideModal .guide-hero-banner {
+    padding: 12px;
+    margin-bottom: 12px;
   }
 
   /* simplify ambient blobs and lower opacity */
@@ -407,13 +413,6 @@ body::after {
 
   /* reduce noise layer and heavy gradients */
   .noise { opacity: 0.03 !important; }
-
-  /* inputs and buttons slightly larger and simpler */
-  input, select, textarea, button { padding: 12px 12px !important; border-radius: 12px !important; }
-}
-  border-radius: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  pointer-events: none;
 }
 
 .cursor-halo {
@@ -6275,7 +6274,10 @@ body[data-theme="light"] .graph-week-label {
   gap: 22px;
   max-height: min(92vh, calc(100vh - 60px));
   height: min(92vh, calc(100vh - 60px));
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .guide-hero-banner {
@@ -6661,13 +6663,19 @@ body[data-theme="light"] .guide-checklist {
 
   .guide-modal-card {
     width: min(100%, 100%);
-    padding: 18px;
-    gap: 18px;
+    padding: calc(14px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));
+    gap: 14px;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .guide-shot {
-    min-height: 190px;
-    padding: 14px;
+    min-height: 140px;
+    padding: 12px;
   }
 
   .guide-shot-dashboard,
@@ -6687,6 +6695,36 @@ body[data-theme="light"] .guide-checklist {
 
   .guide-modal-actions > button {
     width: 100%;
+  }
+
+  /* Stepper controls stack on mobile */
+  .guide-stepper-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .guide-stepper-nav,
+  .guide-stepper-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .guide-stepper-nav button,
+  .guide-stepper-actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  /* Single column guide grid on mobile */
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-step-card-checklist {
+    grid-column: auto;
   }
 }
 

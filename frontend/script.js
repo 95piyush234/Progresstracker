@@ -2560,7 +2560,7 @@ function buildInteractiveGuide() {
   const card = document.createElement("div");
   card.className = "guide-stepper-card guide-stepper-inline";
   card.innerHTML = `
-    <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+    <header class="guide-stepper-header">
       <div>
         <p class="eyebrow" id="guideStepperEyebrow">How It Works</p>
         <h3 id="guideStepperTitle">Step</h3>
@@ -2569,11 +2569,11 @@ function buildInteractiveGuide() {
     </header>
     <div id="guideStepperBody" class="guide-stepper-body"></div>
     <div class="guide-stepper-controls">
-      <div>
+      <div class="guide-stepper-nav">
         <button type="button" class="ghost-button" id="guidePrevBtn">← Previous</button>
         <button type="button" class="ghost-button" id="guideNextBtn">Next →</button>
       </div>
-      <div>
+      <div class="guide-stepper-actions">
         <button type="button" class="ghost-button" id="guideSkipBtn">Skip Guide</button>
         <button type="button" class="primary-button" id="guideDoneBtn">Got It ✓</button>
       </div>
@@ -2601,13 +2601,19 @@ function showInteractiveGuide() {
   try {
     buildInteractiveGuide();
     if (!__guideStepper) return;
-    // append overlay to the modal shell so it sits above guide content and does not create visual overlap
     const container = dom.guideModal || document.body;
-    const modalCard = dom.guideModal?.querySelector('.modal-card');
     if (container.querySelector && container.querySelector('#guideStepperInline')) return;
     __guideStepper.card.id = 'guideStepperInline';
+    // Insert stepper INSIDE modal-card so it stays within the modal's scroll/layout context
+    const modalCard = dom.guideModal?.querySelector('.modal-card');
     if (modalCard) {
-      container.insertBefore(__guideStepper.card, modalCard);
+      // Prepend inside modal-card so it appears at the top, above guide static content
+      modalCard.insertBefore(__guideStepper.card, modalCard.firstChild);
+      // Hide static guide content sections while stepper is active
+      const heroBanner = modalCard.querySelector('.guide-hero-banner');
+      const guideGrid = modalCard.querySelector('.guide-grid');
+      if (heroBanner) heroBanner.setAttribute('data-guide-hidden', '1');
+      if (guideGrid) guideGrid.setAttribute('data-guide-hidden', '1');
     } else {
       container.appendChild(__guideStepper.card);
     }
@@ -2622,7 +2628,16 @@ function showInteractiveGuide() {
 
 function hideInteractiveGuide() {
   if (!__guideStepper) return;
+  // Restore hidden static sections
+  const modalCard = dom.guideModal?.querySelector('.modal-card');
+  if (modalCard) {
+    const heroBanner = modalCard.querySelector('[data-guide-hidden="1"].guide-hero-banner');
+    const guideGrid = modalCard.querySelector('[data-guide-hidden="1"].guide-grid');
+    if (heroBanner) heroBanner.removeAttribute('data-guide-hidden');
+    if (guideGrid) guideGrid.removeAttribute('data-guide-hidden');
+  }
   __guideStepper.card.remove();
+  __guideStepper = null;
   document.removeEventListener("keydown", handleGuideKeydown);
 }
 
