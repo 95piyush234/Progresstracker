@@ -21,7 +21,20 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true
+      // Not required for Google OAuth users
+      required: false,
+      default: null
+    },
+    googleId: {
+      type: String,
+      default: null,
+      index: true,
+      sparse: true
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local"
     },
     role: {
       type: String,
@@ -43,7 +56,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function handlePasswordHash(next) {
-  if (!this.isModified("password")) {
+  if (!this.isModified("password") || !this.password) {
     next();
     return;
   }
@@ -53,6 +66,9 @@ userSchema.pre("save", async function handlePasswordHash(next) {
 });
 
 userSchema.methods.comparePassword = function comparePassword(candidatePassword) {
+  if (!this.password) {
+    return Promise.resolve(false);
+  }
   return bcrypt.compare(candidatePassword, this.password);
 };
 
@@ -63,6 +79,7 @@ userSchema.methods.toSafeObject = function toSafeObject() {
     email: this.email,
     role: this.role,
     isVerified: this.isVerified,
+    authProvider: this.authProvider || "local",
     lastLoginAt: this.lastLoginAt ? this.lastLoginAt.toISOString() : null,
     createdAt: this.createdAt.toISOString(),
     updatedAt: this.updatedAt.toISOString()

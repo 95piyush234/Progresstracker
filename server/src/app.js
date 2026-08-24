@@ -6,6 +6,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
+import passport from "passport";
 import { config } from "./config/env.js";
 import { logger, morganStream } from "./config/logger.js";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
@@ -13,6 +14,7 @@ import { adminRouter } from "./routes/admin.routes.js";
 import { analyticsRouter } from "./routes/analytics.routes.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { goalRouter } from "./routes/goal.routes.js";
+import { googleRouter } from "./routes/google.routes.js";
 import { progressRouter } from "./routes/progress.routes.js";
 import { taskRouter } from "./routes/task.routes.js";
 import { uploadRouter } from "./routes/upload.routes.js";
@@ -76,7 +78,6 @@ export function createApp() {
     };
     next();
   });
-
   app.use(rateLimit({
     windowMs: config.rateLimitWindowMs,
     max: config.rateLimitMax,
@@ -90,8 +91,13 @@ export function createApp() {
     }
   }));
 
+  // Passport — used for the stateless Google OAuth flow only.
+  // No sessions needed; tokens are issued as JWTs immediately after callback.
+  app.use(passport.initialize());
+
   app.use("/uploads", express.static(path.resolve(config.uploadDir)));
   app.use("/api/auth", authRouter);
+  app.use("/api/auth/google", googleRouter);
   app.use("/api/goals", goalRouter);
   app.use("/api/tasks", taskRouter);
   app.use("/api/progress", progressRouter);

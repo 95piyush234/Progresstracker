@@ -93,8 +93,22 @@ export const config = {
   emailOtpExpiresMinutes: toNumber(process.env.EMAIL_OTP_EXPIRES_MINUTES, 10),
   passwordResetExpiresMinutes: toNumber(process.env.PASSWORD_RESET_EXPIRES_MINUTES, 30),
   uploadDir: path.resolve(process.cwd(), process.env.UPLOAD_DIR || "./uploads"),
-  maxFileSizeBytes: toNumber(process.env.MAX_FILE_SIZE_MB, 5) * 1024 * 1024
+  maxFileSizeBytes: toNumber(process.env.MAX_FILE_SIZE_MB, 5) * 1024 * 1024,
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID || "",
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    callbackUrl: process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/auth/google/callback"
+  }
 };
+
+export function isGoogleOAuthConfigured() {
+  return Boolean(
+    config.google.clientId &&
+    config.google.clientSecret &&
+    !isPlaceholderValue(config.google.clientId) &&
+    !isPlaceholderValue(config.google.clientSecret)
+  );
+}
 
 export function isMailConfigured() {
   if (

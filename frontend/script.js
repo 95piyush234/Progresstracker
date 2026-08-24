@@ -181,6 +181,9 @@ async function init() {
   setupRevealFx();
   setupCursorFx();
   state = loadState();
+  // Handle Google OAuth redirect before any other async work so the token in
+  // the URL fragment is consumed and the hash is cleaned up immediately.
+  await checkGoogleOAuthCallback();
   await hydrateBackendSession();
   checkForPasswordResetToken();
   if (isAuthenticated() && isBackendAuthSession()) {
@@ -241,6 +244,7 @@ function cacheDom() {
   dom.authMailPreviewCode = document.getElementById("authMailPreviewCode");
   dom.openGuideFromAuthBtn = document.getElementById("openGuideFromAuthBtn");
   dom.authLoginActions = document.getElementById("authLoginActions");
+  dom.googleSignInBtn = document.getElementById("googleSignInBtn");
   dom.navButtons = Array.from(document.querySelectorAll("[data-view-target]"));
   dom.viewPanels = Array.from(document.querySelectorAll("[data-view-panel]"));
 
@@ -513,6 +517,9 @@ function bindEvents() {
   dom.authCreateModeBtn.addEventListener("click", () => setAuthMode("create"));
   dom.authLoginModeBtn.addEventListener("click", () => setAuthMode("login"));
   dom.authForm.addEventListener("submit", handleAuthSubmit);
+  if (dom.googleSignInBtn) {
+    dom.googleSignInBtn.addEventListener("click", handleGoogleSignIn);
+  }
   dom.openGuideFromAuthBtn.addEventListener("click", () => openGuideModal("auth"));
   // fallback delegation in case the auth guide button is not present at bind time
   if (!dom.openGuideFromAuthBtn) {
@@ -1311,14 +1318,25 @@ async function hydrateBackendSession() {
       sessionId: getSession().sessionId
     });
     saveState();
+    // Schedule proactive token refresh before the access token expires
+    scheduleAccessTokenRefresh();
   } catch (error) {
-    if (error.backendUnavailable) {
+    // Never log out due to network issues, server unavailability, or timeouts.
+    // Only log out on definitive auth rejections (401/403) where refresh also fails.
+    if (error.backendUnavailable || (error.status && error.status >= 500)) {
       return;
     }
 
     try {
       await refreshBackendSessionToken();
-    } catch {
+      scheduleAccessTokenRefresh();
+    } catch (refreshError) {
+      // If the refresh fails due to network/server issues, stay logged in —
+      // the user's local data is intact and they can retry when back online.
+      if (refreshError.backendUnavailable || (refreshError.status && refreshError.status >= 500)) {
+        return;
+      }
+      // Only clear session on definitive 401/403 (token truly invalid/revoked)
       state.settings.session = createSessionState({
         loggedIn: false,
         lastLoginAt: getSession().lastLoginAt || getAccount()?.lastLoginAt || null,
@@ -1327,6 +1345,27 @@ async function hydrateBackendSession() {
       saveState();
     }
   }
+}
+
+// Proactive access token refresh: re-issues the token ~2 minutes before expiry
+// so the user is never mid-session when it expires.
+let _accessTokenRefreshTimer = null;
+function scheduleAccessTokenRefresh() {
+  if (_accessTokenRefreshTimer) {
+    clearTimeout(_accessTokenRefreshTimer);
+    _accessTokenRefreshTimer = null;
+  }
+  // Access token is 15 minutes; refresh 2 minutes before expiry = 13 minutes
+  const refreshInMs = 13 * 60 * 1000;
+  _accessTokenRefreshTimer = setTimeout(async () => {
+    if (!isBackendAuthSession()) return;
+    try {
+      await refreshBackendSessionToken();
+      scheduleAccessTokenRefresh(); // reschedule for the new token
+    } catch {
+      // Silent fail — next API call will trigger a refresh via the 401 retry path
+    }
+  }, refreshInMs);
 }
 
 async function fetchAllBackendPages(path, itemKey, { token, query = {} } = {}) {
@@ -1916,6 +1955,104 @@ function forceCloseOverlays() {
   resetLogForm(true);
   dom.body.classList.remove("is-locked");
 }
+
+// ─── Google OAuth ────────────────────────────────────────────────────────────
+
+/**
+ * Redirects the browser to the backend Google OAuth entry point.
+ * The backend handles the consent screen and redirects back with tokens.
+ */
+function handleGoogleSignIn() {
+  if (!canUseBackendAuth()) {
+    showToast("Start the backend server before signing in with Google.", "error");
+    return;
+  }
+
+  if (dom.googleSignInBtn) {
+    dom.googleSignInBtn.disabled = true;
+    dom.googleSignInBtn.querySelector("span").textContent = "Redirecting…";
+  }
+
+  // Full page redirect — Google OAuth requires a real browser navigation.
+  window.location.href = `${BACKEND_API_BASE}/auth/google`;
+}
+
+/**
+ * Called once on page load. Reads the URL fragment that the backend callback
+ * deposits after a successful Google sign-in:
+ *   #google_token=<accessToken>&google_user=<JSON>&session_id=<id>
+ *
+ * Also handles the error query-param:
+ *   ?google_error=<message>
+ *
+ * After consuming the fragment/param the URL is cleaned up so a page refresh
+ * does not replay the token.
+ */
+async function checkGoogleOAuthCallback() {
+  // ── Error path ──────────────────────────────────────────────────────────────
+  const searchParams = new URLSearchParams(window.location.search);
+  const googleError = searchParams.get("google_error");
+  if (googleError) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+    // Delay the toast until the DOM is ready
+    window.setTimeout(() => showToast(decodeURIComponent(googleError), "error"), 200);
+    return;
+  }
+
+  // ── Success path ─────────────────────────────────────────────────────────────
+  const hash = window.location.hash.slice(1); // strip leading '#'
+  if (!hash) return;
+
+  const params = new URLSearchParams(hash);
+  const googleToken = params.get("google_token");
+  const googleUserRaw = params.get("google_user");
+  const sessionId = params.get("session_id");
+
+  if (!googleToken || !googleUserRaw) return;
+
+  // Immediately clear the fragment so the token is never in history.
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  try {
+    const googleUser = JSON.parse(decodeURIComponent(googleUserRaw));
+
+    // Fetch the full user record using the fresh access token.
+    const payload = await apiRequest("/auth/me", { token: googleToken });
+    const data = getApiData(payload);
+    const user = data.user || googleUser;
+
+    if (!user?.email) {
+      throw new Error("Google sign-in did not return a valid user.");
+    }
+
+    state.settings.account = mapBackendUserToLocalAccount(user);
+    state.settings.session = createSessionState({
+      loggedIn: true,
+      lastLoginAt: user.lastLoginAt || new Date().toISOString(),
+      authProvider: "backend",
+      accessToken: googleToken,
+      sessionId: sessionId || ""
+    });
+    clearPendingAuthOtp(false);
+    saveState();
+
+    try {
+      await syncWorkspaceFromBackend();
+    } catch (syncError) {
+      console.error("Post-Google-login sync failed:", syncError);
+      state.trackers = [];
+      saveState();
+    }
+
+    renderApp();
+    scheduleAccessTokenRefresh();
+    window.setTimeout(() => showToast(`Signed in with Google as ${user.name || user.email}.`, "success"), 120);
+  } catch (error) {
+    window.setTimeout(() => showToast(error.message || "Google sign-in could not be completed.", "error"), 200);
+  }
+}
+
+// ─── Auth form submit ─────────────────────────────────────────────────────────
 
 async function handleAuthSubmit(event) {
   event.preventDefault();
