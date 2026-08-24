@@ -96,8 +96,10 @@ export function createApp() {
   app.use(passport.initialize());
 
   app.use("/uploads", express.static(path.resolve(config.uploadDir)));
-  app.use("/api/auth", authRouter);
+  // Google OAuth must be mounted BEFORE the generic authRouter so Express
+  // matches /api/auth/google before /api/auth catches everything else.
   app.use("/api/auth/google", googleRouter);
+  app.use("/api/auth", authRouter);
   app.use("/api/goals", goalRouter);
   app.use("/api/tasks", taskRouter);
   app.use("/api/progress", progressRouter);
