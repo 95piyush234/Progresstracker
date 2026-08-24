@@ -8752,7 +8752,7 @@ body[data-active-view]:not([data-active-view="dashboard"]) .topbar {
   }
 
   .mobile-tab-button .mobile-tab-icon {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1;
   }
 
