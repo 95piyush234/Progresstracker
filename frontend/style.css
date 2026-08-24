@@ -8481,7 +8481,7 @@ body[data-theme="light"] .modal-shell {
   min-height: auto;
   max-width: 500px;
   justify-self: end;
-  align-content: center;
+  align-content: start;
   gap: 20px;
   padding: 40px !important;
 }
