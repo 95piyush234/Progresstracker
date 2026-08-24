@@ -806,7 +806,7 @@ h4 {
 }
 
 .auth-mail-card {
-  display: grid;
+  display: none;
   gap: 14px;
   padding: 18px;
 }
@@ -9022,4 +9022,13 @@ body[data-theme="light"] .auth-divider span {
     margin-bottom: 0 !important;
     gap: 6px !important;
   }
+}
+
+/* ─── Hide auth mail preview card by default (JS shows it when needed) ─────── */
+#authMailPreviewCard {
+  display: none;
+}
+
+#authMailPreviewCard.is-visible {
+  display: grid;
 }
