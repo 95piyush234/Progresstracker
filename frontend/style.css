@@ -981,6 +981,21 @@ body[data-auth="ready"] .auth-shell {
   box-shadow: 0 18px 36px rgba(var(--brand-start-rgb), 0.3);
 }
 
+.brand-mark img,
+.auth-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.auth-logo {
+  width: min(260px, 100%);
+  height: auto;
+  aspect-ratio: 1280 / 698;
+  margin-bottom: 4px;
+}
+
 .sidebar-nav {
   display: grid;
   gap: 10px;
@@ -8244,6 +8259,15 @@ textarea:focus,
   color: inherit !important;
 }
 
+.mobile-tab-icon {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  font-size: 20px !important;
+  line-height: 1;
+}
+
 .mail-stream-item,
 .timeline-entry,
 .history-summary-card,
@@ -8752,7 +8776,9 @@ body[data-active-view]:not([data-active-view="dashboard"]) .topbar {
   }
 
   .mobile-tab-button .mobile-tab-icon {
-    font-size: 18px !important;
+    width: 26px;
+    height: 26px;
+    font-size: 24px !important;
     line-height: 1;
   }
 

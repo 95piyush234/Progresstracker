@@ -66,7 +66,7 @@ export const config = {
   accessTokenSecret: process.env.JWT_ACCESS_SECRET || "replace-with-a-long-random-access-secret",
   refreshTokenSecret: process.env.JWT_REFRESH_SECRET || "replace-with-a-long-random-refresh-secret",
   accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",
-  refreshTokenExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "30d",
+  refreshTokenExpiresIn: process.env.SESSION_INACTIVITY_EXPIRES_IN || "7d",
   refreshCookieName: process.env.REFRESH_COOKIE_NAME || "pt_refresh_token",
   bcryptSaltRounds: toNumber(process.env.BCRYPT_SALT_ROUNDS, 12),
   rateLimitWindowMs: toNumber(process.env.RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000),

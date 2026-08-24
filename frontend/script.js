@@ -21,6 +21,8 @@ const BACKEND_API_BASE = (() => {
 })();
 const BACKEND_ORIGIN = BACKEND_API_BASE.replace(/\/api\/?$/, "");
 const BACKEND_FETCH_TIMEOUT_MS = 65000;
+const SESSION_INACTIVITY_LIMIT_MS = 7 * 24 * 60 * 60 * 1000;
+const SESSION_ACTIVITY_SAVE_INTERVAL_MS = 60 * 1000;
 // REFACTOR
 // Match backend Joi validation for paginated goal fetches so post-save sync never fails on limit overflow.
 const BACKEND_PAGE_LIMIT = 50;
@@ -181,6 +183,7 @@ async function init() {
   setupRevealFx();
   setupCursorFx();
   state = loadState();
+  enforceSessionInactivityLimit();
   // Handle Google OAuth redirect before any other async work so the token in
   // the URL fragment is consumed and the hash is cleaned up immediately.
   await checkGoogleOAuthCallback();
@@ -194,6 +197,7 @@ async function init() {
     }
   }
   bindEvents();
+  bindSessionActivityTracking();
   setStaticUiDefaults();
   renderApp();
 }
@@ -1042,6 +1046,7 @@ function getSession() {
   return state?.settings?.session || {
     loggedIn: false,
     lastLoginAt: null,
+    lastActivityAt: null,
     authProvider: "local",
     accessToken: "",
     sessionId: ""
@@ -1087,6 +1092,7 @@ function isBackendAuthSession() {
 function createSessionState({
   loggedIn = false,
   lastLoginAt = null,
+  lastActivityAt = null,
   authProvider = "local",
   accessToken = "",
   sessionId = ""
@@ -1094,10 +1100,59 @@ function createSessionState({
   return {
     loggedIn: Boolean(loggedIn),
     lastLoginAt: lastLoginAt ? normalizeIso(lastLoginAt) : null,
+    lastActivityAt: lastActivityAt ? normalizeIso(lastActivityAt) : null,
     authProvider: authProvider === "backend" ? "backend" : "local",
     accessToken: sanitizeText(accessToken, 4096),
     sessionId: sanitizeText(sessionId, 120)
   };
+}
+
+function isSessionExpiredByInactivity(session = getSession()) {
+  if (!session?.loggedIn) return false;
+  const lastActivityAt = session.lastActivityAt || session.lastLoginAt;
+  if (!lastActivityAt) return false;
+  const lastActivityTime = new Date(lastActivityAt).getTime();
+  return Number.isFinite(lastActivityTime) && Date.now() - lastActivityTime > SESSION_INACTIVITY_LIMIT_MS;
+}
+
+function enforceSessionInactivityLimit() {
+  if (!state?.settings || !isSessionExpiredByInactivity(state.settings.session)) {
+    return false;
+  }
+
+  state.settings.session = createSessionState({
+    loggedIn: false,
+    lastLoginAt: state.settings.session.lastLoginAt || getAccount()?.lastLoginAt || null,
+    lastActivityAt: state.settings.session.lastActivityAt || state.settings.session.lastLoginAt || null,
+    authProvider: state.settings.session.authProvider
+  });
+  saveState();
+  return true;
+}
+
+function touchSessionActivity({ force = false } = {}) {
+  if (!state?.settings || !isAuthenticated()) return;
+
+  const now = new Date();
+  const current = getSession();
+  const lastActivityTime = current.lastActivityAt ? new Date(current.lastActivityAt).getTime() : 0;
+  if (!force && Number.isFinite(lastActivityTime) && now.getTime() - lastActivityTime < SESSION_ACTIVITY_SAVE_INTERVAL_MS) {
+    return;
+  }
+
+  state.settings.session = createSessionState({
+    ...current,
+    loggedIn: true,
+    lastActivityAt: now.toISOString()
+  });
+  saveState();
+}
+
+function bindSessionActivityTracking() {
+  ["click", "keydown", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, () => touchSessionActivity(), { passive: true });
+  });
+  document.addEventListener("visibilitychange", () => touchSessionActivity());
 }
 
 // REFACTOR
@@ -1193,6 +1248,7 @@ async function refreshBackendSessionToken() {
   state.settings.session = createSessionState({
     loggedIn: true,
     lastLoginAt: user.lastLoginAt || session?.createdAt || getSession().lastLoginAt || new Date().toISOString(),
+    lastActivityAt: new Date().toISOString(),
     authProvider: "backend",
     accessToken,
     sessionId: session?.id || getSession().sessionId
@@ -1251,6 +1307,7 @@ async function apiRequest(path, { method = "GET", body, token = "", headers = {}
         state.settings.session = createSessionState({
           loggedIn: false,
           lastLoginAt: getSession().lastLoginAt || null,
+          lastActivityAt: getSession().lastActivityAt || null,
           authProvider: "backend"
         });
         saveState();
@@ -1313,6 +1370,7 @@ async function hydrateBackendSession() {
     state.settings.session = createSessionState({
       loggedIn: true,
       lastLoginAt: user.lastLoginAt || getSession().lastLoginAt,
+      lastActivityAt: getSession().lastActivityAt || new Date().toISOString(),
       authProvider: "backend",
       accessToken: getSession().accessToken,
       sessionId: getSession().sessionId
@@ -1340,6 +1398,7 @@ async function hydrateBackendSession() {
       state.settings.session = createSessionState({
         loggedIn: false,
         lastLoginAt: getSession().lastLoginAt || getAccount()?.lastLoginAt || null,
+        lastActivityAt: getSession().lastActivityAt || null,
         authProvider: "backend"
       });
       saveState();
@@ -2029,6 +2088,7 @@ async function checkGoogleOAuthCallback() {
     state.settings.session = createSessionState({
       loggedIn: true,
       lastLoginAt: user.lastLoginAt || new Date().toISOString(),
+      lastActivityAt: new Date().toISOString(),
       authProvider: "backend",
       accessToken: googleToken,
       sessionId: sessionId || ""
@@ -2200,6 +2260,7 @@ function handleLogoutRequest() {
       state.settings.session = createSessionState({
         loggedIn: false,
         lastLoginAt: state.settings.session?.lastLoginAt || null,
+        lastActivityAt: state.settings.session?.lastActivityAt || null,
         authProvider: "backend",
         accessToken: "",
         sessionId: ""
@@ -2424,6 +2485,7 @@ async function applyBackendAuthSuccess(result, payload, successMessage) {
   state.settings.session = createSessionState({
     loggedIn: true,
     lastLoginAt: user.lastLoginAt || data.session?.createdAt || new Date().toISOString(),
+    lastActivityAt: new Date().toISOString(),
     authProvider: "backend",
     accessToken: data.accessToken || "",
     sessionId: data.session?.id || ""
@@ -3074,6 +3136,7 @@ function getPersistedState(nextState = state) {
       session: {
         loggedIn: Boolean(nextState?.settings?.session?.loggedIn),
         lastLoginAt: nextState?.settings?.session?.lastLoginAt || null,
+        lastActivityAt: nextState?.settings?.session?.lastActivityAt || null,
         authProvider: nextState?.settings?.session?.authProvider === "backend" ? "backend" : "local",
         accessToken: nextState?.settings?.session?.accessToken || "",
         sessionId: nextState?.settings?.session?.sessionId || ""
@@ -3243,6 +3306,13 @@ function normalizeSession(session, account) {
       : account.lastLoginAt
         ? normalizeIso(account.lastLoginAt)
         : normalizeIso(account.createdAt),
+    lastActivityAt: session?.lastActivityAt
+      ? normalizeIso(session.lastActivityAt)
+      : session?.lastLoginAt
+        ? normalizeIso(session.lastLoginAt)
+        : account.lastLoginAt
+          ? normalizeIso(account.lastLoginAt)
+          : normalizeIso(account.createdAt),
     authProvider: session?.authProvider === "backend" ? "backend" : "local",
     accessToken: sanitizeText(session?.accessToken, 4096),
     sessionId: sanitizeText(session?.sessionId, 120)
