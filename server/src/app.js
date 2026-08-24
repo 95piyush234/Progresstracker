@@ -100,6 +100,7 @@ export function createApp() {
   // matches /api/auth/google before /api/auth catches everything else.
   app.use("/api/auth/google", googleRouter);
   app.use("/api/auth", authRouter);
+  logger.debug("Google OAuth router mounted at /api/auth/google");
   app.use("/api/goals", goalRouter);
   app.use("/api/tasks", taskRouter);
   app.use("/api/progress", progressRouter);

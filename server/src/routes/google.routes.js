@@ -8,11 +8,10 @@ import { issueAuthTokens, setRefreshCookie } from "../services/auth.service.js";
 
 export const googleRouter = Router();
 
-// ─── Strategy setup ──────────────────────────────────────────────────────────
-// Only register the strategy when credentials are present so the server boots
-// cleanly even without Google OAuth configured.
+// ─── Register Google strategy ─────────────────────────────────────────────────
 if (isGoogleOAuthConfigured()) {
   passport.use(
+    "google",
     new GoogleStrategy(
       {
         clientID: config.google.clientId,
@@ -25,36 +24,35 @@ if (isGoogleOAuthConfigured()) {
           const email = profile.emails?.[0]?.value?.toLowerCase().trim();
           const name =
             profile.displayName ||
-            [profile.name?.givenName, profile.name?.familyName].filter(Boolean).join(" ") ||
+            [profile.name?.givenName, profile.name?.familyName]
+              .filter(Boolean)
+              .join(" ") ||
             "Google User";
 
           if (!email) {
             return done(new ApiError(400, "Google did not return an email address."));
           }
 
-          // 1. Try to find by googleId (returning Google users)
+          // 1. Returning Google user
           let user = await User.findOne({ googleId: profile.id });
 
-          // 2. Try to find by email (account already exists via email/password)
+          // 2. Existing email/password account — link it
           if (!user) {
             user = await User.findOne({ email });
           }
 
           if (user) {
-            // Link the Google account if not already linked
             if (!user.googleId) {
               user.googleId = profile.id;
               user.authProvider = "google";
             }
-            if (!user.isVerified) {
-              user.isVerified = true;
-            }
+            if (!user.isVerified) user.isVerified = true;
             user.lastLoginAt = new Date();
             await user.save();
             return done(null, user);
           }
 
-          // 3. Create a new Google-only account
+          // 3. Brand new user via Google
           const newUser = new User({
             name,
             email,
@@ -66,65 +64,54 @@ if (isGoogleOAuthConfigured()) {
           });
           await newUser.save();
           return done(null, newUser);
-        } catch (error) {
-          return done(error);
+        } catch (err) {
+          return done(err);
         }
       }
     )
   );
 
-  // Passport session stubs — we use stateless JWTs, so these are no-ops.
   passport.serializeUser((user, done) => done(null, user._id));
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await User.findById(id);
-      done(null, user);
+      done(null, await User.findById(id));
     } catch (err) {
       done(err);
     }
   });
 }
 
-// ─── Routes ──────────────────────────────────────────────────────────────────
+// ─── GET /api/auth/google ─────────────────────────────────────────────────────
+googleRouter.get("/", (req, res, next) => {
+  if (!isGoogleOAuthConfigured()) {
+    return res.redirect(
+      `${config.clientUrl}?google_error=${encodeURIComponent(
+        "Google Sign-In is not configured on this server."
+      )}`
+    );
+  }
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false
+  })(req, res, next);
+});
 
-/**
- * GET /api/auth/google
- * Redirects the browser to Google's consent screen.
- */
-googleRouter.get(
-  "/",
-  (req, res, next) => {
-    if (!isGoogleOAuthConfigured()) {
-      return res.redirect(
-        `${config.clientUrl}?google_error=${encodeURIComponent(
-          "Google Sign-In is not configured on this server yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to server/.env."
-        )}`
-      );
-    }
-    next();
-  },
-  passport.authenticate("google", { scope: ["profile", "email"], session: false })
-);
+// ─── GET /api/auth/google/callback ───────────────────────────────────────────
+googleRouter.get("/callback", (req, res, next) => {
+  if (!isGoogleOAuthConfigured()) {
+    return res.redirect(
+      `${config.clientUrl}?google_error=${encodeURIComponent(
+        "Google OAuth is not configured."
+      )}`
+    );
+  }
 
-/**
- * GET /api/auth/google/callback
- * Google redirects here after the user consents. We exchange the code for
- * tokens, set the refresh cookie, and redirect back to the frontend with the
- * access token embedded in the URL fragment so script.js can pick it up.
- */
-googleRouter.get(
-  "/callback",
-  (req, res, next) => {
-    if (!isGoogleOAuthConfigured()) {
-      return res.redirect(
-        `${config.clientUrl}?google_error=${encodeURIComponent("Google OAuth is not configured.")}`
-      );
-    }
-
-    passport.authenticate("google", { session: false }, async (err, user) => {
+  passport.authenticate(
+    "google",
+    { session: false },
+    async (err, user) => {
       if (err || !user) {
-        const message =
-          err?.message || "Google authentication failed. Please try again.";
+        const message = err?.message || "Google authentication failed.";
         return res.redirect(
           `${config.clientUrl}?google_error=${encodeURIComponent(message)}`
         );
@@ -138,8 +125,6 @@ googleRouter.get(
 
         setRefreshCookie(res, auth.refreshToken);
 
-        // Pass the access token and a minimal user snapshot to the frontend
-        // via the URL fragment (never lands in server logs or referrer headers).
         const params = new URLSearchParams({
           google_token: auth.accessToken,
           google_user: JSON.stringify({
@@ -155,10 +140,10 @@ googleRouter.get(
       } catch (issueError) {
         return res.redirect(
           `${config.clientUrl}?google_error=${encodeURIComponent(
-            issueError.message || "Could not create a session after Google login."
+            issueError.message || "Could not create session after Google login."
           )}`
         );
       }
-    })(req, res, next);
-  }
-);
+    }
+  )(req, res, next);
+});
