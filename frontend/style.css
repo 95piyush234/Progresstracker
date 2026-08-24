@@ -9012,6 +9012,7 @@ body[data-theme="light"] .auth-divider span {
 @media (max-width: 768px) {
   .auth-panel {
     gap: 14px !important;
+    min-height: auto !important;
   }
 
   .auth-panel-copy {
