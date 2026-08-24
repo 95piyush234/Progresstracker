@@ -9021,6 +9021,8 @@ body[data-theme="light"] .auth-divider span {
   .auth-panel {
     gap: 14px !important;
     min-height: auto !important;
+    align-content: start !important;
+    height: auto !important;
   }
 
   .auth-panel-copy {
@@ -9030,6 +9032,11 @@ body[data-theme="light"] .auth-divider span {
   .auth-help-row {
     margin-bottom: 0 !important;
     gap: 6px !important;
+    min-height: auto !important;
+  }
+
+  .auth-help-row .subtle {
+    max-width: none !important;
   }
 }
 
