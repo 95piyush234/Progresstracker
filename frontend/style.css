@@ -9023,6 +9023,8 @@ body[data-theme="light"] .auth-divider span {
     min-height: auto !important;
     align-content: start !important;
     height: auto !important;
+    grid-template-rows: none !important;
+    grid-auto-rows: max-content !important;
   }
 
   .auth-panel-copy {
@@ -9030,12 +9032,18 @@ body[data-theme="light"] .auth-divider span {
   }
 
   .auth-help-row {
+    align-self: start !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
     margin-bottom: 0 !important;
     gap: 6px !important;
     min-height: auto !important;
+    height: auto !important;
+    justify-content: flex-start !important;
   }
 
   .auth-help-row .subtle {
+    flex: 0 1 auto !important;
     max-width: none !important;
   }
 }
