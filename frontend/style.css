@@ -9007,3 +9007,19 @@ body[data-theme="light"] .auth-divider span {
     font-size: 1rem;
   }
 }
+
+/* ─── Mobile: remove extra space between auth header and form ─────────────── */
+@media (max-width: 768px) {
+  .auth-panel {
+    gap: 14px !important;
+  }
+
+  .auth-panel-copy {
+    gap: 8px !important;
+  }
+
+  .auth-help-row {
+    margin-bottom: 0 !important;
+    gap: 6px !important;
+  }
+}
