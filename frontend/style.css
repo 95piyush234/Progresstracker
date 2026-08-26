@@ -9082,3 +9082,40 @@ body[data-theme="light"] .auth-divider span {
 #authMailPreviewCard.is-visible {
   display: grid;
 }
+
+/* --- Password Visibility Toggle Styling --- */
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrap input {
+  width: 100%;
+  padding-right: 48px !important; /* Makes room so text doesn't type over the eye */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%); /* Centers the icon vertically perfectly */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.password-toggle-btn:hover {
+  color: var(--text);
+  background: transparent !important;
+  transform: translateY(-50%) scale(1.1) !important; /* Tiny pop effect on hover */
+}
