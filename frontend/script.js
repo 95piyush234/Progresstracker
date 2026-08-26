@@ -2504,7 +2504,7 @@ async function applyBackendAuthSuccess(result, payload, successMessage) {
 }
 
 function getPasswordResetBaseUrl() {
-  return BACKEND_ORIGIN;
+  return window.location.origin + window.location.pathname;
 }
 
 function getPasswordResetTokenFromUrl() {
@@ -2572,11 +2572,18 @@ function clearPasswordRecoveryView({ clearUrl = false } = {}) {
 function syncPasswordRecoveryView() {
   const resetToken = getPasswordResetTokenFromUrl();
   if (resetToken) {
+    // FORCE the auth screen to show, even if the user is already logged in locally
+    document.body.dataset.auth = "locked";
+    document.getElementById("authShell").hidden = false;
+    
     applyPasswordRecoveryView("token", resetToken);
     return true;
   }
 
-  if (dom.body.dataset.authFlow === "reset-request") {
+  if (document.body.dataset.authFlow === "reset-request") {
+    document.body.dataset.auth = "locked";
+    document.getElementById("authShell").hidden = false;
+    
     applyPasswordRecoveryView("request");
     return true;
   }
