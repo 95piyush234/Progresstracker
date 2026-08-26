@@ -6907,3 +6907,22 @@ function hexToRgba(hex, alpha = 0.2) {
 function capitalize(value) {
   return value ? `${value[0].toUpperCase()}${value.slice(1)}` : "";
 }
+// --- Password Visibility Toggle ---
+function setupPasswordToggle(buttonId, inputId) {
+  const btn = document.getElementById(buttonId);
+  const input = document.getElementById(inputId);
+  if (!btn || !input) return;
+
+  btn.addEventListener("click", () => {
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    btn.textContent = isPassword ? "👁️‍🗨️" : "👁️";
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupPasswordToggle("togglePasswordBtn", "authPasswordInput");
+  setupPasswordToggle("toggleConfirmBtn", "authConfirmInput");
+  setupPasswordToggle("toggleResetPasswordBtn", "authResetPasswordInput");
+  setupPasswordToggle("toggleResetconfirmBtn", "authResetConfirmInput");
+});

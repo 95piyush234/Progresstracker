@@ -129,14 +129,19 @@
 
           <label class="field">
             <span>Password</span>
-            <input
-              type="password"
-              id="authPasswordInput"
-              minlength="6"
-              placeholder="At least 6 characters"
-              autocomplete="current-password"
-              required
-            />
+            <div class="password-input-wrap">
+              <input
+                type="password"
+                id="authPasswordInput"
+                minlength="6"
+                placeholder="At least 6 characters"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
           </label>
 
           <div class="auth-inline-actions auth-login-actions hidden" id="authLoginActions">
@@ -147,13 +152,18 @@
 
           <label class="field hidden" id="authConfirmField">
             <span>Confirm password</span>
-            <input
-              type="password"
-              id="authConfirmInput"
-              minlength="6"
-              placeholder="Repeat your password"
-              autocomplete="new-password"
-            />
+            <div class="password-input-wrap">
+             <input
+               type="password"
+               id="authConfirmInput"
+               minlength="6"
+               placeholder="Repeat your password"
+               autocomplete="new-password"
+             />
+              <button type="button" class="password-toggle-btn" id="toggleConfirmBtn" aria-label="Toggle confirm password visibility">
+                👁️
+              </button>
+            </div>
           </label>
 
           <div class="auth-meta-row">
@@ -241,24 +251,34 @@
 
           <label class="field" id="authResetPasswordField">
             <span>New password</span>
-            <input
-              type="password"
-              id="authResetPasswordInput"
-              minlength="6"
-              placeholder="Enter a new password"
-              autocomplete="new-password"
-            />
+            <div class="password-input-wrap">
+             <input
+               type="password"
+               id="authResetPasswordInput"
+               minlength="6"
+               placeholder="Enter a new password"
+               autocomplete="new-password"
+             />
+             <button type="button" class="password-toggle-btn" id="toggleResetPasswordBtn" aria-label="Toggle new password visibility">
+                👁️
+              </button>
+            </div>
           </label>
 
           <label class="field" id="authResetConfirmField">
             <span>Confirm new password</span>
-            <input
-              type="password"
-              id="authResetConfirmInput"
-              minlength="6"
-              placeholder="Repeat your new password"
-              autocomplete="new-password"
-            />
+            <div class="password-input-wrap">
+             <input
+               type="password"
+               id="authResetConfirmInput"
+               minlength="6"
+               placeholder="Repeat your new password"
+               autocomplete="new-password"
+             />
+              <button type="button" class="password-toggle-btn" id="toggleResetconfirmBtn" aria-label="Toggle new password visibility">
+                👁️
+              </button>
+            </div>
           </label>
 
           <button class="primary-button" type="button" id="authResetSubmitBtn">
