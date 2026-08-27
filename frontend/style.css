@@ -9139,18 +9139,75 @@ body[data-theme="light"] .auth-divider span {
   right: 0;
   width: 220px;
   padding: 12px 0;
-  z-index: 100;
+  z-index: 9999 !important;
   display: flex;
   flex-direction: column;
   transform-origin: top right;
   animation: fadeUp 0.2s ease both;
   
-  /* NEW: Solid background, blur, and shadow so it stands out */
-  background: rgba(12, 14, 28, 0.95) !important;
+  /* Solid background to prevent blending with the lobby */
+  background: rgba(12, 14, 28, 0.98) !important;
   backdrop-filter: blur(24px) saturate(140%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Light theme solid background override */
+body[data-theme="light"] .account-dropdown {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+.dropdown-section {
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+}
+
+.dropdown-section .eyebrow {
+  padding: 8px 12px 6px;
+}
+
+.dropdown-item {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+  min-height: auto;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="light"] .dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+.danger-text {
+  color: var(--danger) !important;
+}
+
+.danger-text:hover {
+  background: rgba(255, 111, 130, 0.12) !important;
+}
+
+/* Allow dropdown to escape the topbar boundaries */
+header.topbar.panel {
+  overflow: visible !important;
 }
 
 /* NEW: Light theme override for the dropdown */
