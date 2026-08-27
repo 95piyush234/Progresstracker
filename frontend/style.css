@@ -9310,3 +9310,38 @@ body[data-theme="light"] #accountDropdown:hover {
     top: calc(100% + 8px) !important;
   }
 }
+/* Account Dropdown Arrow */
+.account-dropdown-arrow {
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  margin-left: 4px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Make the arrow light up when the user hovers over the button */
+.account-chip:hover .account-dropdown-arrow {
+  color: var(--text);
+  transform: translateY(2px);
+}
+/* --- Final Account Chip & Mobile Arrow Fixes --- */
+.account-chip {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  gap: 10px !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s !important;
+}
+
+/* Mobile Touch Feedback */
+.account-chip:active {
+  transform: scale(0.97) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Make the arrow snap down when tapped on mobile */
+.account-chip:active .account-dropdown-arrow {
+  color: var(--text) !important;
+  transform: translateY(2px) !important;
+}
