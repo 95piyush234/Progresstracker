@@ -4878,31 +4878,29 @@ async function stopFocusSession(shouldLog = true) {
   const focusLog = buildFocusSessionLog(tracker, durationMs);
 
   try {
+    // 1. Send to backend silently in background
     if (isBackendAuthSession() && !isLocalOnlyMode()) {
-      const createdEntry = await createBackendProgressEntry(tracker.id, focusLog);
-      await syncWorkspaceFromBackend();
-      const syncedTracker = findTracker(tracker.id) || tracker;
-      const latestLog = syncedTracker.logs.find((log) => log.id === createdEntry?.id) || syncedTracker.logs[0] || null;
-      queueWorkspaceEmail({
-        type: "progress",
-        tracker: syncedTracker,
-        log: latestLog,
-        subject: `Focus session logged: ${syncedTracker.title}`,
-        preview: `${formatFocusDuration(durationMs)} saved back into ${syncedTracker.title}.`,
-        body: `Tracker: ${syncedTracker.title}\nDuration: ${formatFocusDuration(durationMs)}\nLogged amount: ${formatSignedValueWithUnit(focusLog.amount, syncedTracker.unitLabel)}\nMode: Focus session`
+      createBackendProgressEntry(tracker.id, focusLog).catch((err) => {
+        console.error("Background sync failed:", err);
       });
-      renderApp();
-      openDetailDrawer(syncedTracker.id);
-      showToast("Focus session logged.", "success");
-      return;
     }
 
-    const syncedTracker = addLocalLogEntry(tracker.id, focusLog);
+    // 2. Update the tracker and UI locally in 0ms
+    const syncedTracker = addLocalLogEntry(tracker.id, focusLog) || tracker;
+    const latestLog = syncedTracker.logs[0] || null;
+
+    queueWorkspaceEmail({
+      type: "progress",
+      tracker: syncedTracker,
+      log: latestLog,
+      subject: `Focus session logged: ${syncedTracker.title}`,
+      preview: `${formatFocusDuration(durationMs)} saved back into ${syncedTracker.title}.`,
+      body: `Tracker: ${syncedTracker.title}\nDuration: ${formatFocusDuration(durationMs)}\nLogged amount: ${formatSignedValueWithUnit(focusLog.amount, syncedTracker.unitLabel)}\nMode: Focus session`
+    });
     renderApp();
-    if (syncedTracker) {
-      openDetailDrawer(syncedTracker.id);
-    }
-    showToast("Focus session saved locally.", "success");
+    openDetailDrawer(syncedTracker.id);
+    showToast("Focus session logged.", "success");
+    return;
   } catch (error) {
     if (error.backendUnavailable) {
       activateLocalFallback("Backend unavailable. Focus session saved locally.");
@@ -5209,18 +5207,16 @@ async function handleLogSubmit(event) {
   };
 
   try {
-    let syncedTracker = null;
-    let latestLog = null;
-
+    // 1. Send to backend silently in background
     if (isBackendAuthSession() && !isLocalOnlyMode()) {
-      const createdEntry = await createBackendProgressEntry(tracker.id, logPayload);
-      await syncWorkspaceFromBackend();
-      syncedTracker = findTracker(tracker.id) || tracker;
-      latestLog = syncedTracker.logs.find((log) => log.id === createdEntry?.id) || syncedTracker.logs[0] || null;
-    } else {
-      syncedTracker = addLocalLogEntry(tracker.id, logPayload) || tracker;
-      latestLog = syncedTracker.logs[0] || null;
+      createBackendProgressEntry(tracker.id, logPayload).catch((err) => {
+        console.error("Background sync failed:", err);
+      });
     }
+
+    // 2. Update the tracker and UI locally in 0ms
+    const syncedTracker = addLocalLogEntry(tracker.id, logPayload) || tracker;
+    const latestLog = syncedTracker.logs[0] || null;
 
     queueWorkspaceEmail({
       type: "progress",
