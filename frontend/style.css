@@ -9266,3 +9266,17 @@ body[data-theme="light"] .dropdown-item:hover {
 header.topbar.panel {
   overflow: visible !important;
 }
+/* Prevent the global panel hover effect from turning the dropdown transparent */
+#accountDropdown:hover {
+  background: rgba(12, 14, 28, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6) !important;
+  transform: none !important;
+}
+
+/* Keep the light theme dropdown solid on hover */
+body[data-theme="light"] #accountDropdown:hover {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15) !important;
+}
