@@ -182,24 +182,28 @@ async function init() {
   cacheDom();
   setupRevealFx();
   setupCursorFx();
-  state = loadState();
+  state = loadState(); // 1. Load fast local memory
   enforceSessionInactivityLimit();
-  // Handle Google OAuth redirect before any other async work so the token in
-  // the URL fragment is consumed and the hash is cleaned up immediately.
+
+  // 2. DRAW THE SCREEN INSTANTLY
+  bindEvents();
+  bindSessionActivityTracking();
+  setStaticUiDefaults();
+  renderApp(); 
+
+  // 3. DO THE HEAVY INTERNET WORK IN THE BACKGROUND
   await checkGoogleOAuthCallback();
   await hydrateBackendSession();
   checkForPasswordResetToken();
+  
   if (isAuthenticated() && isBackendAuthSession()) {
     try {
       await syncWorkspaceFromBackend();
+      renderApp(); // 4. Redraw seamlessly if any new data came from the server
     } catch (error) {
       console.error(error);
     }
   }
-  bindEvents();
-  bindSessionActivityTracking();
-  setStaticUiDefaults();
-  renderApp();
 }
 
 function cacheDom() {
