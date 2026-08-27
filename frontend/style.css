@@ -9295,3 +9295,18 @@ body[data-theme="light"] #accountDropdown:hover {
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15) !important;
 }
+/* Make dropdown safe and centered on mobile viewports */
+@media (max-width: 780px) {
+  .account-menu-wrap {
+    position: static !important;
+  }
+
+  .account-dropdown,
+  #accountDropdown {
+    left: 16px !important;
+    right: 16px !important;
+    transform: none !important;
+    width: auto !important;
+    top: calc(100% + 8px) !important;
+  }
+}
