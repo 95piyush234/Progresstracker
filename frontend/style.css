@@ -9119,3 +9119,74 @@ body[data-theme="light"] .auth-divider span {
   background: transparent !important;
   transform: translateY(-50%) scale(1.1) !important; /* Tiny pop effect on hover */
 }
+/* Account Dropdown Styles */
+.account-menu-wrap {
+  position: relative;
+}
+
+.account-chip {
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.account-chip:hover {
+  border-color: var(--accent);
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 220px;
+  padding: 12px 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transform-origin: top right;
+  animation: fadeUp 0.2s ease both;
+}
+
+.dropdown-section {
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+}
+
+.dropdown-section .eyebrow {
+  padding: 8px 12px 6px;
+}
+
+.dropdown-item {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+  min-height: auto;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="light"] .dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+.danger-text {
+  color: var(--danger) !important;
+}
+
+.danger-text:hover {
+  background: rgba(255, 111, 130, 0.12) !important;
+}

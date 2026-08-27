@@ -756,7 +756,23 @@ function bindEvents() {
   });
 
   document.addEventListener("keydown", handleGlobalKeydown);
-}
+
+  // Dropdown Toggle Logic
+  const accountDropdown = document.getElementById("accountDropdown");
+  if (dom.accountChip && accountDropdown) {
+    dom.accountChip.addEventListener("click", (e) => {
+      e.stopPropagation(); // Stop click from triggering the document listener below
+      accountDropdown.classList.toggle("hidden");
+    });
+
+    // Close the dropdown if the user clicks anywhere else on the screen
+    document.addEventListener("click", (e) => {
+      if (!dom.accountChip.contains(e.target) && !accountDropdown.contains(e.target)) {
+        accountDropdown.classList.add("hidden");
+      }
+    });
+  }
+} // <-- This is the closing bracket for the bindEvents function
 
 function setStaticUiDefaults() {
   dom.logDateInput.value = toLocalInputValue(new Date());
@@ -1791,7 +1807,16 @@ function syncAuthUi() {
   dom.authShell.hidden = authenticated;
 
   const displayName = account?.name || "Guest";
-  dom.accountAvatar.textContent = displayName.charAt(0).toUpperCase() || "G";
+  
+  // NEW: Generate automatic user logo
+  dom.accountAvatar.innerHTML = `
+    <img 
+      src="https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=5de4c7&textColor=071119" 
+      alt="User logo" 
+      style="width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block;" 
+    />
+  `;
+
   dom.accountNameLabel.textContent = displayName;
   dom.accountMetaLabel.textContent = authenticated
     ? account?.email

@@ -426,47 +426,44 @@
         </nav>
 
         <div class="topbar-actions">
-          <div class="account-chip" id="accountChip" aria-label="Current user">
-            <span class="account-avatar" id="accountAvatar">Y</span>
-            <div class="account-copy">
-              <strong id="accountNameLabel">You</strong>
-              <small id="accountMetaLabel">Local workspace owner</small>
-            </div>
-          </div>
-          <button
-            class="icon-button"
-            type="button"
-            id="themeToggleBtn"
-            aria-label="Toggle theme"
-            title="Toggle theme"
-          >
-            <span id="themeToggleIcon">☀</span>
-          </button>
-          <button
-            class="icon-button mail-center-button"
-            type="button"
-            id="mailCenterBtn"
-            aria-label="Open secure mail"
-            title="Open secure mail"
-          >
+          <!-- Keep Mail and Create Tracker outside for quick access -->
+          <button class="icon-button mail-center-button" type="button" id="mailCenterBtn" aria-label="Open secure mail" title="Open secure mail">
             <span>✉</span>
             <span class="mail-center-badge hidden" id="mailCenterUnreadCount">0</span>
           </button>
-          <button
-            class="icon-button"
-            type="button"
-            id="openGuideModalBtn"
-            aria-label="Open instructions"
-            title="Open instructions"
-          >
-            <span>?</span>
-          </button>
-          <button class="ghost-button" type="button" id="importBtn">Import</button>
-          <button class="ghost-button" type="button" id="exportBtn">Export</button>
-          <button class="ghost-button" type="button" id="logoutBtn">Log Out</button>
           <button class="primary-button" type="button" id="openTrackerModalBtn">
             Create Tracker
           </button>
+
+          <!-- New Dropdown Wrapper -->
+          <div class="account-menu-wrap" style="position: relative;">
+            <div class="account-chip" id="accountChip" aria-label="Current user" role="button" tabindex="0">
+              <span class="account-avatar" id="accountAvatar">Y</span>
+              <div class="account-copy">
+                <strong id="accountNameLabel">You</strong>
+                <small id="accountMetaLabel">Local workspace owner</small>
+              </div>
+            </div>
+
+            <!-- The Hidden Dropdown Menu -->
+            <div class="account-dropdown panel hidden" id="accountDropdown">
+              <div class="dropdown-section">
+                <p class="eyebrow">Workspace</p>
+                <button class="dropdown-item" type="button" id="themeToggleBtn">Toggle Theme</button>
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-section">
+                <p class="eyebrow">Data & Support</p>
+                <button class="dropdown-item" type="button" id="importBtn">Import JSON</button>
+                <button class="dropdown-item" type="button" id="exportBtn">Export JSON</button>
+                <button class="dropdown-item" type="button" id="openGuideModalBtn">How To Use</button>
+             </div>
+             <div class="dropdown-divider"></div>
+             <div class="dropdown-section">
+               <button class="dropdown-item danger-text" type="button" id="logoutBtn">Log Out</button>
+             </div>
+            </div>
+          </div>
         </div>
       </header>
 
