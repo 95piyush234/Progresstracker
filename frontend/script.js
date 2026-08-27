@@ -5742,11 +5742,16 @@ function syncOverlayLock() {
 
 function syncTheme() {
   dom.body.dataset.theme = state.settings.theme;
-  dom.themeToggleIcon.textContent = state.settings.theme === "dark" ? "☀" : "☾";
-  dom.themeToggleBtn.setAttribute(
-    "aria-label",
-    state.settings.theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
-  );
+  
+  // Safely check for the old icon just in case
+  if (dom.themeToggleIcon) {
+    dom.themeToggleIcon.textContent = state.settings.theme === "dark" ? "☀" : "☾";
+  }
+  
+  // Update the text of the new dropdown button directly
+  if (dom.themeToggleBtn) {
+    dom.themeToggleBtn.textContent = state.settings.theme === "dark" ? "☀ Switch to Light Theme" : "☾ Switch to Dark Theme";
+  }
 }
 
 function toggleTheme() {
