@@ -9189,8 +9189,9 @@ body[data-theme="light"] .dropdown-item:hover {
 
 .danger-text:hover {
   background: rgba(255, 111, 130, 0.12) !important;
-  /* Allow dropdown to escape the topbar boundaries */
+}
+
+/* Allow dropdown to escape the topbar boundaries */
 header.topbar.panel {
   overflow: visible !important;
-}
 }
