@@ -4018,6 +4018,7 @@ function renderGraphs() {
   const week = getWeeklyChartData();
   const heatmapData = getHeatmapData(35);
   const activeDays = heatmapData.filter((day) => day.total > 0).length;
+  
   const avgCompletion = trackers.length
     ? Math.round(trackers.reduce((sum, tracker) => sum + getTrackerPercent(tracker), 0) / trackers.length)
     : 0;
@@ -4032,6 +4033,56 @@ function renderGraphs() {
     weekTotal: week.currentWeekTotal,
     activeDays
   });
+
+  // 1. Update Momentum Gauge
+  const gaugeChart = document.querySelector('.gauge-chart');
+  const gaugeLabel = document.querySelector('.gauge-label');
+  if (gaugeChart && gaugeLabel) {
+    gaugeChart.style.setProperty('--progress', `${avgCompletion}%`);
+    gaugeLabel.textContent = `${avgCompletion}%`;
+  }
+
+  // 2. Update Multi-Ring Chart
+  const radialRings = document.querySelectorAll('.radial-ring');
+  if (radialRings.length >= 3) {
+    for (let i = 0; i < 3; i++) {
+      const stat = categoryStats[i];
+      if (stat) {
+        radialRings[i].style.setProperty('--progress', `${stat.avgCompletion}%`);
+        radialRings[i].style.setProperty('--ring-color', stat.topAccent);
+      } else {
+        radialRings[i].style.setProperty('--progress', `0%`);
+      }
+    }
+  }
+
+  // 3. Update Diverging Bar Chart (Wins vs Corrections)
+  const divergingContainer = document.querySelector('.diverging-chart');
+  if (divergingContainer) {
+    const allLogs = getAllHistoryEntries().filter(e => !e.log.system);
+    const topCategories = categoryStats.slice(0, 3);
+    
+    divergingContainer.innerHTML = topCategories.map(stat => {
+      const catLogs = allLogs.filter(e => e.tracker.category === stat.category);
+      const positive = catLogs.filter(e => e.log.amount > 0).length;
+      const negative = catLogs.filter(e => e.log.amount < 0).length;
+      const total = positive + negative || 1; // Prevent divide by zero
+      
+      const posPercent = Math.round((positive / total) * 100);
+      const negPercent = Math.round((negative / total) * 100);
+      
+      return `
+        <div class="diverging-row">
+          <span class="diverging-label">${escapeHtml(stat.category)}</span>
+          <div class="diverging-track">
+            <div class="diverging-bar negative" style="width: ${negPercent}%;" title="${negative} corrections"></div>
+            <div class="diverging-center"></div>
+            <div class="diverging-bar positive" style="width: ${posPercent}%;" title="${positive} progress logs"></div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
 
   renderGraphWeeklyVisual(week);
   renderGraphTrackerCompare(trackers);

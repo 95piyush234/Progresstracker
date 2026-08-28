@@ -9345,3 +9345,151 @@ body[data-theme="light"] #accountDropdown:hover {
   color: var(--text) !important;
   transform: translateY(2px) !important;
 }
+/* --- NEW ADVANCED CHARTS --- */
+.gauge-chart-container,
+.multi-radial-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+  padding: 20px 0;
+}
+
+/* 1. Multi-Ring Radial Chart */
+.multi-radial {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: grid;
+  place-items: center;
+}
+
+.radial-ring {
+  position: absolute;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--ring-color) 0, 
+    var(--ring-color) var(--progress), 
+    rgba(255, 255, 255, 0.06) var(--progress), 
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), black calc(100% - 9px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 10px), black calc(100% - 9px));
+}
+
+/* 2. Gauge Speedometer Chart */
+.gauge-chart {
+  position: relative;
+  width: 180px;
+  height: 90px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.gauge-dial {
+  position: absolute;
+  top: 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from -90deg, 
+    var(--accent) 0, 
+    var(--brand-mid) calc(var(--progress) / 2), 
+    rgba(255, 255, 255, 0.08) calc(var(--progress) / 2), 
+    rgba(255, 255, 255, 0.08) 180deg, 
+    transparent 180deg
+  );
+  -webkit-mask: radial-gradient(farthest-side at 50% 50%, transparent 70%, black 72%);
+  mask: radial-gradient(farthest-side at 50% 50%, transparent 70%, black 72%);
+}
+
+.gauge-needle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  height: 70px;
+  background: var(--text);
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(calc(-90deg + (180deg * (var(--progress) / 100))));
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 2;
+}
+
+.gauge-center-pin {
+  position: absolute;
+  bottom: -6px;
+  left: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text);
+  z-index: 3;
+}
+
+.gauge-label {
+  position: absolute;
+  bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 3. Diverging Bar Chart */
+.diverging-chart {
+  display: grid;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.diverging-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.diverging-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: right;
+}
+
+.diverging-track {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+  display: flex;
+}
+
+.diverging-center {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 1;
+}
+
+.diverging-bar {
+  height: 100%;
+}
+
+.diverging-bar.negative {
+  background: var(--danger);
+  border-radius: 999px 0 0 999px;
+  margin-left: auto;
+}
+
+.diverging-bar.positive {
+  background: var(--success);
+  border-radius: 0 999px 999px 0;
+}
