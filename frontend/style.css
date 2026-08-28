@@ -9495,3 +9495,20 @@ body[data-theme="light"] #accountDropdown:hover {
   background: var(--success);
   border-radius: 0 999px 999px 0;
 }
+/* --- 1. GAUGE TEXT OVERLAP FIX --- */
+.gauge-label {
+  z-index: 10 !important; /* Forces the text to sit above the needle */
+  text-shadow: 0 0 8px var(--ui-bg-deep), 0 0 12px var(--ui-bg-deep) !important; /* Adds a dark halo so the needle doesn't wash it out */
+}
+
+/* --- 2. NAVIGATION DEAD-ZONE FIX --- */
+@media (max-width: 1180px) {
+  .mobile-tabbar {
+    display: grid !important; /* Forces the bottom menu to appear exactly when the top menu hides */
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important; /* Ensures all 5 buttons fit perfectly */
+  }
+  
+  body {
+    padding-bottom: 120px !important; /* Prevents the new bottom menu from covering your content */
+  }
+}
