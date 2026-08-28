@@ -9437,6 +9437,8 @@ body[data-theme="light"] #accountDropdown:hover {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--text);
+  z-index: 10; /* Puts text above the needle */
+  text-shadow: 0 0 8px var(--bg-deep), 0 0 12px var(--bg-deep); /* Adds a dark halo so the white needle doesn't wash it out */
 }
 
 /* 3. Diverging Bar Chart */
