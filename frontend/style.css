@@ -9517,3 +9517,7 @@ body[data-theme="light"] #accountDropdown:hover {
     padding-bottom: 120px !important; /* Keeps menu from hiding content */
   }
 }
+/* --- 3. GAUGE NEEDLE MATH FIX --- */
+.gauge-needle {
+  transform: translateX(-50%) rotate(calc(-90deg + var(--progress-deg, 0deg))) !important;
+}
