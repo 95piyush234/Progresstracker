@@ -4039,6 +4039,8 @@ function renderGraphs() {
   const gaugeLabel = document.querySelector('.gauge-label');
   if (gaugeChart && gaugeLabel) {
     gaugeChart.style.setProperty('--progress', `${avgCompletion}%`);
+    // NEW: Calculate exact degrees (180 degrees / 100 = 1.8) for the needle
+    gaugeChart.style.setProperty('--progress-deg', `${avgCompletion * 1.8}deg`);
     gaugeLabel.textContent = `${avgCompletion}%`;
   }
 
