@@ -4027,12 +4027,17 @@ function renderGraphs() {
     ? `${trackers.length} tracker${trackers.length === 1 ? "" : "s"}, ${categoryStats.length} categor${categoryStats.length === 1 ? "y" : "ies"}, ${activeDays} active days, and ${week.currentWeekEntries} entr${week.currentWeekEntries === 1 ? "y" : "ies"} powering your visual progress story.`
     : "Create your first tracker to unlock a full visual graph view of progress, consistency, and completion.";
 
-  dom.graphMetrics.innerHTML = createGraphMetricCards({
+  const metricCardsArray = createGraphMetricCards({
     liveCount: liveTrackers.length,
     avgCompletion,
     weekTotal: week.currentWeekTotal,
     activeDays
   });
+
+  const topContainer = document.getElementById("graphMetricsTop");
+  const bottomContainer = document.getElementById("graphMetricsBottom");
+  if (topContainer) topContainer.innerHTML = metricCardsArray[0]; // Only Live Trackers
+  if (bottomContainer) bottomContainer.innerHTML = metricCardsArray.slice(1).join(""); // The remaining 3
 
   // 1. Update Momentum Gauge
   const gaugeChart = document.querySelector('.gauge-chart');
@@ -4201,7 +4206,6 @@ function createGraphMetricCards({ liveCount, avgCompletion, weekTotal, activeDay
         </article>
       `
     )
-    .join("");
 }
 
 function renderGraphWeeklyVisual(week) {

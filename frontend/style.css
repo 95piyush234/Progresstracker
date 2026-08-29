@@ -9574,3 +9574,23 @@ body[data-theme="light"] #accountDropdown:hover {
   font-family: var(--font-body);
   font-size: 14px;
 }
+/* --- Graph View Split Layout & Mobile Compression Fixes --- */
+#graphMetricsTop {
+  grid-template-columns: 1fr; /* Top row only has 1 card */
+}
+
+#graphMetricsBottom {
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* Bottom row has 3 cards */
+}
+
+@media (max-width: 920px) {
+  #graphMetricsBottom {
+    grid-template-columns: 1fr; /* Stacks the bottom 3 cards vertically on mobile */
+  }
+}
+
+@media (max-width: 780px) {
+  .area-chart-svg {
+    height: 160px; /* Reduces SVG height on mobile so the line doesn't look squished/compressed */
+  }
+}
