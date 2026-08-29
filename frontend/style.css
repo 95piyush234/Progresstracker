@@ -9525,3 +9525,36 @@ body[data-theme="light"] #accountDropdown:hover {
   min-width: 24px;
   min-height: 24px;
 }
+
+/* --- Cumulative Area Chart --- */
+.area-chart-container {
+  position: relative;
+  width: 100%;
+  padding-top: 16px;
+}
+.area-chart-svg {
+  width: 100%;
+  height: 240px;
+  overflow: visible;
+}
+.area-chart-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+.area-chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 4px 6px rgba(93, 228, 199, 0.3));
+}
+.area-chart-fill {
+  fill: url(#area-gradient);
+}
+.area-chart-label {
+  fill: var(--muted);
+  font-size: 13px;
+  font-family: var(--font-body);
+}

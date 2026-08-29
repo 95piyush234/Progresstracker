@@ -4080,6 +4080,79 @@ function renderGraphs() {
     }).join("");
   }
 
+  // 4. Update Cumulative Area Line Chart dynamically
+  const cumulativeContainer = document.getElementById('cumulativeChartContainer');
+  if (cumulativeContainer) {
+    const days = 14; // Shows the last 14 days of cumulative growth
+    let runningTotal = 0;
+    const chartData = [];
+
+    // Calculate daily net totals and accumulate them
+    for (let i = days - 1; i >= 0; i--) {
+      const d = daysOffset(-i);
+      const key = getDateKey(d);
+      const dailyLogs = getAllHistoryEntries().filter(e => !e.log.system && getDateKey(e.log.timestamp) === key);
+      const dayNet = dailyLogs.reduce((sum, e) => sum + e.log.amount, 0);
+      runningTotal += dayNet;
+      chartData.push({ label: formatCalendarDate(d, { month: "short", day: "numeric" }), value: runningTotal });
+    }
+
+    // Set chart dimensions and boundaries
+    const maxVal = Math.max(...chartData.map(d => d.value), 10);
+    const minVal = Math.min(...chartData.map(d => d.value), 0);
+    const range = maxVal - minVal;
+    const pad = range * 0.15; // 15% padding top and bottom
+    const yMax = maxVal + pad;
+    const yMin = minVal - pad;
+    const width = 800;
+    const height = 200;
+
+    // Map data to SVG X/Y coordinates
+    const points = chartData.map((d, i) => {
+      const x = (i / (days - 1)) * width;
+      const y = height - ((d.value - yMin) / (yMax - yMin)) * height;
+      return { x, y, d };
+    });
+
+    // Create SVG paths
+    const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    const areaPath = `${linePath} L ${width} ${height} L 0 ${height} Z`;
+
+    // Inject native SVG
+    cumulativeContainer.innerHTML = `
+      <svg viewBox="-30 -10 860 250" class="area-chart-svg" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="area-gradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        
+        <!-- Grid Lines -->
+        <line x1="0" y1="0" x2="${width}" y2="0" class="area-chart-grid"/>
+        <line x1="0" y1="${height/2}" x2="${width}" y2="${height/2}" class="area-chart-grid"/>
+        <line x1="0" y1="${height}" x2="${width}" y2="${height}" class="area-chart-grid"/>
+        
+        <!-- Y-Axis Labels -->
+        <text x="-10" y="5" text-anchor="end" class="area-chart-label">${Math.round(yMax)}</text>
+        <text x="-10" y="${height/2 + 4}" text-anchor="end" class="area-chart-label">${Math.round((yMax+yMin)/2)}</text>
+        <text x="-10" y="${height + 4}" text-anchor="end" class="area-chart-label">${Math.round(yMin)}</text>
+
+        <!-- X-Axis Labels (Start, Middle, End) -->
+        <text x="0" y="${height + 25}" text-anchor="start" class="area-chart-label">${points[0].d.label}</text>
+        <text x="${width/2}" y="${height + 25}" text-anchor="middle" class="area-chart-label">${points[Math.floor(days/2)].d.label}</text>
+        <text x="${width}" y="${height + 25}" text-anchor="end" class="area-chart-label">${points[days-1].d.label}</text>
+
+        <!-- Area Fill & Solid Line -->
+        <path d="${areaPath}" class="area-chart-fill"></path>
+        <path d="${linePath}" class="area-chart-line"></path>
+        
+        <!-- Data Dots -->
+        ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--bg-deep)" stroke="var(--accent)" stroke-width="2"/>`).join('')}
+      </svg>
+    `;
+  }
+
   renderGraphWeeklyVisual(week);
   renderGraphTrackerCompare(trackers);
   renderGraphCategoryCompare(categoryStats);
