@@ -4148,7 +4148,11 @@ function renderGraphs() {
         <path d="${linePath}" class="area-chart-line"></path>
         
         <!-- Data Dots -->
-        ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--bg-deep)" stroke="var(--accent)" stroke-width="2"/>`).join('')}
+        ${points.map(p => `
+          <circle cx="${p.x}" cy="${p.y}" r="4" fill="var(--bg-deep)" stroke="var(--accent)" stroke-width="2">
+            <title>${p.d.label}: ${formatNumber(p.d.value, 1)}</title>
+          </circle>
+        `).join('')}
       </svg>
     `;
   }

@@ -9558,3 +9558,19 @@ body[data-theme="light"] #accountDropdown:hover {
   font-size: 13px;
   font-family: var(--font-body);
 }
+
+/* Add hover tooltips to the SVG dots */
+.area-chart-svg circle {
+  transition: r 0.2s ease, fill 0.2s ease;
+  cursor: crosshair;
+}
+
+.area-chart-svg circle:hover {
+  r: 6px;
+  fill: var(--accent);
+}
+
+.area-chart-svg circle title {
+  font-family: var(--font-body);
+  font-size: 14px;
+}
