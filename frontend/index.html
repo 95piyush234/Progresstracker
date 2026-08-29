@@ -833,13 +833,8 @@
                 </div>
               </header>
               <div class="multi-radial-container">
-                <div class="multi-radial">
-                  <!-- Outer ring -->
-                  <div class="radial-ring" style="--progress: 85%; --ring-color: var(--brand-start); inset: 0;"></div>
-                  <!-- Middle ring -->
-                  <div class="radial-ring" style="--progress: 62%; --ring-color: var(--brand-mid); inset: 16px;"></div>
-                  <!-- Inner ring -->
-                  <div class="radial-ring" style="--progress: 42%; --ring-color: var(--accent); inset: 32px;"></div>
+                <div class="multi-radial" id="activityRingsContainer">
+                  <!-- Rings will be generated dynamically by script.js -->
                 </div>
               </div>
             </article>
@@ -852,32 +847,8 @@
                   <h4>Wins vs Corrections</h4>
                 </div>
               </header>
-              <div class="diverging-chart">
-                <div class="diverging-row">
-                  <span class="diverging-label">Gaming</span>
-                  <div class="diverging-track">
-                    <!-- Width controls the bar size -->
-                    <div class="diverging-bar negative" style="width: 20%;"></div>
-                    <div class="diverging-center"></div>
-                    <div class="diverging-bar positive" style="width: 80%;"></div>
-                  </div>
-                </div>
-                <div class="diverging-row">
-                  <span class="diverging-label">Study</span>
-                  <div class="diverging-track">
-                    <div class="diverging-bar negative" style="width: 10%;"></div>
-                    <div class="diverging-center"></div>
-                    <div class="diverging-bar positive" style="width: 90%;"></div>
-                  </div>
-                </div>
-                <div class="diverging-row">
-                  <span class="diverging-label">Fitness</span>
-                  <div class="diverging-track">
-                    <div class="diverging-bar negative" style="width: 40%;"></div>
-                    <div class="diverging-center"></div>
-                    <div class="diverging-bar positive" style="width: 60%;"></div>
-                  </div>
-                </div>
+              <div class="diverging-chart" id="divergingChartContainer">
+                <!-- Bars will be generated dynamically by script.js -->
               </div>
             </article>
 

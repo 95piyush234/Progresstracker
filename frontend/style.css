@@ -9521,3 +9521,7 @@ body[data-theme="light"] #accountDropdown:hover {
 .gauge-needle {
   transform: translateX(-50%) rotate(calc(-90deg + var(--progress-deg, 0deg))) !important;
 }
+.radial-ring {
+  min-width: 24px;
+  min-height: 24px;
+}

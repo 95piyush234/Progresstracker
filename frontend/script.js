@@ -4043,31 +4043,26 @@ function renderGraphs() {
     gaugeLabel.textContent = `${avgCompletion}%`;
   }
 
-  // 2. Update Multi-Ring Chart
-  const radialRings = document.querySelectorAll('.radial-ring');
-  if (radialRings.length >= 3) {
-    for (let i = 0; i < 3; i++) {
-      const stat = categoryStats[i];
-      if (stat) {
-        radialRings[i].style.setProperty('--progress', `${stat.avgCompletion}%`);
-        radialRings[i].style.setProperty('--ring-color', stat.topAccent);
-      } else {
-        radialRings[i].style.setProperty('--progress', `0%`);
-      }
-    }
+  /// 2. Update Multi-Ring Chart
+  const radialContainer = document.getElementById('activityRingsContainer');
+  if (radialContainer) {
+    radialContainer.innerHTML = categoryStats.map((stat, index) => {
+      const insetPx = index * 12;
+      return `<div class="radial-ring" style="--progress: ${stat.avgCompletion}%; --ring-color: ${stat.topAccent}; inset: ${insetPx}px;"></div>`;
+    }).join('');
   }
 
-  // 3. Update Diverging Bar Chart (Wins vs Corrections)
-  const divergingContainer = document.querySelector('.diverging-chart');
+  // 3. Update Diverging Bar Chart (Wins vs Corrections) dynamically
+  const divergingContainer = document.getElementById('divergingChartContainer');
   if (divergingContainer) {
     const allLogs = getAllHistoryEntries().filter(e => !e.log.system);
-    const topCategories = categoryStats.slice(0, 3);
     
-    divergingContainer.innerHTML = topCategories.map(stat => {
+    // Removed .slice(0, 3) so it maps every single category
+    divergingContainer.innerHTML = categoryStats.map(stat => {
       const catLogs = allLogs.filter(e => e.tracker.category === stat.category);
       const positive = catLogs.filter(e => e.log.amount > 0).length;
       const negative = catLogs.filter(e => e.log.amount < 0).length;
-      const total = positive + negative || 1; // Prevent divide by zero
+      const total = positive + negative || 1; 
       
       const posPercent = Math.round((positive / total) * 100);
       const negPercent = Math.round((negative / total) * 100);
@@ -4076,9 +4071,9 @@ function renderGraphs() {
         <div class="diverging-row">
           <span class="diverging-label">${escapeHtml(stat.category)}</span>
           <div class="diverging-track">
-            <div class="diverging-bar negative" style="width: ${negPercent}%;" title="${negative} corrections"></div>
+            <div class="diverging-bar negative" style="width: ${negPercent}%;"></div>
             <div class="diverging-center"></div>
-            <div class="diverging-bar positive" style="width: ${posPercent}%;" title="${positive} progress logs"></div>
+            <div class="diverging-bar positive" style="width: ${posPercent}%;"></div>
           </div>
         </div>
       `;
