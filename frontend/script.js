@@ -7118,7 +7118,8 @@ function setupBackButtonTrap() {
     backPressCount += 1;
 
     if (backPressCount === 1) {
-      showToast("Tap back again to exit.");
+      // Changed this line to use the "exit-warning" style tag
+      showToast("Tap back again to exit.", "exit-warning");
       window.history.pushState({ app: "progress-tracker" }, "", window.location.href);
 
       // Reset the counter if they don't tap back again within 2.5 seconds
