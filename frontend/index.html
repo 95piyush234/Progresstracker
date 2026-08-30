@@ -1217,8 +1217,10 @@
         <div class="form-grid">
           <label class="field field-wide">
             <span>Template</span>
-            <input type="text" id="trackerTemplateSelect" list="templateSuggestions" placeholder="Search hundreds of templates..." autocomplete="off" />
-            <datalist id="templateSuggestions"></datalist>
+            <select id="trackerTemplateSelect">
+              <option value="">Start from scratch</option>
+              <!-- Options populated dynamically by JS -->
+            </select>
             <small class="field-help" id="trackerTemplateHint">
               Apply a starter structure with tuned labels, units, colors, and custom fields.
             </small>
