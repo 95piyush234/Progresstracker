@@ -30,61 +30,37 @@ const FOCUS_TICK_MS = 1000;
 const LOCAL_SYNC_MODE = "local";
 const BACKEND_SYNC_MODE = "backend";
 const TRACKER_TEMPLATE_LIBRARY = {
-  Coding: {
-    category: "Coding",
-    goalType: "Deep work coverage",
-    unitType: "hours",
-    accentColor: "#63d3ff",
-    icon: "💻",
-    notes: "Track focused coding hours, problem-solving depth, and shipping consistency without cluttering the workflow.",
-    customFields: [
-      { label: "Language", value: "JavaScript" },
-      { label: "Focus target", value: "Deep work" },
-      { label: "Ship goal", value: "3 commits / week" }
-    ]
-  },
-  Trading: {
-    category: "Trading",
-    goalType: "Execution quality",
-    unitType: "custom",
-    unitLabel: "trades",
-    accentColor: "#ff8f6b",
-    icon: "📈",
-    notes: "Review setups, execution quality, and emotional discipline instead of only chasing outcomes.",
-    customFields: [
-      { label: "Entry price", value: "0.00" },
-      { label: "Exit price", value: "0.00" },
-      { label: "RR ratio", value: "1.5R" },
-      { label: "Result", value: "Win / Loss" },
-      { label: "Emotion", value: "Calm" }
-    ]
-  },
-  Fitness: {
-    category: "Fitness",
-    goalType: "Training volume",
-    unitType: "sessions",
-    accentColor: "#6df1b1",
-    icon: "🏋️",
-    notes: "Build momentum with sessions, lifts, recovery notes, and short reflections after each workout.",
-    customFields: [
-      { label: "Workout split", value: "Upper / Lower" },
-      { label: "Primary lift", value: "Squat" },
-      { label: "Recovery", value: "7h sleep" }
-    ]
-  },
-  Study: {
-    category: "Study",
-    goalType: "Syllabus coverage",
-    unitType: "hours",
-    accentColor: "#b48cff",
-    icon: "📚",
-    notes: "Track chapters, revision blocks, and exam prep with enough structure to see real consistency.",
-    customFields: [
-      { label: "Subject", value: "Algorithms" },
-      { label: "Exam", value: "Upcoming test" },
-      { label: "Topic block", value: "Revision" }
-    ]
-  }
+  // --- CODING & ENGINEERING ---
+  "GeeksforGeeks Streak": { category: "Coding", goalType: "Algorithm mastery", unitType: "tasks", accentColor: "#2f8d46", icon: "💻", notes: "Track daily DSA challenges, specifically focusing on arrays, linked lists, and optimization.", customFields: [{ label: "Language", value: "C / C++" }, { label: "Difficulty", value: "Medium" }] },
+  "C Language Mastery": { category: "Coding", goalType: "Systems programming", unitType: "hours", accentColor: "#555ba2", icon: "⚙️", notes: "Deep dive into pointers, memory management, and pure C algorithms (like analog clock logic).", customFields: [{ label: "Project", value: "Console Apps" }, { label: "Compiler", value: "GCC" }] },
+  "DevOps Roadmap": { category: "Engineering", goalType: "Certification prep", unitType: "hours", accentColor: "#007acc", icon: "☁️", notes: "Track progress through Linux fundamentals, Docker, Kubernetes, and CI/CD pipelines.", customFields: [{ label: "Current Module", value: "Docker" }, { label: "Target Cert", value: "AWS / CKA" }] },
+  "Cybersecurity Basics": { category: "Engineering", goalType: "Skill acquisition", unitType: "hours", accentColor: "#ff0055", icon: "🛡️", notes: "Network protocols, penetration testing fundamentals, and security textbook reviews.", customFields: [{ label: "Platform", value: "TryHackMe" }, { label: "Focus", value: "Networking" }] },
+
+  // --- HARDWARE & DIY ---
+  "ESP32-C3 Audio Build": { category: "Hardware", goalType: "Project completion", unitType: "tasks", accentColor: "#e6b800", icon: "🔋", notes: "Track breadboard testing, wiring schemas, soldering hard-switches, and code flashing for custom pocket MP3 hardware.", customFields: [{ label: "Microcontroller", value: "ESP32-C3 Super Mini" }, { label: "Current Stage", value: "Wiring" }] },
+  "Custom PC Optimization": { category: "Hardware", goalType: "Performance tuning", unitType: "tasks", accentColor: "#9900ff", icon: "🖥️", notes: "Track Ryzen 5 5600G undervolting, RAM speed testing, and thermal paste application cycles.", customFields: [{ label: "CPU", value: "Ryzen 5 5600G" }, { label: "Thermals", value: "High-viscosity paste" }] },
+  "Omni Van Cooling Mod": { category: "DIY", goalType: "Project completion", unitType: "tasks", accentColor: "#00cc99", icon: "🚐", notes: "Step-by-step progress for building a DC-motor evaporative cooling system for high summer heat inside a metal vehicle.", customFields: [{ label: "Power Source", value: "12V DC" }, { label: "User", value: "Father's Shop" }] },
+  "Mechanical Keyboard Mod": { category: "Hardware", goalType: "Customization", unitType: "tasks", accentColor: "#ff3399", icon: "⌨️", notes: "Track hard-soldering new switches, lubing stabilizers, and sound dampening.", customFields: [{ label: "Switch Type", value: "Tactile/Linear" }, { label: "Mounting", value: "Hard-soldered" }] },
+
+  // --- TRADING & FINANCE ---
+  "Pine Script V6 Dev": { category: "Trading", goalType: "Indicator build", unitType: "hours", accentColor: "#00bcd4", icon: "📊", notes: "Development tracking for multi-timeframe analytics dashboard, Candle Range Theory, and FVG detection.", customFields: [{ label: "Platform", value: "TradingView" }, { label: "Architecture", value: "V6" }] },
+  "Institutional Trading Log": { category: "Trading", goalType: "Execution quality", unitType: "custom", unitLabel: "trades", accentColor: "#ff8f6b", icon: "📈", notes: "Review Order Block setups, liquidity sweeps, emotional discipline, and RR outcomes.", customFields: [{ label: "Entry Strategy", value: "FVG + OB" }, { label: "RR ratio", value: "1.5R" }, { label: "Emotion", value: "Calm" }] },
+  "Options Backtesting": { category: "Finance", goalType: "Data gathering", unitType: "custom", unitLabel: "setups", accentColor: "#00cc66", icon: "📉", notes: "Historical chart review for strike pricing, premium decay, and volume profiles.", customFields: [{ label: "Asset", value: "NIFTY/BANKNIFTY" }, { label: "Timeframe", value: "5m" }] },
+
+  // --- GAMING ---
+  "Valorant Ranked Push": { category: "Gaming", goalType: "Performance climb", unitType: "custom", unitLabel: "RR", accentColor: "#fa4454", icon: "🎯", notes: "Track Rank Rating swings, daily aim-training consistency, and agent mastery.", customFields: [{ label: "Main Agent", value: "Duelist/Initiator" }, { label: "Aim Routine", value: "Completed" }] },
+  "CS2 Premier Grind": { category: "Gaming", goalType: "Rating climb", unitType: "custom", unitLabel: "elo", accentColor: "#f5c76c", icon: "🔫", notes: "Track CS Rating, utility practice, and matchmaking map win rates.", customFields: [{ label: "Focus Map", value: "Mirage" }, { label: "Utility", value: "Lineups practiced" }] },
+  "PUBG Survival Rating": { category: "Gaming", goalType: "Rank climbing", unitType: "custom", unitLabel: "points", accentColor: "#f2a900", icon: "🪂", notes: "Track match placements, K/D ratio improvements, and rotational strategies.", customFields: [{ label: "Mode", value: "Squads" }, { label: "Hot Drop", value: "Yes/No" }] },
+
+  // --- ACADEMICS & CREATIVE ---
+  "BCA Semester Syllabus": { category: "Study", goalType: "Syllabus coverage", unitType: "chapters", accentColor: "#b48cff", icon: "🎓", notes: "Track T.N.B. College syllabus coverage, assignment deadlines, and exam form submissions.", customFields: [{ label: "Semester", value: "2nd Semester" }, { label: "Subject", value: "Computer Architecture" }] },
+  "Digital Portrait Editing": { category: "Creative", goalType: "Media production", unitType: "hours", accentColor: "#ff66cc", icon: "🎨", notes: "Stylized portrait editing, automotive-themed compositions, and rendering workflows.", customFields: [{ label: "Subject", value: "Mother's Portrait" }, { label: "Software", value: "Photoshop/Premiere" }] },
+  "Rhythmic Video Editing": { category: "Creative", goalType: "Media production", unitType: "hours", accentColor: "#cc00ff", icon: "🎬", notes: "Multi-clip editing frameworks synced to music beats, testing render efficiencies.", customFields: [{ label: "Style", value: "Beat-sync" }, { label: "Export", value: "4K 60fps" }] },
+
+  // --- FITNESS & LIFE ---
+  "Hypertrophy Block": { category: "Fitness", goalType: "Training volume", unitType: "sessions", accentColor: "#6df1b1", icon: "🏋️", notes: "Track progressive overload, lifting sessions, and recovery metrics.", customFields: [{ label: "Split", value: "Push/Pull/Legs" }, { label: "Sleep", value: "8 hours" }] },
+  "Daily Calisthenics": { category: "Fitness", goalType: "Consistency", unitType: "reps", accentColor: "#42b9f5", icon: "🤸", notes: "Track pushups, pull-ups, dips, and core stabilization hold times.", customFields: [{ label: "Focus", value: "Upper Body" }, { label: "Form", value: "Strict" }] },
+  "Deep Reading": { category: "Habits", goalType: "Page count", unitType: "pages", accentColor: "#ffb366", icon: "📖", notes: "Daily reading tracking for technical manuals or fiction.", customFields: [{ label: "Current Book", value: "" }, { label: "Genre", value: "Engineering/Sci-Fi" }] }
 };
 
 const ui = {
@@ -681,6 +657,7 @@ function bindEvents() {
 
   dom.trackerForm.addEventListener("submit", handleTrackerSubmit);
   dom.trackerTemplateSelect.addEventListener("change", handleTrackerTemplateSelection);
+  dom.trackerTemplateSelect.addEventListener("input", handleTrackerTemplateSelection);
   dom.trackerUnitTypeSelect.addEventListener("change", syncUnitFieldVisibility);
   dom.openLoggerFromModalBtn.addEventListener("click", openLoggerFromTrackerModal);
   dom.trackerAccentInput.addEventListener("input", () => {
@@ -782,6 +759,13 @@ function setStaticUiDefaults() {
   syncLogProofPreview();
   setAuthMode(getDefaultAuthMode(), false);
   syncAuthOtpUi();
+  
+  // POPULATE THE DATALIST FOR THE SEARCHABLE DROPDOWN
+  const templateDatalist = document.getElementById("templateSuggestions");
+  if (templateDatalist) {
+    templateDatalist.innerHTML = Object.keys(TRACKER_TEMPLATE_LIBRARY).sort().map(name => `<option value="${escapeHtml(name)}">`).join("");
+  }
+  
   updateTrackerTemplateHint();
   syncFocusModeUi();
 }
@@ -818,7 +802,9 @@ function getTemplateStarterItem(templateName) {
 function handleTrackerTemplateSelection() {
   updateTrackerTemplateHint();
   const templateName = dom.trackerTemplateSelect.value;
-  if (!templateName) return;
+  
+  // If they clear the search box, don't do anything
+  if (!templateName || !TRACKER_TEMPLATE_LIBRARY[templateName]) return;
 
   if (ui.trackerModalMode !== "create") {
     showToast("Templates are designed for new trackers. Existing tracker data was left unchanged.", "success");
@@ -3205,8 +3191,13 @@ function pushMailMessage(message) {
     };
   }
 
-  state.settings.mailFeed.messages.unshift(normalizeMailMessage(message));
+  const normalizedMsg = normalizeMailMessage(message);
+  if (normalizedMsg) {
+    state.settings.mailFeed.messages.unshift(normalizedMsg);
+  }
+
   state.settings.mailFeed.messages = state.settings.mailFeed.messages
+    .filter((msg) => msg !== null && msg !== undefined) // <-- This cleans out the corrupted data!
     .sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt))
     .slice(0, MAIL_FEED_LIMIT);
 }

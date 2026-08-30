@@ -1217,13 +1217,8 @@
         <div class="form-grid">
           <label class="field field-wide">
             <span>Template</span>
-            <select id="trackerTemplateSelect">
-              <option value="">Start from scratch</option>
-              <option value="Coding">Coding</option>
-              <option value="Trading">Trading</option>
-              <option value="Fitness">Fitness</option>
-              <option value="Study">Study</option>
-            </select>
+            <input type="text" id="trackerTemplateSelect" list="templateSuggestions" placeholder="Search hundreds of templates..." autocomplete="off" />
+            <datalist id="templateSuggestions"></datalist>
             <small class="field-help" id="trackerTemplateHint">
               Apply a starter structure with tuned labels, units, colors, and custom fields.
             </small>
