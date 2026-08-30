@@ -189,6 +189,7 @@ async function init() {
   bindEvents();
   bindSessionActivityTracking();
   setStaticUiDefaults();
+  setupBackButtonTrap(); // <-- ADD THIS LINE HERE
   renderApp(); 
 
   // 3. DO THE HEAVY INTERNET WORK IN THE BACKGROUND
@@ -7094,3 +7095,40 @@ document.addEventListener("DOMContentLoaded", () => {
   setupPasswordToggle("toggleResetPasswordBtn", "authResetPasswordInput");
   setupPasswordToggle("toggleResetconfirmBtn", "authResetConfirmInput");
 });
+
+
+// NEW FEATURE: Double-tap back to exit & mobile back-button modal close
+function setupBackButtonTrap() {
+  // Push a dummy state so the first 'back' press triggers our code instead of exiting
+  window.history.pushState({ app: "progress-tracker" }, "", window.location.href);
+
+  let backPressCount = 0;
+  let backPressTimer = null;
+
+  window.addEventListener("popstate", () => {
+    // 1. If any modal or drawer is open, close it gracefully instead of exiting
+    if (dom.body.classList.contains("is-locked")) {
+      forceCloseOverlays();
+      // Restore the trap so they don't exit on the NEXT press either
+      window.history.pushState({ app: "progress-tracker" }, "", window.location.href);
+      return;
+    }
+
+    // 2. Double tap to exit logic for the main dashboard
+    backPressCount += 1;
+
+    if (backPressCount === 1) {
+      showToast("Tap back again to exit.");
+      window.history.pushState({ app: "progress-tracker" }, "", window.location.href);
+
+      // Reset the counter if they don't tap back again within 2.5 seconds
+      backPressTimer = window.setTimeout(() => {
+        backPressCount = 0;
+      }, 2500);
+    } else {
+      // They tapped back twice quickly, let them leave the app
+      window.clearTimeout(backPressTimer);
+      window.history.back();
+    }
+  });
+}
