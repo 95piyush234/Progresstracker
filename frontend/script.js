@@ -1396,12 +1396,13 @@ async function hydrateBackendSession() {
       sessionId: getSession().sessionId
     });
     saveState();
-    // Schedule proactive token refresh before the access token expires
     scheduleAccessTokenRefresh();
   } catch (error) {
-    // Never log out due to network issues, server unavailability, or timeouts.
-    // Only log out on definitive auth rejections (401/403) where refresh also fails.
+    // CRITICAL FIX: If the server is just sleeping (Render free tier), 
+    // network is down, or a 5xx error occurs, DO NOT log the user out. 
+    // Keep them signed in locally using their existing session token.
     if (error.backendUnavailable || (error.status && error.status >= 500)) {
+      console.warn("Backend sleeping or offline on hydration. Preserving local session.");
       return;
     }
 
@@ -1409,19 +1410,21 @@ async function hydrateBackendSession() {
       await refreshBackendSessionToken();
       scheduleAccessTokenRefresh();
     } catch (refreshError) {
-      // If the refresh fails due to network/server issues, stay logged in —
-      // the user's local data is intact and they can retry when back online.
+      // Again, ignore temporary server blips during refresh
       if (refreshError.backendUnavailable || (refreshError.status && refreshError.status >= 500)) {
         return;
       }
-      // Only clear session on definitive 401/403 (token truly invalid/revoked)
-      state.settings.session = createSessionState({
-        loggedIn: false,
-        lastLoginAt: getSession().lastLoginAt || getAccount()?.lastLoginAt || null,
-        lastActivityAt: getSession().lastActivityAt || null,
-        authProvider: "backend"
-      });
-      saveState();
+      
+      // Only clear the session if the token is definitively dead/unauthorized (401/403)
+      if (refreshError.status === 401 || refreshError.status === 403) {
+        state.settings.session = createSessionState({
+          loggedIn: false,
+          lastLoginAt: getSession().lastLoginAt || getAccount()?.lastLoginAt || null,
+          lastActivityAt: getSession().lastActivityAt || null,
+          authProvider: "backend"
+        });
+        saveState();
+      }
     }
   }
 }
