@@ -30,6 +30,12 @@ const FOCUS_TICK_MS = 1000;
 const LOCAL_SYNC_MODE = "local";
 const BACKEND_SYNC_MODE = "backend";
 const TRACKER_TEMPLATE_LIBRARY = {
+  // --- CORE TEMPLATES (Always at Top) ---
+  "Coding": { category: "Coding", goalType: "Deep work coverage", unitType: "hours", accentColor: "#63d3ff", icon: "💻", notes: "Track focused coding hours, problem-solving depth, and shipping consistency without cluttering the workflow.", customFields: [{ label: "Language", value: "JavaScript" }, { label: "Focus target", value: "Deep work" }, { label: "Ship goal", value: "3 commits / week" }] },
+  "Trading": { category: "Trading", goalType: "Execution quality", unitType: "custom", unitLabel: "trades", accentColor: "#ff8f6b", icon: "📈", notes: "Review setups, execution quality, and emotional discipline instead of only chasing outcomes.", customFields: [{ label: "Entry price", value: "0.00" }, { label: "Exit price", value: "0.00" }, { label: "RR ratio", value: "1.5R" }, { label: "Result", value: "Win / Loss" }, { label: "Emotion", value: "Calm" }] },
+  "Fitness": { category: "Fitness", goalType: "Training volume", unitType: "sessions", accentColor: "#6df1b1", icon: "🏋️", notes: "Build momentum with sessions, lifts, recovery notes, and short reflections after each workout.", customFields: [{ label: "Workout split", value: "Upper / Lower" }, { label: "Primary lift", value: "Squat" }, { label: "Recovery", value: "7h sleep" }] },
+  "Study": { category: "Study", goalType: "Syllabus coverage", unitType: "hours", accentColor: "#b48cff", icon: "📚", notes: "Track chapters, revision blocks, and exam prep with enough structure to see real consistency.", customFields: [{ label: "Subject", value: "Algorithms" }, { label: "Exam", value: "Upcoming test" }, { label: "Topic block", value: "Revision" }] },
+
   // --- CODING & TECH ---
   "Daily LeetCode Streak": { category: "Coding", goalType: "Problem solving", unitType: "tasks", accentColor: "#f6b561", icon: "💻", notes: "Track daily algorithmic problem solving to prepare for technical interviews.", customFields: [{ label: "Difficulty", value: "Medium/Hard" }, { label: "Topic", value: "Dynamic Programming" }] },
   "Full-Stack Project": { category: "Coding", goalType: "Project completion", unitType: "hours", accentColor: "#63d3ff", icon: "🚀", notes: "Track focused development hours spent on your personal portfolio or SaaS project.", customFields: [{ label: "Stack", value: "MERN" }, { label: "Current Phase", value: "Backend API" }] },
@@ -773,25 +779,24 @@ function setStaticUiDefaults() {
   setAuthMode(getDefaultAuthMode(), false);
   syncAuthOtpUi();
   
-  // POPULATE DROPDOWN WITH CORE TEMPLATES AT THE TOP, FOLLOWED BY ALPHABETICAL GROUPS
   if (dom.trackerTemplateSelect) {
-    const coreTemplates = ["Coding", "Trading", "Fitness", "Study"];
     let optionsHtml = '<option value="">Start from scratch</option>';
     
-    // 1. Render the core templates first if they exist in the library
+    // 1. Force your 4 core templates to the absolute top
+    const coreTemplates = ["Coding", "Trading", "Fitness", "Study"];
     for (const name of coreTemplates) {
       if (TRACKER_TEMPLATE_LIBRARY[name]) {
         optionsHtml += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
       }
     }
     
-    // Divider separation if desired, or go straight to grouped categories
-    optionsHtml += `<option disabled>----------------------------------</option>`;
+    // 2. Clean separator line
+    optionsHtml += `<option disabled>────────────────────────</option>`;
 
-    // 2. Render the rest of the categories grouped alphabetically
+    // 3. Group the rest of the templates alphabetically by category
     const groups = {};
     for (const [name, data] of Object.entries(TRACKER_TEMPLATE_LIBRARY)) {
-      if (coreTemplates.includes(name)) continue; // Skip core templates so they don't duplicate
+      if (coreTemplates.includes(name)) continue; // Skip core items so they don't duplicate
       if (!groups[data.category]) groups[data.category] = [];
       groups[data.category].push(name);
     }
