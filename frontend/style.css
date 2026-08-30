@@ -9594,8 +9594,10 @@ body[data-theme="light"] #accountDropdown:hover {
     height: 160px; /* Reduces SVG height on mobile so the line doesn't look squished/compressed */
   }
 }
-/* --- Sign-in Loading State --- */
-.primary-button.is-loading {
+/* --- Global Loading State for All Buttons --- */
+.primary-button.is-loading,
+.danger-button.is-loading,
+.ghost-button.is-loading {
   opacity: 0.8;
   cursor: wait !important;
   position: relative;
@@ -9603,11 +9605,15 @@ body[data-theme="light"] #accountDropdown:hover {
 }
 
 .primary-button.is-loading span,
-.primary-button.is-loading {
+.primary-button.is-loading,
+.danger-button.is-loading,
+.ghost-button.is-loading {
   color: transparent !important;
 }
 
-.primary-button.is-loading::after {
+.primary-button.is-loading::after,
+.danger-button.is-loading::after,
+.ghost-button.is-loading::after {
   content: "";
   position: absolute;
   width: 18px;

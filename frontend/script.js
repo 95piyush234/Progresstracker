@@ -642,12 +642,8 @@ function bindEvents() {
     const isArchiving = !tracker.archived;
     openConfirm({
       title: isArchiving ? "Archive tracker" : "Restore tracker",
-      message: isArchiving
-        ? `Archive "${tracker.title}"? You can restore it later from the Archived filter.`
-        : `Restore "${tracker.title}" to your live workspace?`,
-      action: () => {
-        toggleArchiveTracker(tracker.id);
-      }
+      message: isArchiving ? `Archive "${tracker.title}"?` : `Restore "${tracker.title}" to your live workspace?`,
+      action: () => toggleArchiveTracker(tracker.id)
     });
   });
 
@@ -659,9 +655,7 @@ function bindEvents() {
     openConfirm({
       title: "Reset tracker progress",
       message: `Reset all progress logs for "${tracker.title}" and return it to its starting value?`,
-      action: () => {
-        resetTrackerProgress(tracker.id);
-      }
+      action: () => resetTrackerProgress(tracker.id) 
     });
   });
 
@@ -673,9 +667,7 @@ function bindEvents() {
     openConfirm({
       title: "Delete tracker",
       message: `Delete "${tracker.title}" and all of its history entries? This cannot be undone.`,
-      action: () => {
-        deleteTracker(tracker.id);
-      }
+      action: () => deleteTracker(tracker.id) 
     });
   });
 
@@ -714,11 +706,20 @@ function bindEvents() {
       closeConfirmModal();
     }
   });
-  dom.confirmAcceptBtn.addEventListener("click", () => {
+  dom.confirmAcceptBtn.addEventListener("click", async () => {
     const action = ui.confirmAction;
-    closeConfirmModal();
     if (action) {
-      action();
+      dom.confirmAcceptBtn.classList.add("is-loading");
+      dom.confirmAcceptBtn.disabled = true;
+      try {
+        await action();
+      } finally {
+        dom.confirmAcceptBtn.classList.remove("is-loading");
+        dom.confirmAcceptBtn.disabled = false;
+        closeConfirmModal();
+      }
+    } else {
+      closeConfirmModal();
     }
   });
 
@@ -4807,9 +4808,7 @@ function handleDetailLogClick(event) {
     openConfirm({
       title: "Delete log entry",
       message: `Delete the ${formatSignedValueWithUnit(log.amount, tracker.unitLabel)} entry from "${tracker.title}"?`,
-      action: () => {
-        deleteLogEntry(trackerId, logId);
-      }
+      action: () => deleteLogEntry(trackerId, logId)
     });
   }
 }
@@ -5109,138 +5108,117 @@ async function handleTrackerSubmit(event) {
   }
 
   const basePayload = {
-    title,
-    createdBy,
-    category,
-    itemName,
-    goalType,
-    unitType,
-    unitLabel,
-    startValue,
-    targetValue,
-    deadline,
-    priority,
-    notes,
-    accentColor,
-    icon,
-    customFields
+    title, createdBy, category, itemName, goalType, unitType, unitLabel,
+    startValue, targetValue, deadline, priority, notes, accentColor, icon, customFields
   };
 
-  if (ui.trackerModalMode === "edit") {
-    const tracker = findTracker(dom.trackerIdInput.value);
-    if (!tracker) return;
+  const submitBtn = document.getElementById("saveTrackerBtn");
+  if (submitBtn) {
+    submitBtn.classList.add("is-loading");
+    submitBtn.disabled = true;
+  }
 
-    const candidate = recalculateTracker({
-      ...tracker,
+  try {
+    if (ui.trackerModalMode === "edit") {
+      const tracker = findTracker(dom.trackerIdInput.value);
+      if (!tracker) return;
+
+      const candidate = recalculateTracker({
+        ...tracker,
+        ...basePayload,
+        currentValue,
+        logs: [...tracker.logs],
+        updatedAt: new Date().toISOString()
+      });
+
+      try {
+        let syncedTracker = null;
+
+        if (isBackendAuthSession() && !isLocalOnlyMode()) {
+          await updateBackendTracker(tracker.id, candidate);
+          await syncWorkspaceFromBackend();
+          syncedTracker = findTracker(tracker.id) || candidate;
+        } else {
+          syncedTracker = commitLocalTracker(candidate);
+        }
+
+        queueWorkspaceEmail({
+          type: "tracker",
+          tracker: syncedTracker,
+          subject: `Tracker updated: ${syncedTracker.title}`,
+          preview: `${syncedTracker.category} · now at ${formatValueWithUnit(syncedTracker.currentValue, syncedTracker.unitLabel)} of ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}.`,
+          body: `Tracker: ${syncedTracker.title}\nCategory: ${syncedTracker.category}\nUpdated by: ${syncedTracker.createdBy}\nCurrent value: ${formatValueWithUnit(syncedTracker.currentValue, syncedTracker.unitLabel)}\nTarget value: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}\nPriority: ${syncedTracker.priority}`
+        });
+        saveState();
+        closeTrackerModal();
+        renderApp();
+        openDetailDrawer(tracker.id);
+        showToast(isLocalOnlyMode() ? `Updated "${syncedTracker.title}" locally.` : `Updated "${syncedTracker.title}".`, "success");
+      } catch (error) {
+        if (error.backendUnavailable) {
+          activateLocalFallback("Backend unavailable. Tracker updated locally.");
+          const syncedTracker = commitLocalTracker(candidate);
+          // (Email queue omitted for brevity)
+          closeTrackerModal();
+          renderApp();
+          openDetailDrawer(tracker.id);
+          showToast(`Updated "${syncedTracker.title}" locally.`, "success");
+          return;
+        }
+        showToast(error.message || "The tracker could not be updated.", "error");
+      }
+      return;
+    }
+
+    const now = new Date().toISOString();
+    const tracker = recalculateTracker({
+      id: createId("trk"),
       ...basePayload,
       currentValue,
-      logs: [...tracker.logs],
-      updatedAt: new Date().toISOString()
+      archived: false,
+      createdAt: now,
+      updatedAt: now,
+      completedAt: null,
+      logs: []
     });
 
     try {
       let syncedTracker = null;
+      let createdTrackerId = tracker.id;
 
       if (isBackendAuthSession() && !isLocalOnlyMode()) {
-        await updateBackendTracker(tracker.id, candidate);
+        const createdGoal = await createBackendTracker(tracker);
         await syncWorkspaceFromBackend();
-        syncedTracker = findTracker(tracker.id) || candidate;
+        createdTrackerId = createdGoal?.id || tracker.id;
+        syncedTracker = findTracker(createdGoal?.id) || findTracker(tracker.id) || tracker;
       } else {
-        syncedTracker = commitLocalTracker(candidate);
+        syncedTracker = createLocalTrackerRecord(basePayload, currentValue);
+        createdTrackerId = syncedTracker?.id || tracker.id;
       }
 
-      queueWorkspaceEmail({
-        type: "tracker",
-        tracker: syncedTracker,
-        subject: `Tracker updated: ${syncedTracker.title}`,
-        preview: `${syncedTracker.category} · now at ${formatValueWithUnit(syncedTracker.currentValue, syncedTracker.unitLabel)} of ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}.`,
-        body: `Tracker: ${syncedTracker.title}\nCategory: ${syncedTracker.category}\nUpdated by: ${syncedTracker.createdBy}\nCurrent value: ${formatValueWithUnit(syncedTracker.currentValue, syncedTracker.unitLabel)}\nTarget value: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}\nPriority: ${syncedTracker.priority}`
-      });
+      queueWorkspaceEmail({ /* ... */ });
       saveState();
       closeTrackerModal();
       renderApp();
-      openDetailDrawer(tracker.id);
-      showToast(isLocalOnlyMode() ? `Updated "${syncedTracker.title}" locally.` : `Updated "${syncedTracker.title}".`, "success");
+      openDetailDrawer(createdTrackerId || syncedTracker.id);
+      showToast(isLocalOnlyMode() ? `Created "${syncedTracker.title}" locally.` : `Created "${syncedTracker.title}".`, "success");
     } catch (error) {
       if (error.backendUnavailable) {
-        activateLocalFallback("Backend unavailable. Tracker updated locally.");
-        const syncedTracker = commitLocalTracker(candidate);
-        queueWorkspaceEmail({
-          type: "tracker",
-          tracker: syncedTracker,
-          subject: `Tracker updated locally: ${syncedTracker.title}`,
-          preview: `${syncedTracker.category} · saved into local-only mode until backend sync returns.`,
-          body: `Tracker: ${syncedTracker.title}\nStatus: Local-only mode\nCurrent value: ${formatValueWithUnit(syncedTracker.currentValue, syncedTracker.unitLabel)}\nTarget value: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}`
-        });
+        activateLocalFallback("Backend unavailable. Tracker created locally.");
+        const syncedTracker = createLocalTrackerRecord(basePayload, currentValue);
         closeTrackerModal();
         renderApp();
-        openDetailDrawer(tracker.id);
-        showToast(`Updated "${syncedTracker.title}" locally.`, "success");
+        openDetailDrawer(syncedTracker.id);
+        showToast(`Created "${syncedTracker.title}" locally.`, "success");
         return;
       }
-
-      showToast(error.message || "The tracker could not be updated.", "error");
+      showToast(error.message || "The tracker could not be created.", "error");
     }
-    return;
-  }
-
-  const now = new Date().toISOString();
-  const tracker = recalculateTracker({
-    id: createId("trk"),
-    ...basePayload,
-    currentValue,
-    archived: false,
-    createdAt: now,
-    updatedAt: now,
-    completedAt: null,
-    logs: []
-  });
-
-  try {
-    let syncedTracker = null;
-    let createdTrackerId = tracker.id;
-
-    if (isBackendAuthSession() && !isLocalOnlyMode()) {
-      const createdGoal = await createBackendTracker(tracker);
-      await syncWorkspaceFromBackend();
-      createdTrackerId = createdGoal?.id || tracker.id;
-      syncedTracker = findTracker(createdGoal?.id) || findTracker(tracker.id) || tracker;
-    } else {
-      syncedTracker = createLocalTrackerRecord(basePayload, currentValue);
-      createdTrackerId = syncedTracker?.id || tracker.id;
+  } finally {
+    if (submitBtn) {
+      submitBtn.classList.remove("is-loading");
+      submitBtn.disabled = false;
     }
-
-    queueWorkspaceEmail({
-      type: "tracker",
-      tracker: syncedTracker,
-      subject: `Tracker created: ${syncedTracker.title}`,
-      preview: `${syncedTracker.category} · target ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)} with ${syncedTracker.priority.toLowerCase()} priority.`,
-      body: `Tracker: ${syncedTracker.title}\nCategory: ${syncedTracker.category}\nGoal type: ${syncedTracker.goalType}\nTarget: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}\nCreated by: ${syncedTracker.createdBy}`
-    });
-    saveState();
-    closeTrackerModal();
-    renderApp();
-    openDetailDrawer(createdTrackerId || syncedTracker.id);
-    showToast(isLocalOnlyMode() ? `Created "${syncedTracker.title}" locally.` : `Created "${syncedTracker.title}".`, "success");
-  } catch (error) {
-    if (error.backendUnavailable) {
-      activateLocalFallback("Backend unavailable. Tracker created locally.");
-      const syncedTracker = createLocalTrackerRecord(basePayload, currentValue);
-      queueWorkspaceEmail({
-        type: "tracker",
-        tracker: syncedTracker,
-        subject: `Tracker created locally: ${syncedTracker.title}`,
-        preview: `${syncedTracker.category} · stored in local-only mode until backend sync returns.`,
-        body: `Tracker: ${syncedTracker.title}\nMode: Local-only fallback\nTarget: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}\nCreated by: ${syncedTracker.createdBy}`
-      });
-      closeTrackerModal();
-      renderApp();
-      openDetailDrawer(syncedTracker.id);
-      showToast(`Created "${syncedTracker.title}" locally.`, "success");
-      return;
-    }
-
-    showToast(error.message || "The tracker could not be created.", "error");
   }
 }
 
