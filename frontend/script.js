@@ -2154,39 +2154,39 @@ async function handleAuthSubmit(event) {
     return;
   }
 
-  if (ui.authMode === "login") {
-    try {
+  // Turn on loading state
+  dom.authSubmitBtn.classList.add("is-loading");
+  dom.authSubmitBtn.disabled = true;
+
+  try {
+    if (ui.authMode === "login") {
       const backendResult = await loginWithBackendCredentials(credentials);
       await applyBackendAuthSuccess(backendResult, credentials.payload, "Signed in successfully.");
       return;
-    } catch (error) {
-      showToast(error.message || "Could not sign you in with that email and password.", "error");
-      dom.authPasswordInput.focus();
+    }
+
+    const pending = getPendingAuthOtp();
+    if (!isMatchingPendingOtp(pending, credentials.payload)) {
+      await issueAuthOtp(false, credentials);
       return;
     }
-  }
 
-  const pending = getPendingAuthOtp();
-  if (!isMatchingPendingOtp(pending, credentials.payload)) {
-    await issueAuthOtp(false, credentials);
-    return;
-  }
+    const otp = sanitizeText(dom.authOtpInput.value, 6);
+    if (!/^\d{6}$/.test(otp)) {
+      showToast("Enter the 6-digit OTP from your email inbox.", "error");
+      dom.authOtpInput.focus();
+      return;
+    }
 
-  const otp = sanitizeText(dom.authOtpInput.value, 6);
-  if (!/^\d{6}$/.test(otp)) {
-    showToast("Enter the 6-digit OTP from your email inbox.", "error");
-    dom.authOtpInput.focus();
-    return;
-  }
-
-  try {
     const backendResult = await verifyBackendAuthOtp(credentials.payload, otp);
     await applyBackendAuthSuccess(backendResult, credentials.payload, "Email verified. Your workspace is ready.");
-    return;
   } catch (error) {
-    showToast(error.message || "That OTP could not be verified by the backend.", "error");
-    dom.authOtpInput.focus();
-    return;
+    showToast(error.message || "Authentication request failed.", "error");
+    dom.authPasswordInput.focus();
+  } finally {
+    // This now safely turns off the loading state for ALL paths (success, error, and early returns)
+    dom.authSubmitBtn.classList.remove("is-loading");
+    dom.authSubmitBtn.disabled = false;
   }
 }
 

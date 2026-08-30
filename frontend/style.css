@@ -9594,3 +9594,36 @@ body[data-theme="light"] #accountDropdown:hover {
     height: 160px; /* Reduces SVG height on mobile so the line doesn't look squished/compressed */
   }
 }
+/* --- Sign-in Loading State --- */
+.primary-button.is-loading {
+  opacity: 0.8;
+  cursor: wait !important;
+  position: relative;
+  pointer-events: none;
+}
+
+.primary-button.is-loading span,
+.primary-button.is-loading {
+  color: transparent !important;
+}
+
+.primary-button.is-loading::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  margin-left: -9px;
+  margin-top: -9px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: button-loading-spin 0.6s linear infinite;
+}
+
+@keyframes button-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
