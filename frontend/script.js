@@ -4547,9 +4547,7 @@ function renderDetailDrawer() {
         .join("")
     : createEmptyStackItem("No history yet", "Add a progress entry to start tracking movement here.");
 
-  dom.detailNotes.innerHTML = tracker.notes
-    ? `<div class="note-card"><h5>Notes</h5><p class="subtle">${escapeHtml(tracker.notes)}</p></div>`
-    : "";
+  dom.detailNotes.innerHTML = createNotesMarkup(tracker);
 
   dom.detailCustomFields.innerHTML = tracker.customFields.length
     ? `
@@ -7132,4 +7130,89 @@ function setupBackButtonTrap() {
       window.history.back();
     }
   });
+}
+
+// --- Sub-Task Roadmap Logic ---
+
+function createNotesMarkup(tracker) {
+  if (!tracker.notes) return "";
+
+  // Split by newline and check for markdown checkboxes
+  const lines = tracker.notes.split(/\r?\n/);
+  let html = '';
+  let hasRoadmap = false;
+
+  lines.forEach((line, index) => {
+    // Looks for "- [ ]" or "- [x]" (with optional leading spaces)
+    const match = line.match(/^\s*- \[( |x|X)\] (.*)$/);
+    if (match) {
+      hasRoadmap = true;
+      const isChecked = match[1].toLowerCase() === 'x';
+      html += `
+        <label class="roadmap-item ${isChecked ? 'is-completed' : ''}">
+          <input type="checkbox" class="roadmap-checkbox" data-tracker-id="${tracker.id}" data-line-index="${index}" ${isChecked ? 'checked' : ''} />
+          <span class="roadmap-text">${escapeHtml(match[2])}</span>
+        </label>
+      `;
+    } else if (line.trim() !== "") {
+      html += `<p class="subtle">${escapeHtml(line)}</p>`;
+    }
+  });
+
+  return `
+    <div class="note-card">
+      <h5>${hasRoadmap ? 'Roadmap & Notes' : 'Notes'}</h5>
+      <div class="roadmap-content">
+        ${html}
+      </div>
+    </div>
+  `;
+}
+
+// Bind the interactive clicks to the Notes container
+dom.detailNotes.addEventListener("change", async (event) => {
+  if (event.target.classList.contains("roadmap-checkbox")) {
+    const trackerId = event.target.dataset.trackerId;
+    const lineIndex = parseInt(event.target.dataset.lineIndex, 10);
+    const isChecked = event.target.checked;
+    await toggleRoadmapItem(trackerId, lineIndex, isChecked);
+  }
+});
+
+async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
+  const tracker = findTracker(trackerId);
+  if (!tracker) return;
+
+  const lines = tracker.notes.split(/\r?\n/);
+  const line = lines[lineIndex];
+  
+  if (line !== undefined) {
+    if (isChecked) {
+      lines[lineIndex] = line.replace(/^(\s*- )\[ \]/, '$1[x]');
+    } else {
+      lines[lineIndex] = line.replace(/^(\s*- )\[[xX]\]/, '$1[ ]');
+    }
+  }
+
+  const updatedNotes = lines.join('\n');
+  const updatedTracker = recalculateTracker({ 
+    ...tracker, 
+    notes: updatedNotes, 
+    updatedAt: new Date().toISOString() 
+  });
+
+  try {
+    if (isBackendAuthSession() && !isLocalOnlyMode()) {
+      await updateBackendTracker(tracker.id, updatedTracker);
+      await syncWorkspaceFromBackend();
+    } else {
+      commitLocalTracker(updatedTracker);
+    }
+    
+    // Re-render the drawer instantly to update the visual strike-through
+    renderDetailDrawer();
+  } catch (error) {
+    showToast("Couldn't save roadmap progress.", "error");
+    renderDetailDrawer(); // Revert UI if it fails
+  }
 }
