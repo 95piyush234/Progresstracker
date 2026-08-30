@@ -5158,7 +5158,14 @@ async function handleTrackerSubmit(event) {
         if (error.backendUnavailable) {
           activateLocalFallback("Backend unavailable. Tracker updated locally.");
           const syncedTracker = commitLocalTracker(candidate);
-          // (Email queue omitted for brevity)
+          queueWorkspaceEmail({
+            type: "tracker",
+            tracker: syncedTracker,
+            subject: `Tracker updated locally: ${syncedTracker.title}`,
+            preview: `${syncedTracker.category} · saved into local-only mode until backend sync returns.`,
+            body: `Tracker: ${syncedTracker.title}\nStatus: Local-only mode\nCurrent value: ${formatValueWithUnit(syncedTracker.currentValue, syncedTracker.unitLabel)}\nTarget value: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}`
+          });
+          saveState();
           closeTrackerModal();
           renderApp();
           openDetailDrawer(tracker.id);
@@ -5196,7 +5203,13 @@ async function handleTrackerSubmit(event) {
         createdTrackerId = syncedTracker?.id || tracker.id;
       }
 
-      queueWorkspaceEmail({ /* ... */ });
+      queueWorkspaceEmail({
+        type: "tracker",
+        tracker: syncedTracker,
+        subject: `Tracker created: ${syncedTracker.title}`,
+        preview: `${syncedTracker.category} · target ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)} with ${syncedTracker.priority.toLowerCase()} priority.`,
+        body: `Tracker: ${syncedTracker.title}\nCategory: ${syncedTracker.category}\nGoal type: ${syncedTracker.goalType}\nTarget: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}\nCreated by: ${syncedTracker.createdBy}`
+      });
       saveState();
       closeTrackerModal();
       renderApp();
@@ -5206,6 +5219,14 @@ async function handleTrackerSubmit(event) {
       if (error.backendUnavailable) {
         activateLocalFallback("Backend unavailable. Tracker created locally.");
         const syncedTracker = createLocalTrackerRecord(basePayload, currentValue);
+        queueWorkspaceEmail({
+          type: "tracker",
+          tracker: syncedTracker,
+          subject: `Tracker created locally: ${syncedTracker.title}`,
+          preview: `${syncedTracker.category} · stored in local-only mode until backend sync returns.`,
+          body: `Tracker: ${syncedTracker.title}\nMode: Local-only fallback\nTarget: ${formatValueWithUnit(syncedTracker.targetValue, syncedTracker.unitLabel)}\nCreated by: ${syncedTracker.createdBy}`
+        });
+        saveState();
         closeTrackerModal();
         renderApp();
         openDetailDrawer(syncedTracker.id);
