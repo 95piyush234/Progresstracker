@@ -773,15 +773,29 @@ function setStaticUiDefaults() {
   setAuthMode(getDefaultAuthMode(), false);
   syncAuthOtpUi();
   
-  // POPULATE THE DROPDOWN IN CATEGORIZED GROUPS
+  // POPULATE DROPDOWN WITH CORE TEMPLATES AT THE TOP, FOLLOWED BY ALPHABETICAL GROUPS
   if (dom.trackerTemplateSelect) {
+    const coreTemplates = ["Coding", "Trading", "Fitness", "Study"];
+    let optionsHtml = '<option value="">Start from scratch</option>';
+    
+    // 1. Render the core templates first if they exist in the library
+    for (const name of coreTemplates) {
+      if (TRACKER_TEMPLATE_LIBRARY[name]) {
+        optionsHtml += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
+      }
+    }
+    
+    // Divider separation if desired, or go straight to grouped categories
+    optionsHtml += `<option disabled>----------------------------------</option>`;
+
+    // 2. Render the rest of the categories grouped alphabetically
     const groups = {};
     for (const [name, data] of Object.entries(TRACKER_TEMPLATE_LIBRARY)) {
+      if (coreTemplates.includes(name)) continue; // Skip core templates so they don't duplicate
       if (!groups[data.category]) groups[data.category] = [];
       groups[data.category].push(name);
     }
     
-    let optionsHtml = '<option value="">Start from scratch</option>';
     for (const category of Object.keys(groups).sort()) {
       optionsHtml += `<optgroup label="-- ${escapeHtml(category.toUpperCase())} --">`;
       for (const name of groups[category].sort()) {
@@ -789,6 +803,7 @@ function setStaticUiDefaults() {
       }
       optionsHtml += `</optgroup>`;
     }
+    
     dom.trackerTemplateSelect.innerHTML = optionsHtml;
   }
   
