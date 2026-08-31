@@ -9852,3 +9852,62 @@ body[data-theme="light"] .roadmap-item.is-completed .roadmap-text {
   margin: 0;
   padding: 0;
 }
+
+/* =========================================================
+   LIGHT MODE VISUAL BUG FIXES
+   ========================================================= */
+
+/* 1. Restore the colorful Donut Progress Rings */
+.progress-ring,
+.progress-ring-small {
+  background: conic-gradient(
+    from -110deg,
+    var(--accent) 0,
+    var(--accent-strong) var(--progress),
+    var(--ring-track) var(--progress),
+    var(--ring-track) 100%
+  ) !important;
+}
+
+body[data-theme="light"] .progress-ring,
+body[data-theme="light"] .progress-ring-small {
+  --ring-track: rgba(0, 0, 0, 0.08);
+}
+
+/* 2. Fix the Black Center in the Progress Board Donut */
+body[data-theme="light"] .progress-board-donut::after {
+  background: #ffffff !important;
+}
+
+/* 3. Fix Waffle, Dot, and Step charts missing fills */
+body[data-theme="light"] .progress-dot.is-active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-warm)) !important;
+  border-color: rgba(103, 240, 190, 0.5) !important;
+}
+
+body[data-theme="light"] .progress-waffle-cell.is-active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong), var(--accent-warm)) !important;
+  border-color: rgba(103, 240, 190, 0.5) !important;
+}
+
+body[data-theme="light"] .progress-step.is-active i {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong)) !important;
+}
+
+/* 4. Fix Tracker Card "Quick Action" hover menus turning black */
+body[data-theme="light"] .tracker-card-footer,
+body[data-theme="light"] .history-actions,
+body[data-theme="light"] .log-entry-actions {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* 5. Clean up the Detail Drawer background in light mode */
+body[data-theme="light"] .detail-drawer {
+  background: rgba(250, 250, 250, 0.96) !important;
+}
+
+body[data-theme="light"] .drawer-header,
+body[data-theme="light"] .drawer-footer {
+  background: rgba(250, 250, 250, 0.95) !important;
+}
