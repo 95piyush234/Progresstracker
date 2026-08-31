@@ -4095,13 +4095,31 @@ function renderGraphs() {
     gaugeLabel.textContent = `${avgCompletion}%`;
   }
 
-  /// 2. Update Multi-Ring Chart
+ /// 2. Update Multi-Ring Chart (Upgraded to SVG for rounded caps)
   const radialContainer = document.getElementById('activityRingsContainer');
   if (radialContainer) {
-    radialContainer.innerHTML = categoryStats.map((stat, index) => {
-      const insetPx = index * 12;
-      return `<div class="radial-ring" style="--progress: ${stat.avgCompletion}%; --ring-color: ${stat.topAccent}; inset: ${insetPx}px;"></div>`;
-    }).join('');
+    const size = 150;
+    const center = size / 2;
+    const strokeWidth = 10;
+    const gap = 3; 
+    
+    let svgContent = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform: rotate(-90deg); overflow: visible;">`;
+    
+    categoryStats.forEach((stat, index) => {
+      const radius = (center - strokeWidth/2) - (index * (strokeWidth + gap));
+      const circumference = 2 * Math.PI * radius;
+      // Cap at 100% so it doesn't overlap itself indefinitely
+      const dashOffset = circumference - (Math.min(stat.avgCompletion, 100) / 100) * circumference;
+      
+      // Empty background track
+      svgContent += `<circle cx="${center}" cy="${center}" r="${radius}" fill="none" class="activity-track" stroke-width="${strokeWidth}"></circle>`;
+      
+      // Colorful progress ring with rounded corners
+      svgContent += `<circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="${stat.topAccent}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}" style="transition: stroke-dashoffset 1s cubic-bezier(0.2, 0.8, 0.2, 1);"></circle>`;
+    });
+    
+    svgContent += `</svg>`;
+    radialContainer.innerHTML = svgContent;
   }
 
   // 3. Update Diverging Bar Chart (Wins vs Corrections) dynamically
