@@ -9911,3 +9911,34 @@ body[data-theme="light"] .drawer-header,
 body[data-theme="light"] .drawer-footer {
   background: rgba(250, 250, 250, 0.95) !important;
 }
+
+
+/* =========================================================
+   MOBILE NAV BAR OVERLAP & LIGHT THEME FIX
+   ========================================================= */
+
+/* 1. Prevent the last card from hiding behind the fixed bottom nav */
+@media (max-width: 1180px) {
+  body {
+    padding-bottom: 130px !important;
+  }
+  .app-shell {
+    padding-bottom: 120px !important;
+  }
+}
+
+/* 2. Fix the Mobile Tab Bar colors in Light Mode */
+body[data-theme="light"] .mobile-tabbar {
+  background: rgba(250, 250, 250, 0.9) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+body[data-theme="light"] .mobile-tab-button {
+  color: var(--muted-strong) !important;
+}
+
+body[data-theme="light"] .mobile-tab-button.is-active {
+  background: rgba(0, 0, 0, 0.06) !important;
+  color: var(--text) !important;
+}
