@@ -1,0 +1,21 @@
+{
+  "name": "Progress Tracker Pro",
+  "short_name": "Tracker Pro",
+  "description": "A premium progress system for custom goals, habits, and milestones.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#071119",
+  "theme_color": "#071119",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

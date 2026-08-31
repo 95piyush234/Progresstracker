@@ -175,6 +175,11 @@ function getAuthState() {
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
+  // Register PWA Service Worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch((err) => console.error("Service Worker failed", err));
+  }
+
   cacheDom();
   setupRevealFx();
   setupCursorFx();
