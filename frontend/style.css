@@ -9961,3 +9961,39 @@ body[data-theme="light"] .is-loading::after {
 body[data-theme="light"] .activity-track {
   stroke: rgba(0, 0, 0, 0.08);
 }
+
+
+/* =========================================================
+   MOMENTUM GAUGE FIXES
+   ========================================================= */
+
+/* 1. Fix missing arc by using degrees instead of percentage division */
+.gauge-dial {
+  background: conic-gradient(
+    from -90deg, 
+    var(--accent) 0deg, 
+    var(--brand-mid) var(--progress-deg, 0deg), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) var(--progress-deg, 0deg), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) 180deg, 
+    transparent 180deg
+  ) !important;
+}
+
+/* 2. Perfectly center the percentage label */
+.gauge-label {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: 8px !important;
+  width: max-content;
+  text-align: center;
+}
+
+/* 3. Make track, needle, and pin visible in Light Mode */
+body[data-theme="light"] .gauge-dial {
+  --gauge-track: rgba(0, 0, 0, 0.08);
+}
+
+body[data-theme="light"] .gauge-needle,
+body[data-theme="light"] .gauge-center-pin {
+  background: #111111 !important;
+}
