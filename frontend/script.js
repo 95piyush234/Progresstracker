@@ -4420,7 +4420,7 @@ function createTrackerCard(tracker, index) {
 
   return `
     <article
-      class="tracker-card ${status === "completed" ? "is-complete" : ""} ${status === "archived" ? "is-archived" : ""}"
+      class="tracker-card is-collapsed ${status === "completed" ? "is-complete" : ""} ${status === "archived" ? "is-archived" : ""}"
       style="--tracker-accent:${accent}; --tracker-accent-alt:${accentAlt}; --tracker-accent-fade:${hexToRgba(accent, 0.24)}; animation-delay:${index * 45}ms;"
     >
       <div class="tracker-card-head">
@@ -4432,7 +4432,12 @@ function createTrackerCard(tracker, index) {
             <p class="tracker-owner">Created by ${escapeHtml(tracker.createdBy || "You")}</p>
           </div>
         </div>
-        <span class="status-pill ${status}">${escapeHtml(statusLabel(status))}</span>
+        <div class="tracker-card-head-end">
+          <span class="status-pill ${status}">${escapeHtml(statusLabel(status))}</span>
+          <button class="icon-button icon-button-small tracker-toggle-btn" type="button" data-action="toggle-expand" data-tracker-id="${tracker.id}" aria-label="Toggle details">
+            <span class="toggle-arrow">▼</span>
+          </button>
+        </div>
       </div>
 
       <div class="tracker-overview">
@@ -4466,12 +4471,17 @@ function createTrackerCard(tracker, index) {
         </div>
       </div>
 
-      ${createTrackerTrendMarkup(tracker, "card")}
+      <!-- Collapsible Detailed Visuals -->
+      <div class="tracker-collapsible-section">
+        ${createTrackerTrendMarkup(tracker, "card")}
+      </div>
 
       <div class="tracker-card-footer">
         <button class="ghost-button" type="button" data-action="open-tracker" data-tracker-id="${tracker.id}">Open Detail</button>
         <button class="ghost-button" type="button" data-action="quick-log" data-tracker-id="${tracker.id}">Quick Log</button>
-        <button class="ghost-button" type="button" data-action="edit-tracker" data-tracker-id="${tracker.id}">Edit Setup</button>
+        <button class="ghost-button" type="button" data-action="toggle-expand" data-tracker-id="${tracker.id}">
+          <span class="toggle-text">Show Details</span>
+        </button>
       </div>
     </article>
   `;
@@ -4787,6 +4797,19 @@ function handleTrackerGridClick(event) {
 
   const trackerId = button.dataset.trackerId;
   if (!trackerId) return;
+
+  if (button.dataset.action === "toggle-expand") {
+    const card = button.closest(".tracker-card");
+    if (!card) return;
+    const isCollapsed = card.classList.toggle("is-collapsed");
+    
+    // Update any label inside the card
+    const toggleLabel = card.querySelector(".tracker-card-footer [data-action='toggle-expand'] .toggle-text");
+    if (toggleLabel) {
+      toggleLabel.textContent = isCollapsed ? "Show Details" : "Minimize";
+    }
+    return;
+  }
 
   if (button.dataset.action === "open-tracker") {
     openDetailDrawer(trackerId);
