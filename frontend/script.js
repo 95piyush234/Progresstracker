@@ -4484,9 +4484,7 @@ function createTrackerCard(tracker, index) {
       <div class="tracker-card-footer">
         <button class="ghost-button" type="button" data-action="open-tracker" data-tracker-id="${tracker.id}">Open Detail</button>
         <button class="ghost-button" type="button" data-action="quick-log" data-tracker-id="${tracker.id}">Quick Log</button>
-        <button class="ghost-button" type="button" data-action="toggle-expand" data-tracker-id="${tracker.id}">
-          <span class="toggle-text">Show Details</span>
-        </button>
+        <button class="ghost-button" type="button" data-action="edit-tracker" data-tracker-id="${tracker.id}">Edit Setup</button>
       </div>
     </article>
   `;

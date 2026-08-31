@@ -9879,6 +9879,9 @@ body[data-theme="light"] .roadmap-item.is-completed .roadmap-text {
   width: 24px !important;
   height: 24px !important;
   transform: translate(-50%, -50%) !important;
+  border: none !important; /* THIS KILLS THE OLD SINGLE CIRCLE */
+  box-shadow: none !important;
+  background-color: transparent !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   background-size: contain !important;
