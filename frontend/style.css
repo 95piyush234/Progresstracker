@@ -10066,3 +10066,21 @@ body[data-theme="light"] .is-loading::after {
   0% { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
   100% { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
 }
+
+/* =========================================================
+   MOMENTUM GAUGE ROBUST DATA RENDERING
+   ========================================================= */
+.gauge-dial {
+  background: conic-gradient(
+    from -90deg, 
+    var(--accent) 0deg, 
+    var(--brand-mid) var(--progress-deg, 0deg), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) var(--progress-deg, 0deg), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) 180deg, 
+    transparent 180deg
+  ) !important;
+}
+
+.gauge-needle {
+  transform: translateX(-50%) rotate(calc(-90deg + var(--progress-deg, 0deg))) !important;
+}

@@ -4066,9 +4066,8 @@ function renderGraphs() {
   const heatmapData = getHeatmapData(35);
   const activeDays = heatmapData.filter((day) => day.total > 0).length;
   
-  const avgCompletion = trackers.length
-    ? Math.round(trackers.reduce((sum, tracker) => sum + getTrackerPercent(tracker), 0) / trackers.length)
-    : 0;
+  // FIX: Use weighted completion for the Momentum Gauge
+  const avgCompletion = liveTrackers.length ? Math.round(getOverallCompletion(liveTrackers)) : 0;
 
   dom.graphsSummaryText.textContent = trackers.length
     ? `${trackers.length} tracker${trackers.length === 1 ? "" : "s"}, ${categoryStats.length} categor${categoryStats.length === 1 ? "y" : "ies"}, ${activeDays} active days, and ${week.currentWeekEntries} entr${week.currentWeekEntries === 1 ? "y" : "ies"} powering your visual progress story.`
@@ -6309,7 +6308,8 @@ function getCategoryStats() {
 
   return Array.from(grouped.entries())
     .map(([category, trackers]) => {
-      const avgCompletion = Math.round(trackers.reduce((sum, tracker) => sum + clamp(getTrackerPercent(tracker), 0, 100), 0) / trackers.length);
+      // FIX: Use weighted completion instead of unweighted simple average
+      const avgCompletion = Math.round(getOverallCompletion(trackers));
       return {
         category,
         count: trackers.length,
@@ -6432,7 +6432,10 @@ function getTrackerTrendSeries(tracker, days = 7) {
 }
 
 function getTrackerPercent(tracker) {
-  return roundNumber(getProgressRatio(tracker.startValue, tracker.targetValue, tracker.currentValue) * 100);
+  const rawPercent = getProgressRatio(tracker.startValue, tracker.targetValue, tracker.currentValue) * 100;
+  // Prevent rounding up to 100% text before the visual arc is fully closed
+  if (rawPercent > 99 && rawPercent < 100) return 99;
+  return roundNumber(rawPercent);
 }
 
 function getProgressRatio(startValue, targetValue, currentValue) {
