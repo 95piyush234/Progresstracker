@@ -10068,24 +10068,23 @@ body[data-theme="light"] .is-loading::after {
 }
 
 /* =========================================================
-   MOMENTUM GAUGE ROBUST DATA RENDERING
-   ========================================================= */
-/* =========================================================
-   MOMENTUM GAUGE COLOR FILL & CLIPPING FIX
+   MOMENTUM GAUGE PERFECT ALIGNMENT & COLOR FIX
    ========================================================= */
 .gauge-dial {
+  left: 0 !important; /* Locks the dial to the container, preventing the left-shift cutoff */
   background: conic-gradient(
     from -90deg, 
-    var(--accent) 0%, 
-    var(--brand-mid) calc(var(--progress) * 0.5), 
-    var(--gauge-track, rgba(255, 255, 255, 0.08)) calc(var(--progress) * 0.5), 
-    var(--gauge-track, rgba(255, 255, 255, 0.08)) 50%, 
-    transparent 50%
+    var(--accent) 0deg, 
+    var(--brand-mid) calc(var(--needle-deg, -90deg) + 90deg), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) calc(var(--needle-deg, -90deg) + 90deg), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) 180deg, 
+    transparent 180deg
   ) !important;
 }
 
 .gauge-needle {
-  transform: translateX(-50%) rotate(calc(-90deg + var(--progress-deg, 0deg))) !important;
+  left: 50% !important;
+  transform: translateX(-50%) rotate(var(--needle-deg, -90deg)) !important;
 }
 
 
