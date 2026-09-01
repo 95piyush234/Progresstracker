@@ -4090,7 +4090,8 @@ function renderGraphs() {
   const gaugeLabel = document.querySelector('.gauge-label');
   if (gaugeChart && gaugeLabel) {
     gaugeChart.style.setProperty('--progress', `${avgCompletion}%`);
-    gaugeChart.style.setProperty('--progress-deg', `${avgCompletion * 1.8}deg`);
+    // Compute exact degrees in JS to prevent browser CSS calculation crashes
+    gaugeChart.style.setProperty('--needle-deg', `${-90 + (avgCompletion * 1.8)}deg`);
     gaugeLabel.textContent = `${avgCompletion}%`;
   }
 

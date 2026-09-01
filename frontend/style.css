@@ -10084,3 +10084,66 @@ body[data-theme="light"] .is-loading::after {
 .gauge-needle {
   transform: translateX(-50%) rotate(calc(-90deg + var(--progress-deg, 0deg))) !important;
 }
+
+
+/* =========================================================
+   MOMENTUM GAUGE FAILSAFE & LIGHT MODE GUIDE STEPPER
+   ========================================================= */
+
+/* Force absolute degree mapping on the needle to prevent downward clipping */
+.gauge-needle {
+  transform: translateX(-50%) rotate(var(--needle-deg, -90deg)) !important;
+}
+
+/* Light Mode overrides for the interactive Guide Stepper */
+body[data-theme="light"] .guide-stepper-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1) !important;
+  color: #111111 !important;
+}
+
+body[data-theme="light"] .guide-stepper-card .eyebrow {
+  color: #666666 !important;
+}
+
+body[data-theme="light"] .guide-stepper-card h3,
+body[data-theme="light"] .guide-stepper-card h4,
+body[data-theme="light"] .guide-stepper-card .roadmap-text {
+  color: #111111 !important;
+}
+
+body[data-theme="light"] .guide-stepper-card p.subtle {
+  color: #444444 !important;
+}
+
+body[data-theme="light"] .guide-stepper-controls .ghost-button {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  color: #111111 !important;
+}
+
+body[data-theme="light"] .guide-stepper-dot {
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+body[data-theme="light"] .guide-stepper-dot.is-active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong)) !important;
+  box-shadow: 0 4px 12px rgba(103, 240, 190, 0.4) !important;
+}
+
+
+/* =========================================================
+   HERO METRIC OVERLAP FIX
+   ========================================================= */
+.hero-metric-card {
+  /* Forces the first column to adapt to the ring's true size instead of trapping it in 104px */
+  grid-template-columns: auto minmax(0, 1fr) !important;
+}
+
+@media (max-width: 620px) {
+  .hero-metric-card {
+    grid-template-columns: 1fr !important;
+    justify-items: start !important;
+  }
+}
