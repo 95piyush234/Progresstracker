@@ -10070,14 +10070,17 @@ body[data-theme="light"] .is-loading::after {
 /* =========================================================
    MOMENTUM GAUGE ROBUST DATA RENDERING
    ========================================================= */
+/* =========================================================
+   MOMENTUM GAUGE COLOR FILL & CLIPPING FIX
+   ========================================================= */
 .gauge-dial {
   background: conic-gradient(
     from -90deg, 
-    var(--accent) 0deg, 
-    var(--brand-mid) var(--progress-deg, 0deg), 
-    var(--gauge-track, rgba(255, 255, 255, 0.08)) var(--progress-deg, 0deg), 
-    var(--gauge-track, rgba(255, 255, 255, 0.08)) 180deg, 
-    transparent 180deg
+    var(--accent) 0%, 
+    var(--brand-mid) calc(var(--progress) * 0.5), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) calc(var(--progress) * 0.5), 
+    var(--gauge-track, rgba(255, 255, 255, 0.08)) 50%, 
+    transparent 50%
   ) !important;
 }
 
