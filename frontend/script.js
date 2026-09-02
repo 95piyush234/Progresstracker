@@ -1104,7 +1104,7 @@ function collectRevealTargets(root) {
 }
 
 function getDefaultAuthMode() {
-  return state?.settings?.account || state?.settings?.session?.lastLoginAt ? "login" : "create";
+  return "login"; // Always default to Sign In
 }
 
 function getAccount() {
@@ -1794,68 +1794,69 @@ function setAuthMode(mode, shouldFocus = true) {
 
   ui.authMode = nextMode;
 
-  dom.authCreateModeBtn.classList.toggle("is-active", nextMode === "create");
-  dom.authCreateModeBtn.setAttribute("aria-pressed", String(nextMode === "create"));
-  dom.authCreateModeBtn.disabled = false;
-  dom.authLoginModeBtn.classList.toggle("is-active", nextMode === "login");
-  dom.authLoginModeBtn.setAttribute("aria-pressed", String(nextMode === "login"));
-  dom.authLoginModeBtn.disabled = false;
-  dom.authConfirmField.classList.toggle("hidden", nextMode !== "create");
-  dom.authLoginActions.classList.toggle("hidden", nextMode !== "login");
-  dom.authPasswordInput.setAttribute("autocomplete", nextMode === "create" ? "new-password" : "current-password");
+  // Toggle native hidden fields safely
+  dom.authConfirmField?.classList.toggle("hidden", nextMode !== "create");
+  dom.authLoginActions?.classList.toggle("hidden", nextMode !== "login");
+  dom.authPasswordInput?.setAttribute("autocomplete", nextMode === "create" ? "new-password" : "current-password");
 
   if (nextMode === "create") {
-    dom.authEyebrow.textContent = "Create verified access";
-    dom.authTitle.textContent = "Open your progress workspace.";
-    dom.authSubtitle.textContent = "Create an account with email verification, then unlock your saved trackers from the backend.";
-    dom.authModePill.textContent = "New verified workspace";
-    dom.authHintText.textContent = canUseBackendAuth()
-      ? "A real OTP is sent to your email address to verify the account."
-      : "Start the backend before creating an account so the verification OTP can be delivered by email.";
-    dom.authSubmitBtn.textContent = "Send OTP";
-    dom.authNameInput.value = dom.authNameInput.value.trim();
+    if (dom.authTitle) dom.authTitle.textContent = "Create an account.";
+    if (dom.authSubtitle) dom.authSubtitle.textContent = "Create an account with email verification, then unlock your saved trackers from the backend.";
+    if (dom.authSubmitBtn) dom.authSubmitBtn.textContent = "Sign Up";
+    
+    // Show Username field
+    document.getElementById("authUsernameFieldWrap")?.classList.remove("hidden");
+    
+    // Set bottom link for Create Mode
+    const toggleLink = document.getElementById("taskyToggleModeLink");
+    if (toggleLink) toggleLink.textContent = "Sign In";
+    const promptText = document.getElementById("authSwitchPromptText");
+    if (promptText) promptText.textContent = "Already have an account?";
+    
+    if (dom.authNameInput) dom.authNameInput.value = dom.authNameInput.value.trim();
   } else {
     const account = getAccount();
-    dom.authEyebrow.textContent = "Welcome back";
-    dom.authTitle.textContent = account
-      ? `Sign in to ${account.name || "your"} workspace.`
-      : "Sign in to your verified workspace.";
-    dom.authSubtitle.textContent = account
-      ? "Use your verified email and password to reload your saved trackers, history, graphs, and proof images."
-      : "Sign in with the same verified email and password from your backend account.";
-    dom.authModePill.textContent = "Backend sign-in";
-    dom.authHintText.textContent = canUseBackendAuth()
-      ? "Email OTP is only used while verifying a new account. Returning users sign in directly."
-      : "Start the backend server before signing in.";
-    dom.authSubmitBtn.textContent = "Sign In";
-    if (!dom.authNameInput.value.trim()) {
+    if (dom.authTitle) dom.authTitle.textContent = "Welcome Back!";
+    if (dom.authSubtitle) dom.authSubtitle.textContent = "Sign in with the same verified email and password from your backend account.";
+    if (dom.authSubmitBtn) dom.authSubmitBtn.textContent = "Sign In";
+
+    // Hide Username field
+    document.getElementById("authUsernameFieldWrap")?.classList.add("hidden");
+    
+    // Set bottom link for Login Mode
+    const toggleLink = document.getElementById("taskyToggleModeLink");
+    if (toggleLink) toggleLink.textContent = "Sign Up";
+    const promptText = document.getElementById("authSwitchPromptText");
+    if (promptText) promptText.textContent = "Don't have an account?";
+
+    if (dom.authNameInput && !dom.authNameInput.value.trim()) {
       dom.authNameInput.value = account?.name || "";
     }
-    if (!dom.authEmailInput.value.trim()) {
+    if (dom.authEmailInput && !dom.authEmailInput.value.trim()) {
       dom.authEmailInput.value = account?.email || "";
     }
   }
 
   if (pendingOtp && pendingOtp.mode === nextMode) {
-    if (!dom.authNameInput.value.trim()) {
-      dom.authNameInput.value = pendingOtp.name;
-    }
-    if (!dom.authEmailInput.value.trim()) {
-      dom.authEmailInput.value = pendingOtp.email;
-    }
+    if (dom.authNameInput && !dom.authNameInput.value.trim()) dom.authNameInput.value = pendingOtp.name;
+    if (dom.authEmailInput && !dom.authEmailInput.value.trim()) dom.authEmailInput.value = pendingOtp.email;
   }
 
   if (!pendingOtp || pendingOtp.mode !== nextMode) {
-    dom.authOtpInput.value = "";
+    if (dom.authOtpInput) dom.authOtpInput.value = "";
   }
   if (!(pendingOtp && pendingOtp.mode === nextMode)) {
-    dom.authConfirmInput.value = "";
-    dom.authPasswordInput.value = "";
+    if (dom.authConfirmInput) dom.authConfirmInput.value = "";
+    if (dom.authPasswordInput) dom.authPasswordInput.value = "";
   }
   syncAuthOtpUi();
   renderAuthMailPreview();
+  
   if (shouldFocus) {
-    window.setTimeout(() => dom.authNameInput.focus(), 40);
+    const fieldToFocus = nextMode === "create" ? dom.authNameInput : dom.authEmailInput;
+    if (fieldToFocus && !fieldToFocus.closest('.hidden')) {
+      window.setTimeout(() => fieldToFocus.focus(), 40);
+    }
   }
 }
 
