@@ -2068,28 +2068,9 @@ function mailTypeLabel(type) {
 }
 
 function renderAuthPreview() {
-  // SAFETY CHECK: Prevents the app from crashing if the Tasky layout removes these elements
-  if (!dom.authPreviewTrackers || !dom.authPreviewLogs || !dom.authPreviewCategories) {
-    return;
-  }
-
-  const categories = getUniqueCategories().length;
-  const manualEntries = getAllHistoryEntries().filter((entry) => !entry.log.system).length;
-  const marketingPreview = isAuthenticated()
-    ? {
-        trackers: state.trackers.length,
-        logs: manualEntries,
-        categories: categories || 1
-      }
-    : {
-        trackers: 3,
-        logs: 18,
-        categories: 3
-      };
-
-  dom.authPreviewTrackers.textContent = String(marketingPreview.trackers);
-  dom.authPreviewLogs.textContent = String(marketingPreview.logs);
-  dom.authPreviewCategories.textContent = String(marketingPreview.categories);
+  // SAFETY CHECK: The Tasky UI layout removes the marketing stat elements.
+  // This function is deliberately empty to prevent 'null' crashes on load.
+  return;
 }
 
 function forceCloseOverlays() {
