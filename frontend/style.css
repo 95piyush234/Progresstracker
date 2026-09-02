@@ -10311,12 +10311,18 @@ body[data-theme="light"] .tasky-label-float {
 /* =========================================================
    TASKY REFERENCE SINGLE-CARD LOGIN STYLING
    ========================================================= */
-.auth-shell {
+/* Only center and show the login card when the app is locked */
+body[data-auth="locked"] .auth-shell {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   min-height: 100vh !important;
   padding: 24px !important;
+}
+
+/* Ensure it completely disappears when you are logged in */
+body[data-auth="ready"] .auth-shell {
+  display: none !important;
 }
 
 .tasky-single-card-wrap {
