@@ -10237,3 +10237,213 @@ body[data-theme="light"] .tasky-floating-card {
     display: none !important; /* Hide illustration on mobile to keep login fast and streamlined */
   }
 }
+
+
+/* =========================================================
+   TASKY REFERENCE FORM OVERRIDES
+   ========================================================= */
+.tasky-style-form {
+  display: grid;
+  gap: 18px !important;
+}
+
+.tasky-form-header {
+  margin-bottom: 4px;
+}
+
+.tasky-form-header h2 {
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+/* Floating border-intersect label look */
+.tasky-floating-field {
+  position: relative;
+  margin-top: 8px;
+}
+
+.tasky-label-float {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--panel-strong, #0f1e28);
+  padding: 0 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text) !important;
+  z-index: 2;
+  border-radius: 4px;
+}
+
+body[data-theme="light"] .tasky-label-float {
+  background: #ffffff !important;
+}
+
+.tasky-floating-field input {
+  border-radius: 16px !important;
+  padding: 16px 18px !important;
+  border: 1px solid var(--border-strong) !important;
+  background: transparent !important;
+}
+
+.tasky-submit-btn {
+  min-height: 52px !important;
+  border-radius: 16px !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+.tasky-google-btn {
+  border-radius: 16px !important;
+  min-height: 52px !important;
+}
+
+/* Hide clutter elements that don't match the clean Tasky reference card */
+.auth-panel-copy,
+.auth-help-row,
+.auth-toggle {
+  display: none !important;
+}
+
+
+/* =========================================================
+   TASKY REFERENCE SINGLE-CARD LOGIN STYLING
+   ========================================================= */
+.auth-shell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  padding: 24px !important;
+}
+
+.tasky-single-card-wrap {
+  width: min(440px, 100%);
+  margin: 0 auto;
+}
+
+.tasky-solo-card {
+  padding: 36px !important;
+  border-radius: 28px !important;
+  background: var(--panel-strong) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.tasky-brand-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.tasky-logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.tasky-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tasky-brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.tasky-form-header {
+  margin-bottom: 24px;
+}
+
+.tasky-form-header h2 {
+  font-size: 2.1rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.tasky-style-form {
+  display: grid;
+  gap: 18px !important;
+}
+
+.tasky-floating-field {
+  position: relative;
+  margin-top: 6px;
+}
+
+.tasky-label-float {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--panel-strong, #0f1e28);
+  padding: 0 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text) !important;
+  z-index: 2;
+  border-radius: 4px;
+}
+
+body[data-theme="light"] .tasky-label-float {
+  background: #ffffff !important;
+}
+
+.tasky-floating-field input {
+  border-radius: 16px !important;
+  padding: 16px 18px !important;
+  border: 1px solid var(--border-strong) !important;
+  background: transparent !important;
+}
+
+.tasky-submit-btn {
+  min-height: 52px !important;
+  border-radius: 16px !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  margin-top: 4px;
+}
+
+.tasky-google-btn {
+  border-radius: 16px !important;
+  min-height: 52px !important;
+}
+
+.tasky-bottom-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.tasky-text-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.tasky-text-link:hover {
+  text-decoration: underline;
+}
+
+/* Hide conflicting old headers */
+.auth-panel-copy, .auth-toggle {
+  display: none !important;
+}

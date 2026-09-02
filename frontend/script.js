@@ -775,6 +775,28 @@ function bindEvents() {
       }
     });
   }
+
+  // Connect the Tasky card toggle link to existing auth buttons
+  const toggleLink = document.getElementById("taskyToggleModeLink");
+  if (toggleLink) {
+    toggleLink.addEventListener("click", () => {
+      if (ui.authMode === "login") {
+        setAuthMode("create");
+        document.getElementById("authUsernameFieldWrap")?.classList.remove("hidden");
+        toggleLink.textContent = "Sign In";
+        document.getElementById("authSwitchPromptText").textContent = "Already have an account?";
+        document.getElementById("authTitle").textContent = "Create an account.";
+        document.getElementById("authSubmitBtn").textContent = "Send OTP";
+      } else {
+        setAuthMode("login");
+        document.getElementById("authUsernameFieldWrap")?.classList.add("hidden");
+        toggleLink.textContent = "Sign Up";
+        document.getElementById("authSwitchPromptText").textContent = "Don't have an account?";
+        document.getElementById("authTitle").textContent = "Welcome Back!";
+        document.getElementById("authSubmitBtn").textContent = "Sign in";
+      }
+    });
+  }
 } // <-- This is the closing bracket for the bindEvents function
 
 function setStaticUiDefaults() {
@@ -2045,8 +2067,10 @@ function mailTypeLabel(type) {
 }
 
 function renderAuthPreview() {
-  // SAFETY CHECK: Skip if the Tasky layout removed these elements
-  if (!dom.authPreviewTrackers) return; 
+  // SAFETY CHECK: Prevents the app from crashing if the Tasky layout removes these elements
+  if (!dom.authPreviewTrackers || !dom.authPreviewLogs || !dom.authPreviewCategories) {
+    return;
+  }
 
   const categories = getUniqueCategories().length;
   const manualEntries = getAllHistoryEntries().filter((entry) => !entry.log.system).length;
