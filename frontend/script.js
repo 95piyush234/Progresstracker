@@ -2045,6 +2045,9 @@ function mailTypeLabel(type) {
 }
 
 function renderAuthPreview() {
+  // SAFETY CHECK: Skip if the Tasky layout removed these elements
+  if (!dom.authPreviewTrackers) return; 
+
   const categories = getUniqueCategories().length;
   const manualEntries = getAllHistoryEntries().filter((entry) => !entry.log.system).length;
   const marketingPreview = isAuthenticated()
