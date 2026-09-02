@@ -10149,3 +10149,91 @@ body[data-theme="light"] .guide-stepper-dot.is-active {
     justify-items: start !important;
   }
 }
+
+
+/* =========================================================
+   TASKY-INSPIRED LOGIN PAGE STYLING
+   ========================================================= */
+
+.tasky-auth-layout {
+  max-width: 1040px !important;
+  margin: 0 auto;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 460px) !important;
+  gap: 0 !important;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border);
+}
+
+.tasky-visual-panel {
+  background: linear-gradient(145deg, rgba(135, 88, 255, 0.18), rgba(103, 240, 190, 0.08)), var(--panel-solid) !important;
+  padding: 40px !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+  border: none !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+.tasky-brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  margin-bottom: 12px;
+}
+
+.tasky-form-panel {
+  padding: 40px !important;
+  background: var(--panel-strong) !important;
+  border: none !important;
+}
+
+.tasky-illustration-placeholder {
+  position: relative;
+  min-height: 180px;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.tasky-floating-card {
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  font-weight: 600;
+  font-size: 0.92rem;
+  width: max-content;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.tasky-floating-card.card-offset {
+  margin-left: 32px;
+  background: linear-gradient(135deg, rgba(var(--brand-start-rgb), 0.2), rgba(var(--brand-mid-rgb), 0.2));
+}
+
+/* Light mode adjustments for Tasky panel */
+body[data-theme="light"] .tasky-visual-panel {
+  background: linear-gradient(145deg, rgba(135, 88, 255, 0.12), rgba(103, 240, 190, 0.06)), #f7f4ff !important;
+}
+
+body[data-theme="light"] .tasky-floating-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(76, 54, 120, 0.12);
+  color: #17122c;
+}
+
+/* Responsive collapse for mobile viewports */
+@media (max-width: 900px) {
+  .tasky-auth-layout {
+    grid-template-columns: 1fr !important;
+  }
+  .tasky-visual-panel {
+    display: none !important; /* Hide illustration on mobile to keep login fast and streamlined */
+  }
+}
