@@ -10309,8 +10309,9 @@ body[data-theme="light"] .tasky-label-float {
 
 
 /* =========================================================
-   TASKY REFERENCE SINGLE-CARD LOGIN STYLING
+   TASKY SINGLE-CARD LOGIN STYLING (THEME MATCHED)
    ========================================================= */
+
 /* Only center and show the login card when the app is locked */
 body[data-auth="locked"] .auth-shell {
   display: flex !important;
@@ -10320,7 +10321,6 @@ body[data-auth="locked"] .auth-shell {
   padding: 24px !important;
 }
 
-/* Ensure it completely disappears when you are logged in */
 body[data-auth="ready"] .auth-shell {
   display: none !important;
 }
@@ -10330,102 +10330,180 @@ body[data-auth="ready"] .auth-shell {
   margin: 0 auto;
 }
 
-.tasky-solo-card {
-  padding: 36px !important;
+/* Match the dashboard glassmorphism panels perfectly */
+.tasky-solo-card, .tasky-solo-card:hover {
+  padding: 40px 36px !important;
   border-radius: 28px !important;
-  background: var(--panel-strong) !important;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45) !important;
-  border: 1px solid var(--border) !important;
+  background: var(--ui-bg-surface) !important;
+  backdrop-filter: var(--ui-blur) !important;
+  -webkit-backdrop-filter: var(--ui-blur) !important;
+  box-shadow: var(--ui-shadow-soft) !important;
+  border: 1px solid var(--ui-border) !important;
+  transform: none !important;
+}
+
+body[data-theme="light"] .tasky-solo-card, 
+body[data-theme="light"] .tasky-solo-card:hover {
+  background: var(--ui-bg-surface) !important;
+  border-color: var(--ui-border) !important;
 }
 
 .tasky-brand-top {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 12px;
+  margin-bottom: 28px;
 }
 
 .tasky-logo-icon {
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--ui-border);
   overflow: hidden;
 }
 
 .tasky-logo-icon img {
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   object-fit: contain;
 }
 
 .tasky-brand-name {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  color: var(--ui-text-primary);
 }
 
 .tasky-form-header {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .tasky-form-header h2 {
-  font-size: 2.1rem !important;
+  font-size: 2.2rem !important;
   font-weight: 800 !important;
-  letter-spacing: -0.03em;
-  margin-bottom: 4px;
-  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  color: var(--ui-text-primary);
+}
+
+.tasky-form-header p.subtle {
+  font-size: 0.95rem !important;
+  color: var(--ui-text-secondary) !important; 
 }
 
 .tasky-style-form {
   display: grid;
-  gap: 18px !important;
+  gap: 20px !important;
 }
 
 .tasky-floating-field {
   position: relative;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .tasky-label-float {
   position: absolute;
   top: -10px;
   left: 16px;
-  background: var(--panel-strong, #0f1e28);
+  /* Solid background matching the body so it clips the border cleanly */
+  background: var(--ui-bg-base) !important;
   padding: 0 6px;
   font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text) !important;
+  font-weight: 600;
+  color: var(--ui-text-secondary) !important;
   z-index: 2;
   border-radius: 4px;
 }
 
 body[data-theme="light"] .tasky-label-float {
-  background: #ffffff !important;
+  background: var(--ui-bg-base) !important;
 }
 
 .tasky-floating-field input {
-  border-radius: 16px !important;
+  border-radius: 12px !important;
   padding: 16px 18px !important;
-  border: 1px solid var(--border-strong) !important;
-  background: transparent !important;
+  border: 1px solid var(--ui-border) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: var(--ui-text-primary) !important;
+  font-size: 1rem !important;
 }
 
+.tasky-floating-field input:focus {
+  border-color: var(--ui-border-focus) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.tasky-floating-field input::placeholder {
+  color: var(--ui-text-muted) !important;
+}
+
+.auth-login-actions {
+  justify-content: flex-end;
+  margin-top: -10px;
+  margin-bottom: 4px;
+}
+
+#authForgotPasswordBtn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--ui-text-secondary) !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+  min-height: auto !important;
+}
+
+#authForgotPasswordBtn:hover {
+  color: var(--ui-text-primary) !important;
+}
+
+/* Primary Sign In Button matching your theme */
 .tasky-submit-btn {
   min-height: 52px !important;
-  border-radius: 16px !important;
-  font-size: 1rem !important;
+  border-radius: 12px !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
-  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--ui-border-hover) !important;
+  color: var(--ui-text-primary) !important;
+  box-shadow: none !important;
 }
 
+.tasky-submit-btn:hover {
+  background: var(--ui-bg-elevated) !important;
+}
+
+/* Google Button matching your theme */
 .tasky-google-btn {
-  border-radius: 16px !important;
+  border-radius: 12px !important;
   min-height: 52px !important;
+  background: transparent !important;
+  border: 1px solid var(--ui-border) !important;
+  color: var(--ui-text-primary) !important;
 }
 
+.tasky-google-btn:hover {
+  background: var(--ui-bg-hover) !important;
+  border-color: var(--ui-border-hover) !important;
+}
+
+/* Divider Line */
+.auth-divider span {
+  background: var(--ui-border) !important;
+}
+
+.auth-divider p {
+  color: var(--ui-text-secondary) !important;
+  font-weight: 600 !important;
+}
+
+/* Bottom Toggle Switch */
 .tasky-bottom-switch {
   display: flex;
   justify-content: center;
@@ -10433,13 +10511,13 @@ body[data-theme="light"] .tasky-label-float {
   gap: 6px;
   margin-top: 16px;
   font-size: 0.9rem;
-  color: var(--muted);
+  color: var(--ui-text-secondary);
 }
 
 .tasky-text-link {
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--success) !important;
   font-weight: 700;
   cursor: pointer;
   padding: 0;
@@ -10450,7 +10528,7 @@ body[data-theme="light"] .tasky-label-float {
 }
 
 /* Hide conflicting old headers */
-.auth-panel-copy, .auth-toggle {
+.auth-panel-copy, .auth-toggle, #openGuideFromAuthBtn {
   display: none !important;
 }
 
@@ -10465,4 +10543,24 @@ body[data-theme="light"] .tasky-label-float {
 body[data-theme="light"] .tasky-solo-card:hover {
   background: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+
+/* =========================================================
+   PERMANENT HOVER FIX FOR LOGIN CARD
+   ========================================================= */
+.panel.tasky-solo-card:hover,
+.tasky-solo-card:hover {
+  background: var(--ui-bg-surface) !important;
+  backdrop-filter: var(--ui-blur) !important;
+  -webkit-backdrop-filter: var(--ui-blur) !important;
+  box-shadow: var(--ui-shadow-soft) !important;
+  border: 1px solid var(--ui-border) !important;
+  transform: none !important;
+}
+
+body[data-theme="light"] .panel.tasky-solo-card:hover, 
+body[data-theme="light"] .tasky-solo-card:hover {
+  background: var(--ui-bg-surface) !important;
+  border-color: var(--ui-border) !important;
 }
