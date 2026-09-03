@@ -11054,3 +11054,42 @@ body[data-theme="light"] .tasky-solo-card:hover {
 .legal-close:hover {
   color: #fff;
 }
+
+
+
+
+/* =========================================================
+   GLOBAL SINGLE-SCROLL ENFORCEMENT (VERCEL FIX)
+   ========================================================= */
+
+/* Ensure root HTML and Body control window scrolling */
+html {
+  height: 100%;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+body {
+  min-height: 100vh;
+  height: auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  position: relative;
+}
+
+/* Strip independent vertical scroll behavior from major wrapper shells */
+.landing-shell,
+.app-shell,
+.workspace,
+.workspace-main {
+  height: auto !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+
+/* Prevent modals or hidden layouts from spawning ghost scrollbars */
+.modal-shell:not(.is-open),
+.drawer-scrim:not(.is-open) {
+  display: none !important;
+}
