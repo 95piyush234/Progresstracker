@@ -797,6 +797,68 @@ function bindEvents() {
       }
     });
   }
+  // Connect all Landing Page buttons to the Auth Shell
+  const landingShell = document.getElementById("landingShell");
+  const authShell = document.getElementById("authShell");
+
+  const openAuthFromLanding = (mode) => {
+    if (landingShell) landingShell.classList.add("is-hidden");
+    if (authShell) authShell.classList.add("is-active");
+    setAuthMode(mode);
+    window.scrollTo(0,0); // Reset scroll position when opening auth
+  };
+
+  // Attach listener to all Login buttons
+  document.querySelectorAll(".landing-trigger-login").forEach(btn => {
+    btn.addEventListener("click", () => openAuthFromLanding("login"));
+  });
+
+  // Attach listener to all Sign Up / Get Started buttons
+  document.querySelectorAll(".landing-trigger-signup").forEach(btn => {
+    btn.addEventListener("click", () => openAuthFromLanding("create"));
+  });
+
+  // Smooth scroll for landing page links to prevent the "Tap back to exit" popup bug
+  document.querySelectorAll('a[href^="#ln-"]').forEach(anchor => {
+    anchor.addEventListener("click", function(e) {
+      e.preventDefault(); // Stops the URL hash from changing
+      const targetId = this.getAttribute("href");
+      const targetElement = document.querySelector(targetId);
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+  });
+
+  // Open Company & Legal Modals (Prevents URL hash warning)
+  document.querySelectorAll('.legal-trigger').forEach(trigger => {
+    trigger.addEventListener("click", function(e) {
+      e.preventDefault(); 
+      const targetId = this.getAttribute('data-target');
+      document.getElementById(targetId).classList.add('is-open');
+    });
+  });
+
+  // Close Modals
+  document.querySelectorAll('.legal-close').forEach(closeBtn => {
+    closeBtn.addEventListener("click", function() {
+      this.closest('.legal-modal').classList.remove('is-open');
+    });
+  });
+
+  // Close when clicking outside the box
+  document.querySelectorAll('.legal-modal').forEach(modal => {
+    modal.addEventListener("click", function(e) {
+      if (e.target === this) {
+        this.classList.remove('is-open');
+      }
+    });
+  });
+
 } // <-- This is the closing bracket for the bindEvents function
 
 function setStaticUiDefaults() {
