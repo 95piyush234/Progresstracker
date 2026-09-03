@@ -10340,12 +10340,15 @@ body[data-auth="ready"] .auth-shell {
    LINEAR-INSPIRED LANDING PAGE
    ========================================================= */
 .landing-shell {
+  display: flex;
   flex-direction: column;
+  width: 100%;
   min-height: 100vh;
   background: #000000;
   color: #f2f2f2;
   position: relative;
   overflow-x: hidden;
+  overflow-y: visible; /* Prevents an inner scrollbar from spawning here */
   font-family: var(--ui-font-body);
 }
 
@@ -10439,11 +10442,14 @@ body[data-auth="ready"] .auth-shell {
 .ln-btn-huge { padding: 18px 36px; font-size: 1.2rem; }
 
 .ln-main {
-  position: relative; z-index: 10;
-  display: flex; flex-direction: column;
+  flex: 1; /* Pushes the footer cleanly to the bottom */
+  position: relative; 
+  z-index: 10;
+  display: flex; 
+  flex-direction: column;
   align-items: center;
-  padding: 140px 24px 0;
-  gap: 160px;
+  padding: 80px 24px;
+  gap: 60px;
 }
 
 .ln-section {
@@ -10634,7 +10640,7 @@ body[data-auth="ready"] .auth-shell {
 .ln-sec-item { display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; color: #ccc; font-weight: 500; }
 
 /* Final CTA */
-.ln-final-cta { margin-bottom: 120px; }
+.ln-final-cta { margin-bottom: 40px; }
 .ln-cta-box {
   width: 100%; text-align: center; padding: 100px 40px;
   background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, #050505 100%);
@@ -10644,14 +10650,65 @@ body[data-auth="ready"] .auth-shell {
 .ln-cta-box p { color: #888; font-size: 1.2rem; margin-bottom: 40px; }
 .ln-cta-box small { display: block; margin-top: 20px; color: #555; }
 
-/* Footer */
-.ln-footer { width: 100%; border-top: 1px solid rgba(255,255,255,0.05); padding: 80px 40px; display: flex; justify-content: center; background: #050505; }
-.ln-footer-grid { width: 100%; max-width: 1200px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
-.ln-footer-brand p { color: #666; margin-top: 16px; }
-.ln-footer-links { display: flex; flex-direction: column; gap: 16px; }
-.ln-footer-links strong { color: #fff; margin-bottom: 8px; }
-.ln-footer-links a { color: #888; text-decoration: none; transition: color 0.2s; }
-.ln-footer-links a:hover { color: #fff; }
+/* =========================================================
+   FOOTER STYLING & MOBILE SPACING FIX
+   ========================================================= */
+.ln-footer { 
+  width: 100%; 
+  border-top: 1px solid rgba(255, 255, 255, 0.05); 
+  padding: 40px 24px; /* Reduced padding to remove empty space */
+  display: flex; 
+  justify-content: center; 
+  background: #050505; 
+}
+
+.ln-footer-grid { 
+  width: 100%; 
+  max-width: 1200px; 
+  display: grid; 
+  grid-template-columns: 2fr 1fr 1fr 1fr; 
+  gap: 32px; 
+}
+
+.ln-footer-brand p { 
+  color: #666; 
+  margin-top: 8px; 
+}
+
+.ln-footer-links { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+}
+
+.ln-footer-links strong { 
+  color: #fff; 
+  margin-bottom: 4px; 
+}
+
+.ln-footer-links a { 
+  color: #888; 
+  text-decoration: none; 
+  transition: color 0.2s; 
+}
+
+.ln-footer-links a:hover { 
+  color: #fff; 
+}
+
+/* Mobile Footer Collapse */
+@media(max-width: 900px) {
+  .ln-footer {
+    padding: 32px 20px 48px; /* Tighter padding on mobile */
+  }
+  .ln-footer-grid { 
+    grid-template-columns: 1fr 1fr; /* 2 columns on tablets/phones */
+    gap: 32px 20px;
+  }
+  .ln-footer-brand {
+    grid-column: 1 / -1; /* Make logo/brand span full width at top */
+  }
+}
 
 /* Responsive */
 @media(max-width: 900px) {
