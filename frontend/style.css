@@ -10313,27 +10313,34 @@ body[data-theme="light"] .tasky-label-float {
    ========================================================= */
 
 /* =========================================================
-   ROUTING & VISIBILITY
+   ROUTING & VIEW VISIBILITY FIX
    ========================================================= */
-body[data-auth="locked"] .auth-shell.is-active {
+body[data-auth="locked"][data-auth-screen="landing"] .landing-shell {
   display: flex !important;
 }
 
-body[data-auth="locked"] .auth-shell:not(.is-active) {
+body[data-auth="locked"][data-auth-screen="landing"] .auth-shell {
   display: none !important;
 }
 
-body[data-auth="locked"] .landing-shell:not(.is-hidden) {
-  display: flex;
+body[data-auth="locked"][data-auth-screen="auth"] .landing-shell {
+  display: none !important;
 }
 
-body[data-auth="locked"] .landing-shell.is-hidden {
-  display: none;
+body[data-auth="locked"][data-auth-screen="auth"] .auth-shell {
+  display: flex !important; /* Forces auth shell to take full independent view */
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
 }
 
 body[data-auth="ready"] .landing-shell,
 body[data-auth="ready"] .auth-shell {
   display: none !important;
+}
+
+body[data-auth="ready"] .app-shell {
+  display: grid !important;
 }
 
 /* =========================================================
@@ -11088,7 +11095,11 @@ body .ln-main {
   overflow-y: visible !important;
 }
 
-body[data-auth="locked"] .landing-shell {
+body[data-auth="locked"][data-auth-screen="auth"] .landing-shell {
+  display: none !important;
+}
+
+body[data-auth="locked"][data-auth-screen="landing"] .landing-shell {
   display: flex !important;
   position: relative !important;
   overflow: clip !important;

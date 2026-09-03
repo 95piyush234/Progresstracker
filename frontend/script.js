@@ -210,6 +210,7 @@ async function init() {
 
 function cacheDom() {
   dom.body = document.body;
+  dom.landingShell = document.getElementById("landingShell");
   dom.authShell = document.getElementById("authShell");
   dom.authPreviewTrackers = document.getElementById("authPreviewTrackers");
   dom.authPreviewLogs = document.getElementById("authPreviewLogs");
@@ -798,14 +799,18 @@ function bindEvents() {
     });
   }
   // Connect all Landing Page buttons to the Auth Shell
-  const landingShell = document.getElementById("landingShell");
-  const authShell = document.getElementById("authShell");
-
   const openAuthFromLanding = (mode) => {
-    if (landingShell) landingShell.classList.add("is-hidden");
-    if (authShell) authShell.classList.add("is-active");
+    dom.body.dataset.authScreen = "auth";
+    if (dom.landingShell) {
+      dom.landingShell.hidden = true;
+      dom.landingShell.style.display = "";
+    }
+    if (dom.authShell) {
+      dom.authShell.hidden = false;
+      dom.authShell.classList.add("is-active");
+    }
     setAuthMode(mode);
-    window.scrollTo(0,0); // Reset scroll position when opening auth
+    resetDocumentScroll();
   };
 
   // Attach listener to all Login buttons
@@ -1922,16 +1927,36 @@ function setAuthMode(mode, shouldFocus = true) {
   }
 }
 
+function resetDocumentScroll() {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  });
+}
+
 function syncAuthUi() {
   const account = getAccount();
   const authenticated = isAuthenticated();
 
   if (!authenticated) {
     forceCloseOverlays();
+    if (!dom.body.dataset.authScreen && !dom.body.dataset.authFlow) {
+      dom.body.dataset.authScreen = "landing";
+    }
+  } else {
+    delete dom.body.dataset.authScreen;
   }
 
   dom.body.dataset.auth = authenticated ? "ready" : "locked";
-  dom.authShell.hidden = authenticated;
+  if (dom.landingShell) {
+    dom.landingShell.hidden = authenticated || dom.body.dataset.authScreen !== "landing";
+  }
+  dom.authShell.hidden = authenticated || dom.body.dataset.authScreen !== "auth";
 
   const displayName = account?.name || "Guest";
   
@@ -2247,6 +2272,7 @@ async function checkGoogleOAuthCallback() {
     }
 
     renderApp();
+    resetDocumentScroll();
     scheduleAccessTokenRefresh();
     window.setTimeout(() => showToast(`Signed in with Google as ${user.name || user.email}.`, "success"), 120);
   } catch (error) {
@@ -2642,6 +2668,7 @@ async function applyBackendAuthSuccess(result, payload, successMessage) {
     saveState();
   }
   renderApp();
+  resetDocumentScroll();
   showToast(successMessage || `Welcome back, ${user.name}.`, "success");
 }
 
@@ -2656,7 +2683,10 @@ function getPasswordResetTokenFromUrl() {
 
 function applyPasswordRecoveryView(mode, resetToken = "") {
   const isTokenFlow = mode === "token";
+  dom.body.dataset.authScreen = "auth";
   dom.body.dataset.authFlow = isTokenFlow ? "reset-token" : "reset-request";
+  if (dom.landingShell) dom.landingShell.hidden = true;
+  dom.authShell.hidden = false;
   dom.authForm.classList.add("hidden");
   dom.authOtpShell.classList.add("hidden");
   dom.authResetShell.classList.remove("hidden");
@@ -3722,6 +3752,9 @@ function sampleLog(amount, daysAgo, hours = 18, minutes = 0, note = "", tag = ""
   };
 }
 function renderApp() {
+  // Always snap viewport back to top when switching states (fixes starting at the bottom)
+  resetDocumentScroll();
+
   syncTheme();
   renderAuthPreview();
   setAuthMode(getDefaultAuthMode(), false);
