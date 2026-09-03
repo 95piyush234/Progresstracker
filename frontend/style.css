@@ -10339,16 +10339,26 @@ body[data-auth="ready"] .auth-shell {
 /* =========================================================
    LINEAR-INSPIRED LANDING PAGE
    ========================================================= */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}
+
 .landing-shell {
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
+  height: auto !important;
   background: #000000;
   color: #f2f2f2;
   position: relative;
   overflow-x: hidden;
-  overflow-y: visible; /* Prevents an inner scrollbar from spawning here */
+  overflow-y: visible !important; /* Forces the shell to never spawn its own scrollbar */
   font-family: var(--ui-font-body);
 }
 
