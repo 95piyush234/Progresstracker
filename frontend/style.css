@@ -11058,38 +11058,45 @@ body[data-theme="light"] .tasky-solo-card:hover {
 
 
 
+
 /* =========================================================
-   GLOBAL SINGLE-SCROLL ENFORCEMENT (VERCEL FIX)
+   SINGLE PAGE SCROLL OVERRIDE
    ========================================================= */
 
-/* Ensure root HTML and Body control window scrolling */
 html {
-  height: 100%;
   overflow-x: hidden !important;
   overflow-y: auto !important;
+  height: 100% !important;
 }
 
 body {
-  min-height: 100vh;
+  overflow-x: clip !important;
+  overflow-y: visible !important;
   height: auto !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  position: relative;
+  min-height: 100vh !important;
 }
 
-/* Strip independent vertical scroll behavior from major wrapper shells */
-.landing-shell,
-.app-shell,
-.workspace,
-.workspace-main {
+body .landing-shell,
+body .app-shell,
+body .workspace,
+body .workspace-main,
+body .ln-main {
   height: auto !important;
+  min-height: 100% !important;
   max-height: none !important;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   overflow-y: visible !important;
 }
 
-/* Prevent modals or hidden layouts from spawning ghost scrollbars */
+body[data-auth="locked"] .landing-shell {
+  display: flex !important;
+  position: relative !important;
+  overflow: clip !important;
+}
+
 .modal-shell:not(.is-open),
-.drawer-scrim:not(.is-open) {
+.drawer-scrim:not(.is-open),
+.detail-drawer:not(.is-open) {
   display: none !important;
+  overflow: hidden !important;
 }
