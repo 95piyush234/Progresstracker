@@ -4747,10 +4747,16 @@ function renderDetailDrawer() {
   dom.detailDrawer.classList.add("is-open");
   dom.detailDrawer.setAttribute("aria-hidden", "false");
   dom.drawerScrim.hidden = false;
+  
   requestAnimationFrame(() => {
     dom.drawerScrim.classList.add("is-open");
-    animateProgressVisuals(dom.detailDrawer);
-    registerRevealElements(dom.detailDrawer);
+    
+    // PERFORMANCE FIX: Wait 50ms for the drawer to physically slide open 
+    // before running the heavy chart and reveal animations.
+    window.setTimeout(() => {
+      animateProgressVisuals(dom.detailDrawer);
+      registerRevealElements(dom.detailDrawer);
+    }, 50);
   });
 }
 
@@ -5900,22 +5906,9 @@ function resetDrawerBodyScroll() {
     if (!dom.drawerBody) return;
     dom.detailDrawer.scrollTop = 0;
     dom.drawerBody.scrollTop = 0;
-    dom.drawerBody.scrollLeft = 0;
   });
-
-  window.setTimeout(() => {
-    if (!dom.drawerBody) return;
-    dom.detailDrawer.scrollTop = 0;
-    dom.drawerBody.scrollTop = 0;
-    dom.drawerBody.scrollLeft = 0;
-  }, 90);
-
-  window.setTimeout(() => {
-    if (!dom.drawerBody) return;
-    dom.detailDrawer.scrollTop = 0;
-    dom.drawerBody.scrollTop = 0;
-    dom.drawerBody.scrollLeft = 0;
-  }, 220);
+  
+  // Deleted the 90ms and 220ms timeouts that were causing layout thrashing!
 }
 
 function focusElementWithoutScroll(element) {

@@ -11350,3 +11350,20 @@ body {
 .ln-hero-actions       { animation-delay: 0.45s; }
 .ln-hero-checks        { animation-delay: 0.55s; }
 .ln-hero-image-wrapper { animation-delay: 0.65s; }
+
+/* =========================================================
+   MOBILE DRAWER PERFORMANCE FIX
+   ========================================================= */
+@media (max-width: 780px) {
+  .detail-drawer {
+    /* Turn off the expensive blur effect on mobile */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    
+    /* Make the background fully solid so it looks clean */
+    background: var(--ui-bg-base) !important;
+    
+    /* Tell the mobile browser to prep the GPU for animation */
+    will-change: transform, opacity;
+  }
+}
