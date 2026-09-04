@@ -11169,3 +11169,184 @@ body[data-auth="locked"][data-auth-screen="landing"] .landing-shell {
   display: none !important;
   overflow: hidden !important;
 }
+
+
+
+/* =========================================================
+   LINEAR AESTHETIC + GLASSMORPHISM OVERRIDE
+   ========================================================= */
+
+:root {
+  /* Linear Typography */
+  --ui-font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --ui-font-display: "Inter", system-ui, -apple-system, sans-serif;
+  
+  /* Deep Dark Backgrounds */
+  --bg-deep: #000000;
+  --bg: #080808;
+  --bg-soft: #121212;
+  --ui-bg-deep: #000000;
+  --ui-bg-base: #080808;
+  
+  /* Linear Glass Panels (Translucent Smoke) */
+  --panel: rgba(22, 22, 22, 0.55);
+  --panel-strong: rgba(30, 30, 30, 0.75);
+  --panel-solid: #161616;
+  --ui-bg-surface: rgba(22, 22, 22, 0.55);
+  
+  /* Crisp, Subtle Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --ui-border: rgba(255, 255, 255, 0.08);
+  --ui-border-hover: rgba(255, 255, 255, 0.16);
+  
+  /* High Contrast Text */
+  --text: #F2F2F2;
+  --text-soft: #8A8F98;
+  --muted: #6B6F76;
+  --muted-strong: #9BA1A6;
+  --ui-text-primary: #F2F2F2;
+  --ui-text-secondary: #8A8F98;
+  
+  /* Linear Accents (Subtle Indigo/Purple/Teal) */
+  --accent: #5E6AD2;
+  --accent-strong: #7C88ED;
+  --accent-warm: #5de4c7;
+  --ui-accent: #5E6AD2;
+}
+/* Enforce the Glassmorphism on all panels AND Landing Page elements */
+.panel, 
+.modal-card, 
+.detail-drawer,
+.tasky-solo-card,
+.sidebar,
+.topbar,
+.dashboard-panel,
+.tracker-card,
+.ln-nav,             /* Added Landing Page Navbar */
+.ln-bento-card,      /* Added Landing Page Cards */
+.ln-feature-card,    /* Added Landing Page Feature Cards */
+.ln-hero-mockup      /* Added Landing Page Mockup */ {
+  background: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  backdrop-filter: blur(24px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(120%) !important;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Subtle Hover Effects for Glass Cards */
+.panel:hover, 
+.tracker-card:hover, 
+.insight-card:hover,
+.ln-bento-card:hover,   /* Added Landing Page Hover */
+.ln-feature-card:hover  /* Added Landing Page Hover */ {
+  background: var(--panel-strong) !important;
+  border-color: var(--border-strong) !important;
+  box-shadow: 0 28px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Base Body Background */
+body {
+  background: var(--bg-deep) !important;
+  color: var(--text) !important;
+}
+
+/* Clean up ambient glows so they don't overpower the sleek dark mode */
+.ln-glow, .ambient {
+  opacity: 0.15 !important;
+}
+
+
+
+
+/* =========================================================
+   INFINITE SCROLLING MARQUEE TICKER
+   ========================================================= */
+
+.ln-marquee-section {
+  width: 100vw;           /* Forces it to be exactly the width of the screen */
+  max-width: 100vw;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  display: flex;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 24px 0;
+}
+
+.ln-marquee-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-right: 40px; /* Must equal gap to prevent jumping when it loops */
+  animation: scroll-left 25s linear infinite;
+  white-space: nowrap;
+}
+
+.ln-marquee-content span {
+  font-family: var(--ui-font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted-strong);
+  letter-spacing: 0.2em;
+}
+
+/* Smooth continuous scroll animation */
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* On hover, pause the scrolling so users can read it */
+.ln-marquee-section:hover .ln-marquee-content {
+  animation-play-state: paused;
+}
+
+
+
+/* =========================================================
+   LINEAR-STYLE INITIAL BLUR REVEAL ANIMATION
+   ========================================================= */
+
+/* The core animation: unblurring, fading in, and floating up */
+@keyframes linearBlurReveal {
+  0% {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(24px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 
+  Target the landing page hero elements.
+  We set initial opacity to 0 so they don't blink before the animation starts.
+*/
+.ln-nav,
+.ln-badge,
+.ln-hero-title,
+.ln-hero-subtitle,
+.ln-hero-actions,
+.ln-hero-checks,
+.ln-hero-image-wrapper {
+  opacity: 0;
+  animation: linearBlurReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 
+  Stagger the delays to create a cascading "waterfall" reveal effect 
+  exactly like high-end SaaS landing pages.
+*/
+.ln-nav                { animation-delay: 0.05s; }
+.ln-badge              { animation-delay: 0.15s; }
+.ln-hero-title         { animation-delay: 0.25s; }
+.ln-hero-subtitle      { animation-delay: 0.35s; }
+.ln-hero-actions       { animation-delay: 0.45s; }
+.ln-hero-checks        { animation-delay: 0.55s; }
+.ln-hero-image-wrapper { animation-delay: 0.65s; }
