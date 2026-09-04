@@ -4702,6 +4702,7 @@ function renderDetailDrawer() {
     return;
   }
 
+  // 1. FAST DOM UPDATES: Only update the top title area so the click feels instant
   const accent = tracker.accentColor;
   const accentAlt = adjustHexColor(accent, -12);
   dom.detailBadge.textContent = getBadgeContent(tracker);
@@ -4709,41 +4710,13 @@ function renderDetailDrawer() {
   dom.detailCategoryLabel.textContent = `${tracker.category} · ${statusLabel(getTrackerStatus(tracker))}`;
   dom.detailTitle.textContent = tracker.title;
   dom.detailSubtitle.textContent = tracker.itemName || tracker.goalType;
-  dom.detailHeroCard.innerHTML = createDetailHero(tracker);
-  dom.detailProgressVisuals.innerHTML = createDetailProgressVisuals(tracker);
-  dom.detailMetaGrid.innerHTML = createDetailMetaCards(tracker);
-  dom.detailHistoryCount.textContent = `${tracker.logs.length} entr${tracker.logs.length === 1 ? "y" : "ies"}`;
-  dom.detailLogList.innerHTML = tracker.logs.length
-    ? [...tracker.logs]
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-        .map((log) => createDetailLogEntry(tracker, log))
-        .join("")
-    : createEmptyStackItem("No history yet", "Add a progress entry to start tracking movement here.");
+  
+  // Temporarily clear the heavy sections to prevent previous tracker "ghosting" and layout stutter
+  dom.detailHeroCard.innerHTML = "";
+  dom.detailProgressVisuals.innerHTML = "";
+  dom.detailLogList.innerHTML = "";
 
-  dom.detailNotes.innerHTML = createNotesMarkup(tracker);
-
-  dom.detailCustomFields.innerHTML = tracker.customFields.length
-    ? `
-      <div class="note-card">
-        <h5>Custom fields</h5>
-        <div class="custom-field-list">
-          ${tracker.customFields
-            .map(
-              (field) => `
-                <div class="custom-field-pill">
-                  <strong>${escapeHtml(field.label)}</strong>
-                  <span class="subtle">${escapeHtml(field.value)}</span>
-                </div>
-              `
-            )
-            .join("")}
-        </div>
-      </div>
-    `
-    : "";
-
-  dom.archiveSelectedTrackerBtn.textContent = tracker.archived ? "Restore" : "Archive";
-
+  // 2. TRIGGER ANIMATION INSTANTLY
   dom.detailDrawer.classList.add("is-open");
   dom.detailDrawer.setAttribute("aria-hidden", "false");
   dom.drawerScrim.hidden = false;
@@ -4751,12 +4724,50 @@ function renderDetailDrawer() {
   requestAnimationFrame(() => {
     dom.drawerScrim.classList.add("is-open");
     
-    // PERFORMANCE FIX: Wait 50ms for the drawer to physically slide open 
-    // before running the heavy chart and reveal animations.
+    // 3. OFFLOAD HEAVY RENDERING
+    // Wait 120ms to let the drawer physically slide in *before* we block the phone's CPU with HTML building
     window.setTimeout(() => {
-      animateProgressVisuals(dom.detailDrawer);
-      registerRevealElements(dom.detailDrawer);
-    }, 50);
+      dom.detailHeroCard.innerHTML = createDetailHero(tracker);
+      dom.detailMetaGrid.innerHTML = createDetailMetaCards(tracker);
+      dom.detailNotes.innerHTML = createNotesMarkup(tracker);
+      
+      dom.detailCustomFields.innerHTML = tracker.customFields.length
+        ? `
+          <div class="note-card">
+            <h5>Custom fields</h5>
+            <div class="custom-field-list">
+              ${tracker.customFields
+                .map((field) => `
+                  <div class="custom-field-pill">
+                    <strong>${escapeHtml(field.label)}</strong>
+                    <span class="subtle">${escapeHtml(field.value)}</span>
+                  </div>
+                `).join("")}
+            </div>
+          </div>
+        ` : "";
+        
+      dom.archiveSelectedTrackerBtn.textContent = tracker.archived ? "Restore" : "Archive";
+      
+      // 4. Split the absolute heaviest renders (Charts & Logs) into another tick so the UI doesn't freeze
+      window.setTimeout(() => {
+        dom.detailProgressVisuals.innerHTML = createDetailProgressVisuals(tracker);
+        dom.detailHistoryCount.textContent = `${tracker.logs.length} entr${tracker.logs.length === 1 ? "y" : "ies"}`;
+        
+        // OPTIMIZATION: Only render the first 40 logs on load. Rendering 100+ items at once crashes mobile browsers.
+        dom.detailLogList.innerHTML = tracker.logs.length
+          ? [...tracker.logs]
+              .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+              .slice(0, 40) 
+              .map((log) => createDetailLogEntry(tracker, log))
+              .join("")
+          : createEmptyStackItem("No history yet", "Add a progress entry to start tracking movement here.");
+
+        animateProgressVisuals(dom.detailDrawer);
+        registerRevealElements(dom.detailDrawer);
+      }, 50);
+
+    }, 120);
   });
 }
 

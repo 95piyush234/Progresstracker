@@ -11367,3 +11367,34 @@ body {
     will-change: transform, opacity;
   }
 }
+
+
+
+/* =========================================================
+   ACCOUNT DROPDOWN SOLID BACKGROUND FIX
+   ========================================================= */
+#accountDropdown,
+.account-dropdown {
+  /* Force a solid, dark background so text behind it doesn't bleed through */
+  background: #0a0a0a !important; 
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--border-strong) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9) !important;
+  z-index: 9999 !important;
+}
+
+body[data-theme="light"] #accountDropdown,
+body[data-theme="light"] .account-dropdown {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Ensure hover items stay visible */
+#accountDropdown .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+body[data-theme="light"] #accountDropdown .dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
