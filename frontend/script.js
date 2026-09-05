@@ -7415,9 +7415,21 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 /* =========================================================
    DIARY MODULE (LOCAL-FIRST)
    ========================================================= */
-(function() {
+;(function() {
   const DIARY_KEY = "progress-tracker-diary.v1";
-  let diaryEntries = JSON.parse(localStorage.getItem(DIARY_KEY)) || [];
+  let diaryEntries = [];
+  
+  // Safe local storage fetch to prevent crashes
+  try {
+    const stored = localStorage.getItem(DIARY_KEY);
+    if (stored) {
+      diaryEntries = JSON.parse(stored);
+      if (!Array.isArray(diaryEntries)) diaryEntries = [];
+    }
+  } catch (e) {
+    console.error("Diary parse error:", e);
+    diaryEntries = [];
+  }
 
   const templates = {
     freeform: "",
@@ -7441,17 +7453,17 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     list.innerHTML = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
       <article class="panel" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
-          <h4 style="margin:0; font-size: 1.15rem; color: var(--ui-text-primary); font-weight: 600;">${escapeHtml(entry.title)}</h4>
+          <h4 style="margin:0; font-size: 1.15rem; color: var(--ui-text-primary); font-weight: 600;">${typeof escapeHtml === 'function' ? escapeHtml(entry.title) : entry.title}</h4>
           <span class="soft-pill" style="font-size: 0.75rem;">${entry.dateStr}</span>
         </div>
-        <p class="subtle" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: var(--ui-text-secondary); margin: 0;">${escapeHtml(entry.body)}</p>
+        <p class="subtle" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: var(--ui-text-secondary); margin: 0;">${typeof escapeHtml === 'function' ? escapeHtml(entry.body) : entry.body}</p>
       </article>
     `).join("");
     
     if(typeof registerRevealElements === 'function') registerRevealElements(list);
   };
 
-  // Bulletproof Global Event Listeners
+  // Safely attach global click listener
   document.addEventListener("click", (e) => {
     const newBtn = e.target.closest("#newDiaryEntryBtn");
     const closeBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
@@ -7464,7 +7476,12 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       const templateSelect = document.getElementById("diaryTemplateSelect");
       const bodyInput = document.getElementById("diaryBodyInput");
       
-      if(!modal) return;
+      if (!modal) {
+        console.error("Diary modal not found in DOM!");
+        if(typeof showToast === 'function') showToast("Error: Modal HTML missing.", "error");
+        return;
+      }
+      
       const now = new Date();
       if(dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
       if(form) form.reset();
@@ -7474,6 +7491,12 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       modal.classList.add("is-open");
       modal.setAttribute("aria-hidden", "false");
       document.body.classList.add("is-locked");
+      
+      // HARDCODE DISPLAY FALLBACK (Bypasses any CSS caching issues)
+      modal.style.display = "grid";
+      modal.style.opacity = "1";
+      modal.style.visibility = "visible";
+      modal.style.zIndex = "999999";
     }
     
     if (closeBtn) {
@@ -7482,6 +7505,12 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
          modal.classList.remove("is-open");
          modal.setAttribute("aria-hidden", "true");
          document.body.classList.remove("is-locked");
+         
+         // Remove inline style fallbacks
+         modal.style.display = "";
+         modal.style.opacity = "";
+         modal.style.visibility = "";
+         modal.style.zIndex = "";
       }
     }
 
@@ -7507,8 +7536,8 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       const now = new Date();
       const newEntry = {
         id: "diary-" + Date.now(),
-        title: titleInput.value.trim(),
-        body: bodyInput.value.trim(),
+        title: titleInput ? titleInput.value.trim() : "Untitled",
+        body: bodyInput ? bodyInput.value.trim() : "",
         timestamp: now.getTime(),
         dateStr: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
       };
@@ -7520,6 +7549,10 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
          modal.classList.remove("is-open");
          modal.setAttribute("aria-hidden", "true");
          document.body.classList.remove("is-locked");
+         modal.style.display = "";
+         modal.style.opacity = "";
+         modal.style.visibility = "";
+         modal.style.zIndex = "";
       }
       
       window.renderDiary();
