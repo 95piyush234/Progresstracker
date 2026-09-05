@@ -1,11 +1,11 @@
 import express from 'express';
 import DiaryEntry from '../models/diary.model.js';
-import { verifyToken } from '../middleware/auth.middleware.js'; 
+import { protect } from '../middleware/auth.middleware.js'; 
 
 const router = express.Router();
 
 // Fetch all diary entries for the logged-in user
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', protect, async (req, res) => {
   try {
     const entries = await DiaryEntry.find({ user: req.user._id }).sort({ timestamp: -1 });
     res.json({ success: true, data: { entries } });
@@ -15,7 +15,7 @@ router.get('/', verifyToken, async (req, res) => {
 });
 
 // Save a new diary entry
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', protect, async (req, res) => {
   try {
     const { title, body, timestamp, dateStr } = req.body;
     const entry = await DiaryEntry.create({
