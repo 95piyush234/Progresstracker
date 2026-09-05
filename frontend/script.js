@@ -7413,7 +7413,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
 
 /* =========================================================
-   DIARY MODULE - DIRECT & BULLETPROOF FIX
+   DIARY MODULE - IMMEDIATE BINDING FIX
    ========================================================= */
 ;(function() {
   const DIARY_KEY = "progress-tracker-diary.v1";
@@ -7505,40 +7505,25 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     document.body.classList.remove("is-locked");
   }
 
-  // Bind directly when the DOM is ready
-  document.addEventListener("DOMContentLoaded", () => {
-    const newBtn = document.getElementById("newDiaryEntryBtn");
-    if (newBtn) {
-      newBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        openDiaryModal();
-      });
-    }
-
-    const closeBtn = document.getElementById("closeDiaryModalBtn");
-    const cancelBtn = document.getElementById("cancelDiaryModalBtn");
-    if (closeBtn) closeBtn.addEventListener("click", (e) => { e.preventDefault(); closeDiaryModal(); });
-    if (cancelBtn) cancelBtn.addEventListener("click", (e) => { e.preventDefault(); closeDiaryModal(); });
-
-    const diaryNav = document.querySelector('[data-view-target="diary"]');
-    if (diaryNav) {
-      diaryNav.addEventListener("click", () => {
-        window.setTimeout(() => window.renderDiary(), 50);
-      });
-    }
-  });
-
-  // Fallback global listener in case elements load dynamically
+  // Global event delegation works immediately without waiting for DOMContentLoaded
   document.addEventListener("click", (e) => {
-    const btn = e.target.closest("#newDiaryEntryBtn");
-    if (btn) {
+    const newBtn = e.target.closest("#newDiaryEntryBtn");
+    if (newBtn) {
       e.preventDefault();
       openDiaryModal();
+      return;
     }
-    const close = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
-    if (close) {
+
+    const closeBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
+    if (closeBtn) {
       e.preventDefault();
       closeDiaryModal();
+      return;
+    }
+
+    const diaryNav = e.target.closest('[data-view-target="diary"]');
+    if (diaryNav) {
+      window.setTimeout(() => window.renderDiary(), 50);
     }
   });
 
