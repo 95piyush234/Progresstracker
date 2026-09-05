@@ -7361,15 +7361,17 @@ function createNotesMarkup(tracker) {
   `;
 }
 
-// Bind the interactive clicks to the Notes container
-dom.detailNotes.addEventListener("change", async (event) => {
-  if (event.target.classList.contains("roadmap-checkbox")) {
-    const trackerId = event.target.dataset.trackerId;
-    const lineIndex = parseInt(event.target.dataset.lineIndex, 10);
-    const isChecked = event.target.checked;
-    await toggleRoadmapItem(trackerId, lineIndex, isChecked);
-  }
-});
+// Bind the interactive clicks to the Notes container safely
+if (dom.detailNotes) {
+  dom.detailNotes.addEventListener("change", async (event) => {
+    if (event.target.classList.contains("roadmap-checkbox")) {
+      const trackerId = event.target.dataset.trackerId;
+      const lineIndex = parseInt(event.target.dataset.lineIndex, 10);
+      const isChecked = event.target.checked;
+      await toggleRoadmapItem(trackerId, lineIndex, isChecked);
+    }
+  });
+}
 
 async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
   const tracker = findTracker(trackerId);
