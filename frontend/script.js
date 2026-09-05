@@ -7413,12 +7413,9 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
 
 /* =========================================================
-   DIARY MODULE - FINAL POLISH FIX (CLOSING & RENDERING)
+   DIARY MODULE - DIRECT & BULLETPROOF FIX
    ========================================================= */
 ;(function() {
-  if (window._diaryModuleLoaded) return;
-  window._diaryModuleLoaded = true;
-
   const DIARY_KEY = "progress-tracker-diary.v1";
 
   const templates = {
@@ -7445,19 +7442,19 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     if (entries.length === 0) {
       lists.forEach(list => list.innerHTML = "");
       empties.forEach(empty => {
-         empty.classList.remove("hidden");
-         empty.style.removeProperty("display");
+        empty.classList.remove("hidden");
+        empty.style.display = "";
       });
       return;
     }
 
     empties.forEach(empty => {
-        empty.classList.add("hidden");
-        empty.style.setProperty("display", "none", "important");
+      empty.classList.add("hidden");
+      empty.style.setProperty("display", "none", "important");
     });
 
     const html = entries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
-      <article class="panel is-revealed" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px; opacity: 1 !important; transform: none !important; visibility: visible !important; filter: none !important;">
+      <article class="panel" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
           <h4 style="margin:0; font-size: 1.15rem; color: var(--ui-text-primary); font-weight: 600;">${typeof escapeHtml === 'function' ? escapeHtml(entry.title) : entry.title}</h4>
           <span class="soft-pill" style="font-size: 0.75rem;">${entry.dateStr}</span>
@@ -7471,81 +7468,91 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     });
   };
 
-  // Bulletproof Close Function using explicit display: none
+  function openDiaryModal() {
+    const modal = document.getElementById("diaryModal");
+    if (!modal) return;
+
+    const dateLabel = modal.querySelector("#diaryModalDate");
+    const form = modal.querySelector("#diaryForm");
+    const templateSelect = modal.querySelector("#diaryTemplateSelect");
+    const bodyInput = modal.querySelector("#diaryBodyInput");
+
+    const now = new Date();
+    if (dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+    if (form) form.reset();
+    if (templateSelect) templateSelect.value = "freeform";
+    if (bodyInput) bodyInput.value = templates.freeform;
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    modal.style.setProperty("display", "grid", "important");
+    modal.style.setProperty("opacity", "1", "important");
+    modal.style.setProperty("visibility", "visible", "important");
+    modal.style.setProperty("z-index", "999999", "important");
+    document.body.classList.add("is-locked");
+  }
+
   function closeDiaryModal() {
-    document.querySelectorAll("#diaryModal").forEach(m => {
-      m.classList.remove("is-open");
-      m.setAttribute("aria-hidden", "true");
-      m.style.display = "none";
-      m.style.removeProperty("opacity");
-      m.style.removeProperty("visibility");
-      m.style.removeProperty("z-index");
-    });
+    const modal = document.getElementById("diaryModal");
+    if (!modal) return;
+
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    modal.style.display = "none";
+    modal.style.removeProperty("opacity");
+    modal.style.removeProperty("visibility");
+    modal.style.removeProperty("z-index");
     document.body.classList.remove("is-locked");
   }
 
-  // Global Event Listener for Clicks
-  window.addEventListener("click", function(e) {
-    if (!e.target || typeof e.target.closest !== 'function') return;
-
-    // Open Modal
-    if (e.target.closest("#newDiaryEntryBtn")) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-
-      document.querySelectorAll("#diaryModal").forEach(m => {
-        const dateLabel = m.querySelector("#diaryModalDate");
-        const form = m.querySelector("#diaryForm");
-        const templateSelect = m.querySelector("#diaryTemplateSelect");
-        const bodyInput = m.querySelector("#diaryBodyInput");
-
-        if (dateLabel) dateLabel.textContent = dateStr;
-        if (form) form.reset();
-        if (templateSelect) templateSelect.value = "freeform";
-        if (bodyInput) bodyInput.value = templates.freeform;
-
-        m.classList.add("is-open");
-        m.setAttribute("aria-hidden", "false");
-        m.style.display = "grid";
-        m.style.opacity = "1";
-        m.style.visibility = "visible";
-        m.style.zIndex = "999999";
+  // Bind directly when the DOM is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    const newBtn = document.getElementById("newDiaryEntryBtn");
+    if (newBtn) {
+      newBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openDiaryModal();
       });
-      document.body.classList.add("is-locked");
-      return;
     }
 
-    // Close Modal (Cancel or X button)
-    if (e.target.closest("#closeDiaryModalBtn") || e.target.closest("#cancelDiaryModalBtn")) {
+    const closeBtn = document.getElementById("closeDiaryModalBtn");
+    const cancelBtn = document.getElementById("cancelDiaryModalBtn");
+    if (closeBtn) closeBtn.addEventListener("click", (e) => { e.preventDefault(); closeDiaryModal(); });
+    if (cancelBtn) cancelBtn.addEventListener("click", (e) => { e.preventDefault(); closeDiaryModal(); });
+
+    const diaryNav = document.querySelector('[data-view-target="diary"]');
+    if (diaryNav) {
+      diaryNav.addEventListener("click", () => {
+        window.setTimeout(() => window.renderDiary(), 50);
+      });
+    }
+  });
+
+  // Fallback global listener in case elements load dynamically
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#newDiaryEntryBtn");
+    if (btn) {
       e.preventDefault();
-      e.stopImmediatePropagation();
+      openDiaryModal();
+    }
+    const close = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
+    if (close) {
+      e.preventDefault();
       closeDiaryModal();
-      return;
     }
+  });
 
-    // Click on Diary Tab in Nav or Mobile Bar
-    if (e.target.closest('[data-view-target="diary"]')) {
-      window.setTimeout(() => window.renderDiary(), 50);
-    }
-  }, true);
-
-  // Template dropdown change
-  window.addEventListener("change", function(e) {
+  document.addEventListener("change", (e) => {
     if (e.target && e.target.id === "diaryTemplateSelect") {
       const form = e.target.closest("form");
       const bodyInput = form ? form.querySelector("#diaryBodyInput") : document.getElementById("diaryBodyInput");
       if (bodyInput) bodyInput.value = templates[e.target.value] || "";
     }
-  }, true);
+  });
 
-  // Form Submission
-  window.addEventListener("submit", function(e) {
+  document.addEventListener("submit", (e) => {
     if (e.target && e.target.id === "diaryForm") {
       e.preventDefault();
-      e.stopImmediatePropagation();
 
       const form = e.target;
       const titleInput = form.querySelector("#diaryTitleInput");
@@ -7566,11 +7573,11 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       closeDiaryModal();
       window.renderDiary();
 
-      if(typeof showToast === 'function') showToast("Diary entry saved.", "success");
+      if (typeof showToast === 'function') showToast("Diary entry saved.", "success");
     }
-  }, true);
+  });
 
-  // Initial render on load
+  // Initial render call
   setTimeout(() => window.renderDiary(), 200);
 })();
 
