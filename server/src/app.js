@@ -102,6 +102,7 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   logger.debug("Google OAuth router mounted at /api/auth/google");
   app.use("/api/goals", goalRouter);
+  app.use('/api/diary', require('./routes/diary.routes'));
   app.use("/api/tasks", taskRouter);
   app.use("/api/progress", progressRouter);
   app.use("/api/analytics", analyticsRouter);

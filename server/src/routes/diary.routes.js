@@ -1,0 +1,33 @@
+const express = require('express');
+const router = express.Router();
+const DiaryEntry = require('../models/diary.model');
+const { verifyToken } = require('../middleware/auth'); // Check if this path matches your auth file
+
+// Fetch all diary entries for the logged-in user
+router.get('/', verifyToken, async (req, res) => {
+  try {
+    const entries = await DiaryEntry.find({ user: req.user._id }).sort({ timestamp: -1 });
+    res.json({ success: true, data: { entries } });
+  } catch (err) {
+    res.status(500).json({ success: false, error: { message: err.message } });
+  }
+});
+
+// Save a new diary entry
+router.post('/', verifyToken, async (req, res) => {
+  try {
+    const { title, body, timestamp, dateStr } = req.body;
+    const entry = await DiaryEntry.create({
+      user: req.user._id,
+      title: title || 'Untitled',
+      body: body || '',
+      timestamp: timestamp || Date.now(),
+      dateStr: dateStr || new Date().toLocaleDateString()
+    });
+    res.status(201).json({ success: true, data: { entry } });
+  } catch (err) {
+    res.status(400).json({ success: false, error: { message: err.message } });
+  }
+});
+
+module.exports = router;
