@@ -7492,6 +7492,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       if (e.target.closest("#newDiaryEntryBtn")) {
           e.preventDefault();
           e.stopImmediatePropagation();
+          e.stopPropagation();
 
           const now = new Date();
           const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
@@ -7522,6 +7523,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       if (e.target.closest("#closeDiaryModalBtn") || e.target.closest("#cancelDiaryModalBtn")) {
           e.preventDefault();
           e.stopImmediatePropagation();
+          e.stopPropagation();
           closeAllDiaryModals();
           return;
       }
@@ -7546,6 +7548,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       if (e.target && e.target.id === "diaryForm") {
           e.preventDefault();
           e.stopImmediatePropagation(); // Kills duplicated code
+          e.stopPropagation();
 
           const form = e.target;
           const titleInput = form.querySelector("#diaryTitleInput");
