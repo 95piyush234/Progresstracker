@@ -1,7 +1,7 @@
 const STORAGE_KEY = "progress-tracker-pro.v1";
 const DEFAULT_THEME = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 const PRIORITY_VALUES = ["Critical", "High", "Medium", "Low"];
-const VIEW_NAMES = ["dashboard", "trackers", "graphs", "history"];
+const VIEW_NAMES = ["dashboard", "trackers", "graphs", "history", "diary"];
 const AUTH_MODES = ["create", "login"];
 const OTP_TTL_MINUTES = 10;
 const MAIL_FEED_LIMIT = 60;
@@ -7408,3 +7408,99 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     renderDetailDrawer(); // Revert UI if it fails
   }
 }
+
+
+
+
+/* =========================================================
+   DIARY MODULE (LOCAL-FIRST)
+   ========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const DIARY_KEY = "progress-tracker-diary.v1";
+  let diaryEntries = JSON.parse(localStorage.getItem(DIARY_KEY)) || [];
+
+  const templates = {
+    freeform: "",
+    reflection: "🌟 Wins today:\n-\n\n📈 Could improve:\n-\n\n🧠 Mood & Thoughts:\n-",
+    standup: "✅ Done yesterday:\n-\n\n🎯 Focus today:\n-\n\n🚧 Blockers:\n-",
+    gratitude: "Today I am grateful for:\n1. \n2. \n3. "
+  };
+
+  const list = document.getElementById("diaryEntryList");
+  const empty = document.getElementById("diaryEmptyState");
+  const modal = document.getElementById("diaryModal");
+  const form = document.getElementById("diaryForm");
+  const templateSelect = document.getElementById("diaryTemplateSelect");
+  const bodyInput = document.getElementById("diaryBodyInput");
+  const titleInput = document.getElementById("diaryTitleInput");
+  const dateLabel = document.getElementById("diaryModalDate");
+
+  function renderDiary() {
+    if (!list) return;
+    if (diaryEntries.length === 0) {
+      list.innerHTML = "";
+      empty.classList.remove("hidden");
+      return;
+    }
+    empty.classList.add("hidden");
+    list.innerHTML = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
+      <article class="panel" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+          <h4 style="margin:0; font-size: 1.15rem; color: var(--ui-text-primary); font-weight: 600;">${escapeHtml(entry.title)}</h4>
+          <span class="soft-pill" style="font-size: 0.75rem;">${entry.dateStr}</span>
+        </div>
+        <p class="subtle" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: var(--ui-text-secondary); margin: 0;">${escapeHtml(entry.body)}</p>
+      </article>
+    `).join("");
+    registerRevealElements(list);
+  }
+
+  function openDiaryModal() {
+    const now = new Date();
+    dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    form.reset();
+    templateSelect.value = "freeform";
+    bodyInput.value = templates.freeform;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-locked");
+  }
+
+  function closeDiaryModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-locked");
+  }
+
+  document.getElementById("newDiaryEntryBtn")?.addEventListener("click", openDiaryModal);
+  document.getElementById("closeDiaryModalBtn")?.addEventListener("click", closeDiaryModal);
+  document.getElementById("cancelDiaryModalBtn")?.addEventListener("click", closeDiaryModal);
+
+  templateSelect?.addEventListener("change", (e) => {
+    bodyInput.value = templates[e.target.value] || "";
+  });
+
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const now = new Date();
+    const newEntry = {
+      id: "diary-" + Date.now(),
+      title: titleInput.value.trim(),
+      body: bodyInput.value.trim(),
+      timestamp: now.getTime(),
+      dateStr: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+    };
+    diaryEntries.push(newEntry);
+    localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+    closeDiaryModal();
+    renderDiary();
+    if(typeof showToast === 'function') showToast("Diary entry saved.", "success");
+  });
+
+  // Re-render when nav buttons are clicked
+  document.querySelectorAll('[data-view-target="diary"]').forEach(btn => {
+    btn.addEventListener("click", renderDiary);
+  });
+
+  renderDiary(); // Initial render
+});

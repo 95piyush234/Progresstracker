@@ -597,6 +597,17 @@
               <small>Timeline and corrections</small>
             </span>
           </button>
+          <button class="nav-button" type="button" data-view-target="diary">
+            <span class="nav-button-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+              </svg>
+            </span>
+            <span class="nav-button-copy">
+              <span>Diary</span>
+              <small>Reflections</small>
+            </span>
+          </button>
         </nav>
 
         <div class="topbar-actions">
@@ -1213,6 +1224,31 @@
             </article>
           </section>
         </section>
+        <!-- DIARY VIEW PANEL -->
+        <section class="view-panel" data-view-panel="diary" aria-labelledby="diaryHeading">
+          <header class="section-heading">
+            <div>
+              <p class="eyebrow">Daily reflections</p>
+              <h3 id="diaryHeading">Journal & Notes</h3>
+              <p class="subtle">
+                Write down your thoughts, ideas, and daily reflections completely freeform.
+              </p>
+            </div>
+            <button class="primary-button" type="button" id="newDiaryEntryBtn">New Entry</button>
+          </header>
+
+          <!-- Premium Empty State for Diary -->
+          <section class="empty-state panel" id="diaryEmptyState">
+            <div class="empty-state-icon" style="opacity: 0.8;">📓</div>
+            <h4>No journal entries yet</h4>
+            <p class="subtle">
+              Start writing your daily reflections to build your personal diary.
+            </p>
+          </section>
+          
+          <!-- Future Diary Grid will go here -->
+          <div class="stack-list" id="diaryEntryList"></div>
+        </section>
       </main>
     </div>
   </div>
@@ -1242,6 +1278,11 @@
       <span class="mobile-tab-icon" aria-hidden="true">◷</span>
       <span>History</span>
       <small>Activity</small>
+    </button>
+    <button class="mobile-tab-button" type="button" data-view-target="diary">
+      <span class="mobile-tab-icon" aria-hidden="true">📓</span>
+      <span>Diary</span>
+      <small>Notes</small>
     </button>
   </nav>
 
@@ -2008,6 +2049,43 @@
 
   <script src="script.js"></script>
 
+  <!-- DIARY ENTRY MODAL -->
+  <section class="modal-shell" id="diaryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-card panel" style="max-width: 600px;">
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow" id="diaryModalDate">Today</p>
+          <h3>New Journal Entry</h3>
+        </div>
+        <button class="icon-button" type="button" id="closeDiaryModalBtn">×</button>
+      </header>
+      <form id="diaryForm" class="tracker-form" style="padding: 24px;">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+          <label class="field">
+            <span>Template</span>
+            <select id="diaryTemplateSelect">
+              <option value="freeform">Blank Entry</option>
+              <option value="reflection">Evening Reflection</option>
+              <option value="standup">Daily Standup</option>
+              <option value="gratitude">Gratitude Journal</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Title</span>
+            <input type="text" id="diaryTitleInput" placeholder="How was your day?" required />
+          </label>
+          <label class="field">
+            <span>Entry</span>
+            <textarea id="diaryBodyInput" rows="10" placeholder="Start typing your thoughts..." required></textarea>
+          </label>
+        </div>
+        <footer class="modal-actions" style="margin-top: 24px;">
+          <button class="ghost-button" type="button" id="cancelDiaryModalBtn">Cancel</button>
+          <button class="primary-button" type="submit">Save Entry</button>
+        </footer>
+      </form>
+    </div>
+  </section>
   <!-- ==========================================
        COMPANY & LEGAL MODALS 
        ========================================== -->
