@@ -7463,13 +7463,11 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     if(typeof registerRevealElements === 'function') registerRevealElements(list);
   };
 
-  // Safely attach global click listener
-  document.addEventListener("click", (e) => {
-    const newBtn = e.target.closest("#newDiaryEntryBtn");
-    const closeBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
-    const navBtn = e.target.closest('[data-view-target="diary"]');
-    
-    if (newBtn) {
+  // Attach directly to the New Entry button for reliability
+  const newBtn = document.getElementById("newDiaryEntryBtn");
+  if (newBtn) {
+    newBtn.addEventListener("click", (e) => {
+      e.preventDefault();
       const modal = document.getElementById("diaryModal");
       const dateLabel = document.getElementById("diaryModalDate");
       const form = document.getElementById("diaryForm");
@@ -7492,12 +7490,20 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       modal.setAttribute("aria-hidden", "false");
       document.body.classList.add("is-locked");
       
-      // HARDCODE DISPLAY FALLBACK (Bypasses any CSS caching issues)
+      // HARDCODE DISPLAY FALLBACK
       modal.style.display = "grid";
       modal.style.opacity = "1";
       modal.style.visibility = "visible";
       modal.style.zIndex = "999999";
-    }
+    });
+  }
+
+  // Safely attach global click listener for close buttons and nav
+  document.addEventListener("click", (e) => {
+    if (!e.target || typeof e.target.closest !== 'function') return;
+    
+    const closeBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
+    const navBtn = e.target.closest('[data-view-target="diary"]');
     
     if (closeBtn) {
       const modal = document.getElementById("diaryModal");
