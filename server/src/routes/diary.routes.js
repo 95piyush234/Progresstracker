@@ -1,6 +1,6 @@
 import express from 'express';
 import DiaryEntry from '../models/diary.model.js';
-import { verifyToken } from '../middleware/auth.js'; 
+import { verifyToken } from '../middleware/auth.middleware.js'; 
 
 const router = express.Router();
 
