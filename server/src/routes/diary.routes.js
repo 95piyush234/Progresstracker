@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import DiaryEntry from '../models/diary.model.js';
+import { verifyToken } from '../middleware/auth.js'; 
+
 const router = express.Router();
-const DiaryEntry = require('../models/diary.model');
-const { verifyToken } = require('../middleware/auth'); // Check if this path matches your auth file
 
 // Fetch all diary entries for the logged-in user
 router.get('/', verifyToken, async (req, res) => {
@@ -30,4 +31,4 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

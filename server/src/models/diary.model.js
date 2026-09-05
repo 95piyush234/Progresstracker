@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const DiarySchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -8,4 +8,4 @@ const DiarySchema = new mongoose.Schema({
   dateStr: { type: String, required: true }
 }, { timestamps: true });
 
-module.exports = mongoose.model('DiaryEntry', DiarySchema);
+export default mongoose.model('DiaryEntry', DiarySchema);

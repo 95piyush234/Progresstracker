@@ -7,6 +7,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 import passport from "passport";
+import diaryRouter from './routes/diary.routes.js';
 import { config } from "./config/env.js";
 import { logger, morganStream } from "./config/logger.js";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js";
@@ -102,7 +103,7 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   logger.debug("Google OAuth router mounted at /api/auth/google");
   app.use("/api/goals", goalRouter);
-  app.use('/api/diary', require('./routes/diary.routes'));
+  app.use('/api/diary', diaryRouter);
   app.use("/api/tasks", taskRouter);
   app.use("/api/progress", progressRouter);
   app.use("/api/analytics", analyticsRouter);
