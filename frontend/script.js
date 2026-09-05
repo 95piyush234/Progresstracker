@@ -7415,11 +7415,12 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
 
 /* =========================================================
-   DIARY MODULE - CLOUD SYNCED
+   DIARY MODULE - CLOUD SYNCED (WITH EDIT/DELETE)
    ========================================================= */
 ;(function() {
   const DIARY_KEY = "progress-tracker-diary.v1";
   let diaryEntries = [];
+  let editingDiaryId = null;
 
   const templates = {
     freeform: "",
@@ -7472,32 +7473,56 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       empty.style.setProperty("display", "none", "important");
     });
 
-    const html = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
+    const html = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => {
+      const entryId = entry._id || entry.id;
+      return `
       <article class="panel" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
           <h4 style="margin:0; font-size: 1.15rem; color: var(--ui-text-primary); font-weight: 600;">${typeof escapeHtml === 'function' ? escapeHtml(entry.title) : entry.title}</h4>
           <span class="soft-pill" style="font-size: 0.75rem;">${entry.dateStr}</span>
         </div>
         <p class="subtle" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: var(--ui-text-secondary); margin: 0;">${typeof escapeHtml === 'function' ? escapeHtml(entry.body) : entry.body}</p>
+        <div style="display: flex; gap: 8px; margin-top: 8px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+          <button class="ghost-button ghost-button-small" type="button" data-action="edit-diary" data-id="${entryId}">Edit</button>
+          <button class="ghost-button ghost-button-small danger-text" type="button" data-action="delete-diary" data-id="${entryId}">Delete</button>
+        </div>
       </article>
-    `).join("");
+      `;
+    }).join("");
 
     lists.forEach(list => list.innerHTML = html);
   };
 
-  function openDiaryModal() {
+  function openDiaryModal(entry = null) {
     const modal = document.getElementById("diaryModal");
     if (!modal) return;
     const dateLabel = modal.querySelector("#diaryModalDate");
     const form = modal.querySelector("#diaryForm");
     const templateSelect = modal.querySelector("#diaryTemplateSelect");
     const bodyInput = modal.querySelector("#diaryBodyInput");
+    const titleInput = modal.querySelector("#diaryTitleInput");
+    const submitBtn = form.querySelector("button[type='submit']");
 
-    const now = new Date();
-    if (dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
     if (form) form.reset();
-    if (templateSelect) templateSelect.value = "freeform";
-    if (bodyInput) bodyInput.value = templates.freeform;
+
+    if (entry) {
+      editingDiaryId = entry._id || entry.id;
+      if (dateLabel) dateLabel.textContent = "Editing Entry";
+      if (titleInput) titleInput.value = entry.title;
+      if (bodyInput) bodyInput.value = entry.body;
+      if (templateSelect) templateSelect.parentElement.classList.add("hidden"); 
+      if (submitBtn) submitBtn.textContent = "Save Changes";
+    } else {
+      editingDiaryId = null;
+      const now = new Date();
+      if (dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+      if (templateSelect) {
+        templateSelect.value = "freeform";
+        templateSelect.parentElement.classList.remove("hidden");
+      }
+      if (bodyInput) bodyInput.value = templates.freeform;
+      if (submitBtn) submitBtn.textContent = "Save Entry";
+    }
 
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
@@ -7511,6 +7536,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
   function closeDiaryModal() {
     const modal = document.getElementById("diaryModal");
     if (!modal) return;
+    editingDiaryId = null;
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     modal.style.display = "none";
@@ -7520,7 +7546,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     document.body.classList.remove("is-locked");
   }
 
-  document.addEventListener("click", (e) => {
+  document.addEventListener("click", async (e) => {
     const newBtn = e.target.closest("#newDiaryEntryBtn");
     if (newBtn) {
       e.preventDefault();
@@ -7532,6 +7558,36 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     if (closeBtn) {
       e.preventDefault();
       closeDiaryModal();
+      return;
+    }
+
+    const editBtn = e.target.closest('[data-action="edit-diary"]');
+    if (editBtn) {
+      const id = editBtn.dataset.id;
+      const entry = diaryEntries.find(e => (e._id || e.id) === id);
+      if (entry) openDiaryModal(entry);
+      return;
+    }
+
+    const deleteBtn = e.target.closest('[data-action="delete-diary"]');
+    if (deleteBtn) {
+      const id = deleteBtn.dataset.id;
+      const confirmDelete = window.confirm("Are you sure you want to delete this diary entry?");
+      if (confirmDelete) {
+        try {
+          const isLocal = id.toString().startsWith('diary-');
+          if (!isLocal && typeof isBackendAuthSession === 'function' && isBackendAuthSession()) {
+            await apiRequest(`/diary/${id}`, { method: 'DELETE', token: getSession().accessToken });
+          }
+          diaryEntries = diaryEntries.filter(e => (e._id || e.id) !== id);
+          localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+          window.renderDiary();
+          if (typeof showToast === 'function') showToast("Diary entry deleted.", "success");
+        } catch (err) {
+          console.error("Delete failed:", err);
+          if (typeof showToast === 'function') showToast("Could not delete entry.", "error");
+        }
+      }
       return;
     }
 
@@ -7555,36 +7611,63 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       const form = e.target;
       const titleInput = form.querySelector("#diaryTitleInput");
       const bodyInput = form.querySelector("#diaryBodyInput");
+      const submitBtn = form.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.disabled = true;
 
-      const newEntry = {
-        title: titleInput && titleInput.value.trim() ? titleInput.value.trim() : "Untitled",
-        body: bodyInput ? bodyInput.value.trim() : "",
-        timestamp: Date.now(),
-        dateStr: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
-      };
+      const titleVal = titleInput && titleInput.value.trim() ? titleInput.value.trim() : "Untitled";
+      const bodyVal = bodyInput ? bodyInput.value.trim() : "";
 
       try {
-        if (typeof isBackendAuthSession === 'function' && isBackendAuthSession()) {
-          const response = await apiRequest("/diary", {
-            method: "POST",
-            token: getSession().accessToken,
-            body: newEntry
-          });
-          const data = getApiData(response);
-          diaryEntries.unshift(data.entry || newEntry);
+        if (editingDiaryId) {
+          const isLocal = editingDiaryId.toString().startsWith('diary-');
+          if (!isLocal && typeof isBackendAuthSession === 'function' && isBackendAuthSession()) {
+            const response = await apiRequest(`/diary/${editingDiaryId}`, {
+              method: "PATCH",
+              token: getSession().accessToken,
+              body: { title: titleVal, body: bodyVal }
+            });
+            const data = getApiData(response);
+            diaryEntries = diaryEntries.map(e => (e._id || e.id) === editingDiaryId ? (data.entry || { ...e, title: titleVal, body: bodyVal }) : e);
+          } else {
+            diaryEntries = diaryEntries.map(e => (e._id || e.id) === editingDiaryId ? { ...e, title: titleVal, body: bodyVal } : e);
+          }
+          if (typeof showToast === 'function') showToast("Diary entry updated.", "success");
         } else {
-          diaryEntries.unshift({ ...newEntry, id: "diary-" + Date.now() });
+          const newEntry = {
+            title: titleVal,
+            body: bodyVal,
+            timestamp: Date.now(),
+            dateStr: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+          };
+
+          if (typeof isBackendAuthSession === 'function' && isBackendAuthSession()) {
+            const response = await apiRequest("/diary", {
+              method: "POST",
+              token: getSession().accessToken,
+              body: newEntry
+            });
+            const data = getApiData(response);
+            diaryEntries.unshift(data.entry || newEntry);
+          } else {
+            diaryEntries.unshift({ ...newEntry, id: "diary-" + Date.now() });
+          }
+          if (typeof showToast === 'function') showToast("Diary entry saved.", "success");
         }
+        
         localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+        closeDiaryModal();
+        window.renderDiary();
       } catch (err) {
         console.error("Backend sync failed, saved locally:", err);
-        diaryEntries.unshift({ ...newEntry, id: "diary-" + Date.now() });
-        localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+        if (!editingDiaryId) {
+          diaryEntries.unshift({ title: titleVal, body: bodyVal, timestamp: Date.now(), dateStr: new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }), id: "diary-" + Date.now() });
+          localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+        }
+        closeDiaryModal();
+        window.renderDiary();
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
-
-      closeDiaryModal();
-      window.renderDiary();
-      if (typeof showToast === 'function') showToast("Diary entry saved and synced.", "success");
     }
   });
 
