@@ -7413,13 +7413,12 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
 
 /* =========================================================
-   DIARY MODULE (LOCAL-FIRST)
+   DIARY MODULE (LOCAL-FIRST) - DUPLICATE IMMUNE
    ========================================================= */
 ;(function() {
   const DIARY_KEY = "progress-tracker-diary.v1";
   let diaryEntries = [];
   
-  // Safe local storage fetch to prevent crashes
   try {
     const stored = localStorage.getItem(DIARY_KEY);
     if (stored) {
@@ -7427,7 +7426,6 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       if (!Array.isArray(diaryEntries)) diaryEntries = [];
     }
   } catch (e) {
-    console.error("Diary parse error:", e);
     diaryEntries = [];
   }
 
@@ -7439,18 +7437,19 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
   };
 
   window.renderDiary = function() {
-    const list = document.getElementById("diaryEntryList");
-    const empty = document.getElementById("diaryEmptyState");
-    if (!list || !empty) return;
+    // Finds every single duplicated list in the HTML and renders to all of them
+    const lists = document.querySelectorAll("#diaryEntryList");
+    const empties = document.querySelectorAll("#diaryEmptyState");
     
     if (diaryEntries.length === 0) {
-      list.innerHTML = "";
-      empty.classList.remove("hidden");
+      lists.forEach(list => list.innerHTML = "");
+      empties.forEach(empty => empty.classList.remove("hidden"));
       return;
     }
     
-    empty.classList.add("hidden");
-    list.innerHTML = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
+    empties.forEach(empty => empty.classList.add("hidden"));
+    
+    const html = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
       <article class="panel" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
           <h4 style="margin:0; font-size: 1.15rem; color: var(--ui-text-primary); font-weight: 600;">${typeof escapeHtml === 'function' ? escapeHtml(entry.title) : entry.title}</h4>
@@ -7460,74 +7459,67 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       </article>
     `).join("");
     
-    if(typeof registerRevealElements === 'function') registerRevealElements(list);
+    lists.forEach(list => {
+      list.innerHTML = html;
+      if(typeof registerRevealElements === 'function') registerRevealElements(list);
+    });
   };
 
-  // Attach directly to the New Entry button for reliability
-  const newBtn = document.getElementById("newDiaryEntryBtn");
-  if (newBtn) {
-    newBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const modal = document.getElementById("diaryModal");
-      const dateLabel = document.getElementById("diaryModalDate");
-      const form = document.getElementById("diaryForm");
-      const templateSelect = document.getElementById("diaryTemplateSelect");
-      const bodyInput = document.getElementById("diaryBodyInput");
-      
-      if (!modal) {
-        console.error("Diary modal not found in DOM!");
-        if(typeof showToast === 'function') showToast("Error: Modal HTML missing.", "error");
-        return;
-      }
-      
-      const now = new Date();
-      if(dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-      if(form) form.reset();
-      if(templateSelect) templateSelect.value = "freeform";
-      if(bodyInput) bodyInput.value = templates.freeform;
-      
-      modal.classList.add("is-open");
-      modal.setAttribute("aria-hidden", "false");
-      document.body.classList.add("is-locked");
-      
-      // HARDCODE DISPLAY FALLBACK
-      modal.style.display = "grid";
-      modal.style.opacity = "1";
-      modal.style.visibility = "visible";
-      modal.style.zIndex = "999999";
-    });
-  }
-
-  // Safely attach global click listener for close buttons and nav
+  // Global click listener intercepts clicks on ANY duplicate button
   document.addEventListener("click", (e) => {
     if (!e.target || typeof e.target.closest !== 'function') return;
     
-    const closeBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
-    const navBtn = e.target.closest('[data-view-target="diary"]');
+    const isNewBtn = e.target.closest("#newDiaryEntryBtn");
+    const isCloseBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
+    const isNavBtn = e.target.closest('[data-view-target="diary"]');
     
-    if (closeBtn) {
-      const modal = document.getElementById("diaryModal");
-      if(modal) {
+    if (isNewBtn) {
+      e.preventDefault();
+      // Forces EVERY duplicated modal to open, ensuring the top-most one is visible
+      const modals = document.querySelectorAll("#diaryModal");
+      modals.forEach(modal => {
+        const dateLabel = modal.querySelector("#diaryModalDate");
+        const form = modal.querySelector("#diaryForm");
+        const templateSelect = modal.querySelector("#diaryTemplateSelect");
+        const bodyInput = modal.querySelector("#diaryBodyInput");
+        
+        const now = new Date();
+        if(dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+        if(form) form.reset();
+        if(templateSelect) templateSelect.value = "freeform";
+        if(bodyInput) bodyInput.value = templates.freeform;
+        
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        modal.style.display = "grid";
+        modal.style.opacity = "1";
+        modal.style.visibility = "visible";
+        modal.style.zIndex = "999999";
+      });
+      document.body.classList.add("is-locked");
+    }
+    
+    if (isCloseBtn) {
+      document.querySelectorAll("#diaryModal").forEach(modal => {
          modal.classList.remove("is-open");
          modal.setAttribute("aria-hidden", "true");
-         document.body.classList.remove("is-locked");
-         
-         // Remove inline style fallbacks
          modal.style.display = "";
          modal.style.opacity = "";
          modal.style.visibility = "";
          modal.style.zIndex = "";
-      }
+      });
+      document.body.classList.remove("is-locked");
     }
 
-    if (navBtn) {
+    if (isNavBtn) {
       window.renderDiary();
     }
   });
 
   document.addEventListener("change", (e) => {
     if (e.target.id === "diaryTemplateSelect") {
-       const bodyInput = document.getElementById("diaryBodyInput");
+       const form = e.target.closest("form");
+       const bodyInput = form ? form.querySelector("#diaryBodyInput") : document.getElementById("diaryBodyInput");
        if(bodyInput) bodyInput.value = templates[e.target.value] || "";
     }
   });
@@ -7535,9 +7527,9 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
   document.addEventListener("submit", (e) => {
     if (e.target.id === "diaryForm") {
       e.preventDefault();
-      const titleInput = document.getElementById("diaryTitleInput");
-      const bodyInput = document.getElementById("diaryBodyInput");
-      const modal = document.getElementById("diaryModal");
+      const form = e.target;
+      const titleInput = form.querySelector("#diaryTitleInput");
+      const bodyInput = form.querySelector("#diaryBodyInput");
 
       const now = new Date();
       const newEntry = {
@@ -7551,21 +7543,20 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       diaryEntries.push(newEntry);
       localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
       
-      if(modal) {
+      document.querySelectorAll("#diaryModal").forEach(modal => {
          modal.classList.remove("is-open");
          modal.setAttribute("aria-hidden", "true");
-         document.body.classList.remove("is-locked");
          modal.style.display = "";
          modal.style.opacity = "";
          modal.style.visibility = "";
          modal.style.zIndex = "";
-      }
+      });
+      document.body.classList.remove("is-locked");
       
       window.renderDiary();
       if(typeof showToast === 'function') showToast("Diary entry saved.", "success");
     }
   });
 
-  // Run render initially
   setTimeout(() => window.renderDiary(), 200);
 })();
