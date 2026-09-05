@@ -11471,3 +11471,12 @@ body[data-theme="light"] #accountDropdown .dropdown-item:hover {
   margin: auto !important;
   overscroll-behavior: contain;
 }
+
+
+/* FORCE DIARY MODAL TO FRONT */
+#diaryModal.is-open {
+  display: grid !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 999999 !important;
+}
