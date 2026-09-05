@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -1242,7 +1242,7 @@
                 Write down your thoughts, ideas, and daily reflections completely freeform.
               </p>
             </div>
-            <button class="primary-button" type="button" id="newDiaryEntryBtn">New Entry</button>
+            <button class="primary-button" type="button" id="newDiaryEntryBtn" onclick="var m = document.getElementById('diaryModal'); if(m) { m.classList.add('is-open'); m.setAttribute('aria-hidden', 'false'); m.style.display='grid'; m.style.opacity='1'; m.style.visibility='visible'; m.style.zIndex='999999'; document.body.classList.add('is-locked'); }">New Entry ✨</button>
           </header>
 
           <!-- Premium Empty State for Diary -->
