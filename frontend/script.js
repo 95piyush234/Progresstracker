@@ -7415,7 +7415,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 /* =========================================================
    DIARY MODULE (LOCAL-FIRST)
    ========================================================= */
-document.addEventListener("DOMContentLoaded", () => {
+(function() {
   const DIARY_KEY = "progress-tracker-diary.v1";
   let diaryEntries = JSON.parse(localStorage.getItem(DIARY_KEY)) || [];
 
@@ -7426,22 +7426,17 @@ document.addEventListener("DOMContentLoaded", () => {
     gratitude: "Today I am grateful for:\n1. \n2. \n3. "
   };
 
-  const list = document.getElementById("diaryEntryList");
-  const empty = document.getElementById("diaryEmptyState");
-  const modal = document.getElementById("diaryModal");
-  const form = document.getElementById("diaryForm");
-  const templateSelect = document.getElementById("diaryTemplateSelect");
-  const bodyInput = document.getElementById("diaryBodyInput");
-  const titleInput = document.getElementById("diaryTitleInput");
-  const dateLabel = document.getElementById("diaryModalDate");
-
-  function renderDiary() {
-    if (!list) return;
+  window.renderDiary = function() {
+    const list = document.getElementById("diaryEntryList");
+    const empty = document.getElementById("diaryEmptyState");
+    if (!list || !empty) return;
+    
     if (diaryEntries.length === 0) {
       list.innerHTML = "";
       empty.classList.remove("hidden");
       return;
     }
+    
     empty.classList.add("hidden");
     list.innerHTML = diaryEntries.sort((a, b) => b.timestamp - a.timestamp).map(entry => `
       <article class="panel" style="padding: 24px; display: grid; gap: 12px; margin-bottom: 16px;">
@@ -7452,55 +7447,86 @@ document.addEventListener("DOMContentLoaded", () => {
         <p class="subtle" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.7; color: var(--ui-text-secondary); margin: 0;">${escapeHtml(entry.body)}</p>
       </article>
     `).join("");
-    registerRevealElements(list);
-  }
+    
+    if(typeof registerRevealElements === 'function') registerRevealElements(list);
+  };
 
-  function openDiaryModal() {
-    const now = new Date();
-    dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-    form.reset();
-    templateSelect.value = "freeform";
-    bodyInput.value = templates.freeform;
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("is-locked");
-  }
+  // Bulletproof Global Event Listeners
+  document.addEventListener("click", (e) => {
+    const newBtn = e.target.closest("#newDiaryEntryBtn");
+    const closeBtn = e.target.closest("#closeDiaryModalBtn, #cancelDiaryModalBtn");
+    const navBtn = e.target.closest('[data-view-target="diary"]');
+    
+    if (newBtn) {
+      const modal = document.getElementById("diaryModal");
+      const dateLabel = document.getElementById("diaryModalDate");
+      const form = document.getElementById("diaryForm");
+      const templateSelect = document.getElementById("diaryTemplateSelect");
+      const bodyInput = document.getElementById("diaryBodyInput");
+      
+      if(!modal) return;
+      const now = new Date();
+      if(dateLabel) dateLabel.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+      if(form) form.reset();
+      if(templateSelect) templateSelect.value = "freeform";
+      if(bodyInput) bodyInput.value = templates.freeform;
+      
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-locked");
+    }
+    
+    if (closeBtn) {
+      const modal = document.getElementById("diaryModal");
+      if(modal) {
+         modal.classList.remove("is-open");
+         modal.setAttribute("aria-hidden", "true");
+         document.body.classList.remove("is-locked");
+      }
+    }
 
-  function closeDiaryModal() {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("is-locked");
-  }
-
-  document.getElementById("newDiaryEntryBtn")?.addEventListener("click", openDiaryModal);
-  document.getElementById("closeDiaryModalBtn")?.addEventListener("click", closeDiaryModal);
-  document.getElementById("cancelDiaryModalBtn")?.addEventListener("click", closeDiaryModal);
-
-  templateSelect?.addEventListener("change", (e) => {
-    bodyInput.value = templates[e.target.value] || "";
+    if (navBtn) {
+      window.renderDiary();
+    }
   });
 
-  form?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const now = new Date();
-    const newEntry = {
-      id: "diary-" + Date.now(),
-      title: titleInput.value.trim(),
-      body: bodyInput.value.trim(),
-      timestamp: now.getTime(),
-      dateStr: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
-    };
-    diaryEntries.push(newEntry);
-    localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
-    closeDiaryModal();
-    renderDiary();
-    if(typeof showToast === 'function') showToast("Diary entry saved.", "success");
+  document.addEventListener("change", (e) => {
+    if (e.target.id === "diaryTemplateSelect") {
+       const bodyInput = document.getElementById("diaryBodyInput");
+       if(bodyInput) bodyInput.value = templates[e.target.value] || "";
+    }
   });
 
-  // Re-render when nav buttons are clicked
-  document.querySelectorAll('[data-view-target="diary"]').forEach(btn => {
-    btn.addEventListener("click", renderDiary);
+  document.addEventListener("submit", (e) => {
+    if (e.target.id === "diaryForm") {
+      e.preventDefault();
+      const titleInput = document.getElementById("diaryTitleInput");
+      const bodyInput = document.getElementById("diaryBodyInput");
+      const modal = document.getElementById("diaryModal");
+
+      const now = new Date();
+      const newEntry = {
+        id: "diary-" + Date.now(),
+        title: titleInput.value.trim(),
+        body: bodyInput.value.trim(),
+        timestamp: now.getTime(),
+        dateStr: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+      };
+      
+      diaryEntries.push(newEntry);
+      localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+      
+      if(modal) {
+         modal.classList.remove("is-open");
+         modal.setAttribute("aria-hidden", "true");
+         document.body.classList.remove("is-locked");
+      }
+      
+      window.renderDiary();
+      if(typeof showToast === 'function') showToast("Diary entry saved.", "success");
+    }
   });
 
-  renderDiary(); // Initial render
-});
+  // Run render initially
+  setTimeout(() => window.renderDiary(), 200);
+})();
