@@ -7755,3 +7755,20 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
 
 
+window.addEventListener("DOMContentLoaded", () => {
+  // Check if the app is opened as an installed PWA (Standalone mode)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  const splash = document.getElementById("app-splash-screen");
+
+  if (isStandalone && splash) {
+    // If it's opened as an app, let the splash screen play, then fade out
+    setTimeout(() => {
+      splash.classList.add("fade-out");
+      setTimeout(() => splash.remove(), 600);
+    }, 2500);
+  } else if (splash) {
+    // If it's opened via a normal website browser tab, remove it instantly
+    splash.remove();
+  }
+});

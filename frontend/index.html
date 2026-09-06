@@ -20,13 +20,20 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body data-theme="dark" data-auth="loading">
-  
+
+  <div id="app-splash-screen" class="splash-screen">
+    <div class="splash-content">
+      <img src="./assets/splash.png" alt="App Splash Screen" class="splash-splash-img" />
+    </div>
+  </div>
+
   <div class="ambient ambient-a"></div>
   <div class="ambient ambient-b"></div>
   <div class="ambient ambient-c"></div>
   <div class="noise"></div>
-  
+
   <section class="landing-shell" id="landingShell">
     <!-- Ambient Glows -->
     <div class="ln-glow ln-glow-top"></div>
@@ -47,7 +54,8 @@
       </div>
       <div class="ln-nav-actions">
         <button type="button" class="ln-btn-ghost landing-trigger-login">Login</button>
-        <button type="button" class="ln-btn-primary landing-trigger-signup">Get Started <span class="ln-arrow">→</span></button>
+        <button type="button" class="ln-btn-primary landing-trigger-signup">Get Started <span
+            class="ln-arrow">→</span></button>
       </div>
     </nav>
 
@@ -63,18 +71,20 @@
           <span class="ln-text-gradient">Visible Progress.</span>
         </h1>
         <p class="ln-hero-subtitle">
-          Track your goals, build consistent habits, document your achievements, and see exactly how far you've actually come.
+          Track your goals, build consistent habits, document your achievements, and see exactly how far you've actually
+          come.
         </p>
         <div class="ln-hero-actions">
-          <button type="button" class="ln-btn-primary ln-btn-large landing-trigger-signup">Start Tracking — Free</button>
+          <button type="button" class="ln-btn-primary ln-btn-large landing-trigger-signup">Start Tracking —
+            Free</button>
           <a href="#ln-how-it-works" class="ln-btn-ghost ln-btn-large">See How It Works</a>
         </div>
         <div class="ln-hero-checks">
-            <span><span class="ln-check">✓</span> Any Metric</span>
-            <span><span class="ln-check">✓</span> Deep Analytics</span>
-            <span><span class="ln-check">✓</span> Local-First Privacy</span>
-            <span><span class="ln-check">✓</span> Daily Journal</span>
-          </div>
+          <span><span class="ln-check">✓</span> Any Metric</span>
+          <span><span class="ln-check">✓</span> Deep Analytics</span>
+          <span><span class="ln-check">✓</span> Local-First Privacy</span>
+          <span><span class="ln-check">✓</span> Daily Journal</span>
+        </div>
 
         <!-- Abstract UI Mockup -->
         <div class="ln-hero-mockup">
@@ -98,34 +108,35 @@
           <div class="ln-float-label ln-float-streak" style="bottom: 30%; left: -5%;">24 Day Streak</div>
         </div>
         <!-- Infinite Feature Marquee -->
-      <div class="ln-marquee-section">
-        <div class="ln-marquee-content">
-          <span>🎯 GOAL TRACKING</span><span>•</span>
-          <span>📈 DEEP ANALYTICS</span><span>•</span>
-          <span>📸 VISUAL PROOF</span><span>•</span>
-          <span>📓 DAILY JOURNAL</span><span>•</span>
-          <span>🔥 CONSISTENCY STREAKS</span><span>•</span>
-          <span>🏆 MILESTONE MAPPING</span><span>•</span>
-          <span>📅 ACTIVITY HISTORY</span><span>•</span>
+        <div class="ln-marquee-section">
+          <div class="ln-marquee-content">
+            <span>🎯 GOAL TRACKING</span><span>•</span>
+            <span>📈 DEEP ANALYTICS</span><span>•</span>
+            <span>📸 VISUAL PROOF</span><span>•</span>
+            <span>📓 DAILY JOURNAL</span><span>•</span>
+            <span>🔥 CONSISTENCY STREAKS</span><span>•</span>
+            <span>🏆 MILESTONE MAPPING</span><span>•</span>
+            <span>📅 ACTIVITY HISTORY</span><span>•</span>
+          </div>
+          <!-- Duplicate for seamless infinite scrolling -->
+          <div class="ln-marquee-content" aria-hidden="true">
+            <span>🎯 GOAL TRACKING</span><span>•</span>
+            <span>📈 DEEP ANALYTICS</span><span>•</span>
+            <span>📸 VISUAL PROOF</span><span>•</span>
+            <span>📓 DAILY JOURNAL</span><span>•</span>
+            <span>🔥 CONSISTENCY STREAKS</span><span>•</span>
+            <span>🏆 MILESTONE MAPPING</span><span>•</span>
+            <span>📅 ACTIVITY HISTORY</span><span>•</span>
+          </div>
         </div>
-        <!-- Duplicate for seamless infinite scrolling -->
-        <div class="ln-marquee-content" aria-hidden="true">
-          <span>🎯 GOAL TRACKING</span><span>•</span>
-          <span>📈 DEEP ANALYTICS</span><span>•</span>
-          <span>📸 VISUAL PROOF</span><span>•</span>
-          <span>📓 DAILY JOURNAL</span><span>•</span>
-          <span>🔥 CONSISTENCY STREAKS</span><span>•</span>
-          <span>🏆 MILESTONE MAPPING</span><span>•</span>
-          <span>📅 ACTIVITY HISTORY</span><span>•</span>
-        </div>
-      </div>
       </header>
 
       <!-- 3. Problem -> Solution -->
       <section class="ln-section ln-problem-solution">
         <div class="ln-section-head">
           <h2>Goals Are Easy to Set.<br><span class="ln-text-gradient">Progress Is Hard to See.</span></h2>
-          <p>You start with motivation. Then days pass, progress gets scattered across notes, apps, screenshots and your memory.<br><strong>Progress Tracker Pro brings everything together.</strong></p>
+          <p>You start with motivation. Then days pass, progress gets scattered across notes, apps, screenshots and your
+            memory.<br><strong>Progress Tracker Pro brings everything together.</strong></p>
         </div>
         <div class="ln-bento-3">
           <div class="ln-bento-card">
@@ -147,7 +158,8 @@
           <div class="ln-bento-card">
             <div class="ln-icon">📓</div>
             <h3>Private Journal</h3>
-            <p>Your thoughts, isolated and secure. Use built-in templates for daily standups, evening reflections, and gratitude without ever leaving your workspace.</p>
+            <p>Your thoughts, isolated and secure. Use built-in templates for daily standups, evening reflections, and
+              gratitude without ever leaving your workspace.</p>
           </div>
         </div>
       </section>
@@ -227,7 +239,8 @@
       <section id="ln-proof" class="ln-section ln-split">
         <div class="ln-split-content">
           <h2>Don't Just Track Progress.<br><span class="ln-text-gradient">Prove It.</span></h2>
-          <p>Save visual evidence of your journey and create a permanent record of the hard work behind every achievement.</p>
+          <p>Save visual evidence of your journey and create a permanent record of the hard work behind every
+            achievement.</p>
         </div>
         <div class="ln-split-visual">
           <div class="ln-proof-mockup">
@@ -244,7 +257,8 @@
       <section id="ln-analytics" class="ln-section ln-split ln-split-reverse">
         <div class="ln-split-content">
           <h2>See the<br><span class="ln-text-gradient">Bigger Picture.</span></h2>
-          <p>Your progress becomes more meaningful when you can see it over time. Track growth trends, weekly velocity, and goal completion across your entire workspace.</p>
+          <p>Your progress becomes more meaningful when you can see it over time. Track growth trends, weekly velocity,
+            and goal completion across your entire workspace.</p>
         </div>
         <div class="ln-split-visual">
           <div class="ln-chart-mockup">
@@ -283,7 +297,8 @@
         <div class="ln-cta-box">
           <h2>Ready to Start Tracking?</h2>
           <p>Stop wondering how far you've come. Start documenting it.</p>
-          <button type="button" class="ln-btn-primary ln-btn-huge landing-trigger-signup">Create Your Free Account <span class="ln-arrow">→</span></button>
+          <button type="button" class="ln-btn-primary ln-btn-huge landing-trigger-signup">Create Your Free Account <span
+              class="ln-arrow">→</span></button>
           <small>Start building your progress history today.</small>
         </div>
       </section>
@@ -321,174 +336,198 @@
 
 
   <section class="auth-shell" id="authShell" aria-labelledby="authTitle">
-  <div class="tasky-single-card-wrap">
-    <div class="panel auth-panel tasky-solo-card" aria-live="polite">
-      
-      <!-- Top Branding Header matching reference -->
-      <div class="tasky-brand-top">
-        <div class="tasky-logo-icon">
-          <img src="assets/logo.svg" alt="Logo" />
+    <div class="tasky-single-card-wrap">
+      <div class="panel auth-panel tasky-solo-card" aria-live="polite">
+
+        <!-- Top Branding Header matching reference -->
+        <div class="tasky-brand-top">
+          <div class="tasky-logo-icon">
+            <img src="assets/logo.svg" alt="Logo" />
+          </div>
+          <span class="tasky-brand-name">Progress Tracker</span>
         </div>
-        <span class="tasky-brand-name">Progress Tracker</span>
-      </div>
 
-      <div class="tasky-form-header">
-        <h2 id="authTitle">Welcome Back!</h2>
-        <p class="subtle" id="authSubtitle">Please enter login details below</p>
-      </div>
+        <div class="tasky-form-header">
+          <h2 id="authTitle">Welcome Back!</h2>
+          <p class="subtle" id="authSubtitle">Please enter login details below</p>
+        </div>
 
-      <form class="auth-form tasky-style-form" id="authForm" novalidate>
-        
-        <!-- Username Field -->
-        <label class="field tasky-floating-field hidden" id="authUsernameFieldWrap">
-          <span class="tasky-label-float">Username</span>
-          <input type="text" id="authNameInput" maxlength="40" placeholder="Enter your username" autocomplete="username" />
-        </label>
+        <form class="auth-form tasky-style-form" id="authForm" novalidate>
 
-        <!-- Email Field -->
-        <label class="field tasky-floating-field">
-          <span class="tasky-label-float">Email</span>
-          <input type="email" id="authEmailInput" maxlength="120" placeholder="Enter your email" autocomplete="email" required />
-        </label>
+          <!-- Username Field -->
+          <label class="field tasky-floating-field hidden" id="authUsernameFieldWrap">
+            <span class="tasky-label-float">Username</span>
+            <input type="text" id="authNameInput" maxlength="40" placeholder="Enter your username"
+              autocomplete="username" />
+          </label>
 
-        <!-- Password Field -->
-        <label class="field tasky-floating-field">
-          <span class="tasky-label-float">Password</span>
-          <div class="password-input-wrap">
-            <input type="password" id="authPasswordInput" minlength="6" placeholder="Enter your password" autocomplete="current-password" required />
-            <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Toggle password visibility">
-              👁️
+          <!-- Email Field -->
+          <label class="field tasky-floating-field">
+            <span class="tasky-label-float">Email</span>
+            <input type="email" id="authEmailInput" maxlength="120" placeholder="Enter your email" autocomplete="email"
+              required />
+          </label>
+
+          <!-- Password Field -->
+          <label class="field tasky-floating-field">
+            <span class="tasky-label-float">Password</span>
+            <div class="password-input-wrap">
+              <input type="password" id="authPasswordInput" minlength="6" placeholder="Enter your password"
+                autocomplete="current-password" required />
+              <button type="button" class="password-toggle-btn" id="togglePasswordBtn"
+                aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
+          </label>
+
+          <div class="auth-inline-actions auth-login-actions" id="authLoginActions" style="justify-content: flex-end;">
+            <button class="ghost-button ghost-button-small" type="button" id="authForgotPasswordBtn"
+              style="border:none; padding:0; background:transparent; font-size: 0.85rem; color: var(--muted);">
+              Forgot password?
             </button>
           </div>
-        </label>
 
-        <div class="auth-inline-actions auth-login-actions" id="authLoginActions" style="justify-content: flex-end;">
-          <button class="ghost-button ghost-button-small" type="button" id="authForgotPasswordBtn" style="border:none; padding:0; background:transparent; font-size: 0.85rem; color: var(--muted);">
-            Forgot password?
+          <!-- Confirm Password Field (Fixed to match floating label styling) -->
+          <label class="field tasky-floating-field hidden" id="authConfirmField">
+            <span class="tasky-label-float">Confirm password</span>
+            <div class="password-input-wrap">
+              <input type="password" id="authConfirmInput" minlength="6" placeholder="Repeat your password"
+                autocomplete="new-password" />
+              <button type="button" class="password-toggle-btn" id="toggleConfirmBtn"
+                aria-label="Toggle confirm password visibility">
+                👁️
+              </button>
+            </div>
+          </label>
+
+          <div class="auth-meta-row hidden">
+            <span class="soft-pill" id="authModePill">New verified workspace</span>
+            <p class="subtle" id="authHintText">
+              Verification OTPs are delivered to your email inbox and your workspace syncs with the backend.
+            </p>
+          </div>
+
+          <section class="auth-otp-shell hidden" id="authOtpShell" aria-live="polite">
+            <div class="auth-otp-head">
+              <span class="soft-pill" id="authOtpStatus">Waiting to send OTP</span>
+              <div class="auth-inline-actions">
+                <button class="ghost-button ghost-button-small" type="button" id="authResendOtpBtn">Resend OTP</button>
+                <button class="ghost-button ghost-button-small" type="button" id="authResetOtpBtn">Edit Email</button>
+              </div>
+            </div>
+            <label class="field">
+              <span>One-time password</span>
+              <input type="text" id="authOtpInput" maxlength="6" inputmode="numeric" pattern="[0-9]*"
+                placeholder="Enter 6-digit code" />
+            </label>
+            <p class="subtle" id="authOtpDeliveryText">Verification codes are delivered to your email inbox.</p>
+          </section>
+
+          <!-- Main Submit Button -->
+          <button class="primary-button tasky-submit-btn" type="submit" id="authSubmitBtn">
+            Sign In
           </button>
-        </div>
 
-        <!-- Confirm Password Field (Fixed to match floating label styling) -->
-        <label class="field tasky-floating-field hidden" id="authConfirmField">
-          <span class="tasky-label-float">Confirm password</span>
-          <div class="password-input-wrap">
-            <input type="password" id="authConfirmInput" minlength="6" placeholder="Repeat your password" autocomplete="new-password" />
-            <button type="button" class="password-toggle-btn" id="toggleConfirmBtn" aria-label="Toggle confirm password visibility">
-              👁️
-            </button>
+          <div class="auth-divider" aria-hidden="true">
+            <span></span>
+            <p>Or continue</p>
+            <span></span>
           </div>
-        </label>
 
-        <div class="auth-meta-row hidden">
-          <span class="soft-pill" id="authModePill">New verified workspace</span>
-          <p class="subtle" id="authHintText">
-            Verification OTPs are delivered to your email inbox and your workspace syncs with the backend.
-          </p>
-        </div>
+          <!-- Google Sign In -->
+          <button class="google-signin-button tasky-google-btn" type="button" id="googleSignInBtn"
+            aria-label="Continue with Google">
+            <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4" />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853" />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                fill="#FBBC05" />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335" />
+            </svg>
+            <span>Continue with Google</span>
+          </button>
 
-        <section class="auth-otp-shell hidden" id="authOtpShell" aria-live="polite">
+          <!-- Bottom toggle switch -->
+          <div class="tasky-bottom-switch">
+            <span id="authSwitchPromptText">Don't have an account?</span>
+            <button type="button" id="taskyToggleModeLink" class="tasky-text-link">Sign Up</button>
+          </div>
+
+          <div class="hidden">
+            <button type="button" id="authCreateModeBtn" data-auth-mode="create"></button>
+            <button type="button" id="authLoginModeBtn" data-auth-mode="login"></button>
+            <button type="button" id="openGuideFromAuthBtn"></button>
+            <span id="authPreviewTrackers"></span>
+            <span id="authPreviewLogs"></span>
+            <span id="authPreviewCategories"></span>
+            <span id="authEyebrow"></span>
+            <span id="authModePill"></span>
+          </div>
+        </form>
+
+        <!-- Password reset shell -->
+        <section class="auth-otp-shell auth-reset-shell hidden" id="authResetShell" aria-live="polite">
           <div class="auth-otp-head">
-            <span class="soft-pill" id="authOtpStatus">Waiting to send OTP</span>
+            <span class="soft-pill" id="authResetStatus">Reset link detected</span>
             <div class="auth-inline-actions">
-              <button class="ghost-button ghost-button-small" type="button" id="authResendOtpBtn">Resend OTP</button>
-              <button class="ghost-button ghost-button-small" type="button" id="authResetOtpBtn">Edit Email</button>
+              <button class="ghost-button ghost-button-small" type="button" id="authResetBackBtn">Back to Sign
+                In</button>
             </div>
           </div>
-          <label class="field">
-            <span>One-time password</span>
-            <input type="text" id="authOtpInput" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="Enter 6-digit code" />
+          <p class="subtle" id="authResetHelpText">Choose a new password for your verified workspace, then sign in
+            again.</p>
+          <label class="field hidden" id="authForgotEmailField">
+            <span>Email address</span>
+            <input type="email" id="authForgotEmailInput" maxlength="120" placeholder="you@example.com" required />
           </label>
-          <p class="subtle" id="authOtpDeliveryText">Verification codes are delivered to your email inbox.</p>
+          <label class="field" id="authResetPasswordField">
+            <span>New password</span>
+            <div class="password-input-wrap">
+              <input type="password" id="authResetPasswordInput" minlength="6" placeholder="Enter a new password"
+                autocomplete="new-password" />
+              <button type="button" class="password-toggle-btn" id="toggleResetPasswordBtn"
+                aria-label="Toggle new password visibility">👁️</button>
+            </div>
+          </label>
+          <label class="field" id="authResetConfirmField">
+            <span>Confirm new password</span>
+            <div class="password-input-wrap">
+              <input type="password" id="authResetConfirmInput" minlength="6" placeholder="Repeat your new password"
+                autocomplete="new-password" />
+              <button type="button" class="password-toggle-btn" id="toggleResetconfirmBtn"
+                aria-label="Toggle new password visibility">👁️</button>
+            </div>
+          </label>
+          <button class="primary-button" type="button" id="authResetSubmitBtn">Save New Password</button>
         </section>
 
-        <!-- Main Submit Button -->
-        <button class="primary-button tasky-submit-btn" type="submit" id="authSubmitBtn">
-          Sign In
-        </button>
-
-        <div class="auth-divider" aria-hidden="true">
-          <span></span>
-          <p>Or continue</p>
-          <span></span>
-        </div>
-
-        <!-- Google Sign In -->
-        <button class="google-signin-button tasky-google-btn" type="button" id="googleSignInBtn" aria-label="Continue with Google">
-          <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-          </svg>
-          <span>Continue with Google</span>
-        </button>
-
-        <!-- Bottom toggle switch -->
-        <div class="tasky-bottom-switch">
-          <span id="authSwitchPromptText">Don't have an account?</span>
-          <button type="button" id="taskyToggleModeLink" class="tasky-text-link">Sign Up</button>
-        </div>
-
-        <div class="hidden">
-          <button type="button" id="authCreateModeBtn" data-auth-mode="create"></button>
-          <button type="button" id="authLoginModeBtn" data-auth-mode="login"></button>
-          <button type="button" id="openGuideFromAuthBtn"></button>
-          <span id="authPreviewTrackers"></span>
-          <span id="authPreviewLogs"></span>
-          <span id="authPreviewCategories"></span>
-          <span id="authEyebrow"></span>
-          <span id="authModePill"></span>
-        </div>
-      </form>
-
-      <!-- Password reset shell -->
-      <section class="auth-otp-shell auth-reset-shell hidden" id="authResetShell" aria-live="polite">
-        <div class="auth-otp-head">
-          <span class="soft-pill" id="authResetStatus">Reset link detected</span>
-          <div class="auth-inline-actions">
-            <button class="ghost-button ghost-button-small" type="button" id="authResetBackBtn">Back to Sign In</button>
+        <article class="auth-mail-card" id="authMailPreviewCard" aria-live="polite">
+          <div class="auth-mail-head">
+            <div>
+              <p class="eyebrow">Email delivery</p>
+              <h3 id="authMailPreviewSubject">No delivery yet</h3>
+            </div>
+            <span class="panel-pill" id="authMailPreviewState">Standby</span>
           </div>
-        </div>
-        <p class="subtle" id="authResetHelpText">Choose a new password for your verified workspace, then sign in again.</p>
-        <label class="field hidden" id="authForgotEmailField">
-          <span>Email address</span>
-          <input type="email" id="authForgotEmailInput" maxlength="120" placeholder="you@example.com" required />
-        </label>
-        <label class="field" id="authResetPasswordField">
-          <span>New password</span>
-          <div class="password-input-wrap">
-            <input type="password" id="authResetPasswordInput" minlength="6" placeholder="Enter a new password" autocomplete="new-password" />
-            <button type="button" class="password-toggle-btn" id="toggleResetPasswordBtn" aria-label="Toggle new password visibility">👁️</button>
+          <p class="subtle" id="authMailPreviewBody">Enter an email address and request secure access to generate your
+            first OTP delivery.</p>
+          <div class="auth-mail-meta">
+            <span class="soft-pill" id="authMailPreviewMeta">SMTP-backed delivery</span>
+            <strong class="auth-mail-code" id="authMailPreviewCode">------</strong>
           </div>
-        </label>
-        <label class="field" id="authResetConfirmField">
-          <span>Confirm new password</span>
-          <div class="password-input-wrap">
-            <input type="password" id="authResetConfirmInput" minlength="6" placeholder="Repeat your new password" autocomplete="new-password" />
-            <button type="button" class="password-toggle-btn" id="toggleResetconfirmBtn" aria-label="Toggle new password visibility">👁️</button>
-          </div>
-        </label>
-        <button class="primary-button" type="button" id="authResetSubmitBtn">Save New Password</button>
-      </section>
+        </article>
 
-      <article class="auth-mail-card" id="authMailPreviewCard" aria-live="polite">
-        <div class="auth-mail-head">
-          <div>
-            <p class="eyebrow">Email delivery</p>
-            <h3 id="authMailPreviewSubject">No delivery yet</h3>
-          </div>
-          <span class="panel-pill" id="authMailPreviewState">Standby</span>
-        </div>
-        <p class="subtle" id="authMailPreviewBody">Enter an email address and request secure access to generate your first OTP delivery.</p>
-        <div class="auth-mail-meta">
-          <span class="soft-pill" id="authMailPreviewMeta">SMTP-backed delivery</span>
-          <strong class="auth-mail-code" id="authMailPreviewCode">------</strong>
-        </div>
-      </article>
-
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <div class="app-shell">
     <aside class="sidebar panel" aria-label="Sidebar">
@@ -607,7 +646,8 @@
           </button>
           <button class="nav-button" type="button" data-view-target="diary">
             <span class="nav-button-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round">
                 <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
               </svg>
             </span>
@@ -1253,7 +1293,7 @@
               Start writing your daily reflections to build your personal diary.
             </p>
           </section>
-          
+
           <!-- Future Diary Grid will go here -->
           <div class="stack-list" id="diaryEntryList"></div>
         </section>
@@ -1610,7 +1650,8 @@
             <span>Notes & Roadmap</span>
             <textarea id="trackerNotesInput" rows="4" maxlength="400"
               placeholder="Add context, or create a roadmap by typing lists like:&#10;- [ ] First step&#10;- [ ] Second step"></textarea>
-            <small class="field-help" style="margin-top: -4px;">Tip: Type <b>- [ ] Task Name</b> to automatically generate an interactive sub-task checklist.</small>
+            <small class="field-help" style="margin-top: -4px;">Tip: Type <b>- [ ] Task Name</b> to automatically
+              generate an interactive sub-task checklist.</small>
           </label>
         </div>
 
@@ -2102,9 +2143,13 @@
     <div class="legal-modal-content">
       <span class="legal-close">&times;</span>
       <h2>About Progress Tracker Pro</h2>
-      <p>Progress Tracker Pro was built to help individuals turn their goals into visible, measurable progress. We believe in local-first data, frictionless tracking, and the power of consistent habits to build momentum.</p>
-      <p><strong>Our Mission:</strong> To bridge the gap between setting a goal and actually achieving it by providing clear, visual feedback loops. We strip away the unnecessary clutter so you can focus entirely on your execution.</p>
-      <p><strong>The Platform:</strong> Designed with premium aesthetics and high-performance engineering, this tool adapts to your workflow—whether you are tracking fitness reps, study hours, or professional milestones.</p>
+      <p>Progress Tracker Pro was built to help individuals turn their goals into visible, measurable progress. We
+        believe in local-first data, frictionless tracking, and the power of consistent habits to build momentum.</p>
+      <p><strong>Our Mission:</strong> To bridge the gap between setting a goal and actually achieving it by providing
+        clear, visual feedback loops. We strip away the unnecessary clutter so you can focus entirely on your execution.
+      </p>
+      <p><strong>The Platform:</strong> Designed with premium aesthetics and high-performance engineering, this tool
+        adapts to your workflow—whether you are tracking fitness reps, study hours, or professional milestones.</p>
     </div>
   </div>
 
@@ -2112,7 +2157,8 @@
     <div class="legal-modal-content">
       <span class="legal-close">&times;</span>
       <h2>Contact Us</h2>
-      <p>Have questions, feedback, or need technical support? We are here to help you get the most out of your tracking experience.</p>
+      <p>Have questions, feedback, or need technical support? We are here to help you get the most out of your tracking
+        experience.</p>
       <p><strong>Email:</strong> piyush62870@gmail.com</p>
     </div>
   </div>
@@ -2121,10 +2167,15 @@
     <div class="legal-modal-content">
       <span class="legal-close">&times;</span>
       <h2>Privacy Policy</h2>
-      <p>Your privacy is our priority. Progress Tracker Pro is designed as a local-first workspace. Your daily progress logs and images remain in your browser storage unless you explicitly choose to sync them to the cloud. We do not sell your personal data.</p>
-      <p><strong>Data Storage:</strong> If you use the app without an account, all data is stored purely locally on your device. If you create an account, your data is securely synced to our backend to allow cross-device access.</p>
-      <p><strong>Security:</strong> We utilize industry-standard encryption for authentication and data transmission. Your uploaded proof images are securely stored and only accessible by you.</p>
-      <p><strong>Third-Party Services:</strong> We may use trusted third-party services for email OTP delivery and secure cloud hosting. We never share your tracking habits with advertisers.</p>
+      <p>Your privacy is our priority. Progress Tracker Pro is designed as a local-first workspace. Your daily progress
+        logs and images remain in your browser storage unless you explicitly choose to sync them to the cloud. We do not
+        sell your personal data.</p>
+      <p><strong>Data Storage:</strong> If you use the app without an account, all data is stored purely locally on your
+        device. If you create an account, your data is securely synced to our backend to allow cross-device access.</p>
+      <p><strong>Security:</strong> We utilize industry-standard encryption for authentication and data transmission.
+        Your uploaded proof images are securely stored and only accessible by you.</p>
+      <p><strong>Third-Party Services:</strong> We may use trusted third-party services for email OTP delivery and
+        secure cloud hosting. We never share your tracking habits with advertisers.</p>
     </div>
   </div>
 
@@ -2132,10 +2183,15 @@
     <div class="legal-modal-content">
       <span class="legal-close">&times;</span>
       <h2>Terms of Service</h2>
-      <p>By using Progress Tracker Pro, you agree to use the software as provided. We are not liable for lost data due to local browser cache clearing. Always use the JSON export feature to back up your workspace.</p>
-      <p><strong>Account Responsibility:</strong> You are responsible for maintaining the confidentiality of your account credentials and OTP codes. You agree to provide accurate information when creating an account.</p>
-      <p><strong>Acceptable Use:</strong> This platform is intended for personal and professional productivity tracking. Any malicious use, reverse engineering, or attempt to disrupt the service is strictly prohibited.</p>
-      <p><strong>Limitation of Liability:</strong> Progress Tracker Pro is provided "as is" without warranties of any kind. We do not guarantee uninterrupted service and are not responsible for any data loss or indirect damages resulting from the use of the platform.</p>
+      <p>By using Progress Tracker Pro, you agree to use the software as provided. We are not liable for lost data due
+        to local browser cache clearing. Always use the JSON export feature to back up your workspace.</p>
+      <p><strong>Account Responsibility:</strong> You are responsible for maintaining the confidentiality of your
+        account credentials and OTP codes. You agree to provide accurate information when creating an account.</p>
+      <p><strong>Acceptable Use:</strong> This platform is intended for personal and professional productivity tracking.
+        Any malicious use, reverse engineering, or attempt to disrupt the service is strictly prohibited.</p>
+      <p><strong>Limitation of Liability:</strong> Progress Tracker Pro is provided "as is" without warranties of any
+        kind. We do not guarantee uninterrupted service and are not responsible for any data loss or indirect damages
+        resulting from the use of the platform.</p>
     </div>
   </div>
 </body>

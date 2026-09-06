@@ -4,8 +4,8 @@
   "description": "A premium progress system for custom goals, habits, and milestones.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#071119",
-  "theme_color": "#071119",
+  "background_color": "#08131a",
+  "theme_color": "#08131a",
   "icons": [
     {
       "src": "assets/logo-192.png",
