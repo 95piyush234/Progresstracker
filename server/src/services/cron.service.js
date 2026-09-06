@@ -3,7 +3,7 @@ import webpush from 'web-push';
 import { User } from '../models/User.js';
 import { ProgressEntry } from '../models/ProgressEntry.js';
 
-cron.schedule('0 21 * * *', async () => {
+cron.schedule('0 22 * * *', async () => {
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
     
@@ -12,12 +12,11 @@ cron.schedule('0 21 * * *', async () => {
     todayStart.setHours(0, 0, 0, 0);
 
     for (const user of users) {
-      // Check if they logged any TRACKER PROGRESS today
+            // Check if they logged any TRACKER PROGRESS today using entryDate
       const logsToday = await ProgressEntry.countDocuments({ 
-        user: user._id, // or userId, depending on your database schema
-        createdAt: { $gte: todayStart } 
+        user: user._id, 
+        entryDate: { $gte: todayStart } 
       });
-
       // If no tracker progress was logged, send the push
       if (logsToday === 0) {
         const payload = JSON.stringify({
