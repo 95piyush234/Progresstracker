@@ -3,16 +3,19 @@ import webpush from 'web-push';
 import { User } from '../models/User.js';
 import { ProgressEntry } from '../models/ProgressEntry.js';
 
-// Configure VAPID keys so Google's push server accepts the notification
-webpush.setVapidDetails(
-  'mailto:piyush6207273710@gmail.com', 
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
+try {
+  webpush.setVapidDetails(
+    'mailto:piyush6207273710@gmail.com', 
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+} catch (e) {
+  console.error("VAPID Keys Error:", e.message);
+}
 
-// Scheduled for 16:35 UTC (which is exactly 10:35 PM IST)
-cron.schedule('35 16 * * *', async () => {
-  console.log("CRON TRIGGERED: Starting 10:35 PM check!"); 
+// Scheduled to run EVERY SINGLE MINUTE for testing
+cron.schedule('* * * * *', async () => {
+  console.log("CRON TRIGGERED: Running test check!"); 
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
     console.log(`STATUS: Found ${users.length} users with push subscriptions.`);
