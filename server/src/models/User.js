@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema(
     lastLoginAt: {
       type: Date,
       default: null
-    }
+    },
+    pushSubscription: { type: Object, default: null }
   },
   {
     timestamps: true

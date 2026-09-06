@@ -1,7 +1,7 @@
 import express from 'express';
 import DiaryEntry from '../models/diary.model.js';
 import { requireAuth } from '../middleware/auth.middleware.js'; 
-
+import { User } from '../models/User.js';
 const router = express.Router();
 
 // Fetch all diary entries for the logged-in user
@@ -57,5 +57,13 @@ router.delete('/:id', requireAuth, async (req, res) => {
     res.status(400).json({ success: false, error: { message: err.message } });
   }
 });
-
+// Save user's device for push notifications
+router.post('/push-subscribe', requireAuth, async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.user._id, { pushSubscription: req.body });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: { message: err.message } });
+  }
+});
 export default router;

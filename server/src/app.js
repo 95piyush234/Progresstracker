@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import './cron.service.js';
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";

@@ -2642,6 +2642,31 @@ async function loginWithBackendCredentials(credentials) {
   });
 }
 
+async function subscribeToPushNotifications() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  
+  const registration = await navigator.serviceWorker.ready;
+  
+  // Replace with the VAPID_PUBLIC_KEY you generated in Step 2
+  const publicVapidKey = "BIcZAQPdjbiKkdYgYjYtYE_K9uXUEP7xQ2IYr44aBCkX42u0gU3rMfDXadJELl6japA0kOKH5J5_WcSfGP-WTOM"; 
+  
+  try {
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: publicVapidKey
+    });
+
+    // Send the subscription object to your backend to save to the User model
+    await apiRequest("/diary/push-subscribe", {
+      method: "POST",
+      token: getSession().accessToken,
+      body: subscription
+    });
+  } catch (err) {
+    console.warn("User blocked push notifications.", err);
+  }
+}
+
 async function applyBackendAuthSuccess(result, payload, successMessage) {
   const data = getApiData(result);
   const user = data.user || null;
@@ -2660,6 +2685,10 @@ async function applyBackendAuthSuccess(result, payload, successMessage) {
   });
   clearPendingAuthOtp(false);
   saveState();
+
+  // Trigger the notification permission popup after login
+  subscribeToPushNotifications();
+
   try {
     await syncWorkspaceFromBackend();
   } catch (error) {
