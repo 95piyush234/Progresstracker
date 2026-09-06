@@ -191,13 +191,13 @@ async function init() {
   bindSessionActivityTracking();
   setStaticUiDefaults();
   setupBackButtonTrap(); // <-- ADD THIS LINE HERE
-  renderApp(); 
+  renderApp();
 
   // 3. DO THE HEAVY INTERNET WORK IN THE BACKGROUND
   await checkGoogleOAuthCallback();
   await hydrateBackendSession();
   checkForPasswordResetToken();
-  
+
   if (isAuthenticated() && isBackendAuthSession()) {
     try {
       await syncWorkspaceFromBackend();
@@ -657,7 +657,7 @@ function bindEvents() {
     openConfirm({
       title: "Reset tracker progress",
       message: `Reset all progress logs for "${tracker.title}" and return it to its starting value?`,
-      action: () => resetTrackerProgress(tracker.id) 
+      action: () => resetTrackerProgress(tracker.id)
     });
   });
 
@@ -669,7 +669,7 @@ function bindEvents() {
     openConfirm({
       title: "Delete tracker",
       message: `Delete "${tracker.title}" and all of its history entries? This cannot be undone.`,
-      action: () => deleteTracker(tracker.id) 
+      action: () => deleteTracker(tracker.id)
     });
   });
 
@@ -825,11 +825,11 @@ function bindEvents() {
 
   // Smooth scroll for landing page links to prevent the "Tap back to exit" popup bug
   document.querySelectorAll('a[href^="#ln-"]').forEach(anchor => {
-    anchor.addEventListener("click", function(e) {
+    anchor.addEventListener("click", function (e) {
       e.preventDefault(); // Stops the URL hash from changing
       const targetId = this.getAttribute("href");
       const targetElement = document.querySelector(targetId);
-      
+
       if (targetElement) {
         targetElement.scrollIntoView({
           behavior: "smooth",
@@ -841,8 +841,8 @@ function bindEvents() {
 
   // Open Company & Legal Modals (Prevents URL hash warning)
   document.querySelectorAll('.legal-trigger').forEach(trigger => {
-    trigger.addEventListener("click", function(e) {
-      e.preventDefault(); 
+    trigger.addEventListener("click", function (e) {
+      e.preventDefault();
       const targetId = this.getAttribute('data-target');
       document.getElementById(targetId).classList.add('is-open');
     });
@@ -850,14 +850,14 @@ function bindEvents() {
 
   // Close Modals
   document.querySelectorAll('.legal-close').forEach(closeBtn => {
-    closeBtn.addEventListener("click", function() {
+    closeBtn.addEventListener("click", function () {
       this.closest('.legal-modal').classList.remove('is-open');
     });
   });
 
   // Close when clicking outside the box
   document.querySelectorAll('.legal-modal').forEach(modal => {
-    modal.addEventListener("click", function(e) {
+    modal.addEventListener("click", function (e) {
       if (e.target === this) {
         this.classList.remove('is-open');
       }
@@ -872,10 +872,10 @@ function setStaticUiDefaults() {
   syncLogProofPreview();
   setAuthMode(getDefaultAuthMode(), false);
   syncAuthOtpUi();
-  
+
   if (dom.trackerTemplateSelect) {
     let optionsHtml = '<option value="">Start from scratch</option>';
-    
+
     // 1. Force your 4 core templates to the absolute top
     const coreTemplates = ["Coding", "Trading", "Fitness", "Study"];
     for (const name of coreTemplates) {
@@ -883,7 +883,7 @@ function setStaticUiDefaults() {
         optionsHtml += `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`;
       }
     }
-    
+
     // 2. Clean separator line
     optionsHtml += `<option disabled>────────────────────────</option>`;
 
@@ -894,7 +894,7 @@ function setStaticUiDefaults() {
       if (!groups[data.category]) groups[data.category] = [];
       groups[data.category].push(name);
     }
-    
+
     for (const category of Object.keys(groups).sort()) {
       optionsHtml += `<optgroup label="-- ${escapeHtml(category.toUpperCase())} --">`;
       for (const name of groups[category].sort()) {
@@ -902,10 +902,10 @@ function setStaticUiDefaults() {
       }
       optionsHtml += `</optgroup>`;
     }
-    
+
     dom.trackerTemplateSelect.innerHTML = optionsHtml;
   }
-  
+
   updateTrackerTemplateHint();
   syncFocusModeUi();
 }
@@ -942,7 +942,7 @@ function getTemplateStarterItem(templateName) {
 function handleTrackerTemplateSelection() {
   updateTrackerTemplateHint();
   const templateName = dom.trackerTemplateSelect.value;
-  
+
   // If they clear the search box, don't do anything
   if (!templateName || !TRACKER_TEMPLATE_LIBRARY[templateName]) return;
 
@@ -1062,9 +1062,9 @@ function syncFocusModeUi() {
   const preferredTrackerId = getPreferredFocusTrackerId();
   const options = trackers.length
     ? trackers.map((tracker) => ({
-        value: tracker.id,
-        label: `${tracker.title} · ${tracker.unitLabel}`
-      }))
+      value: tracker.id,
+      label: `${tracker.title} · ${tracker.unitLabel}`
+    }))
     : [{ value: "", label: "No active trackers available" }];
 
   setSelectOptions(dom.focusTrackerSelect, options, preferredTrackerId);
@@ -1542,7 +1542,7 @@ async function hydrateBackendSession() {
       if (refreshError.backendUnavailable || (refreshError.status && refreshError.status >= 500)) {
         return;
       }
-      
+
       // Only clear the session if the token is definitively dead/unauthorized (401/403)
       if (refreshError.status === 401 || refreshError.status === 403) {
         state.settings.session = createSessionState({
@@ -1806,11 +1806,11 @@ async function createBackendProgressEntry(trackerId, log) {
       entryDate: normalizeIso(log.timestamp),
       attachment: attachment
         ? {
-            url: toBackendUrl(attachment.url),
-            filename: attachment.filename || "",
-            mimetype: attachment.mimetype || "",
-            size: attachment.size || 0
-          }
+          url: toBackendUrl(attachment.url),
+          filename: attachment.filename || "",
+          mimetype: attachment.mimetype || "",
+          size: attachment.size || 0
+        }
         : undefined
     }
   });
@@ -1835,11 +1835,11 @@ async function updateBackendProgressEntry(trackerId, entryId, log) {
       entryDate: normalizeIso(log.timestamp),
       attachment: attachment
         ? {
-            url: toBackendUrl(attachment.url),
-            filename: attachment.filename || "",
-            mimetype: attachment.mimetype || "",
-            size: attachment.size || 0
-          }
+          url: toBackendUrl(attachment.url),
+          filename: attachment.filename || "",
+          mimetype: attachment.mimetype || "",
+          size: attachment.size || 0
+        }
         : undefined
     }
   });
@@ -1870,16 +1870,16 @@ function setAuthMode(mode, shouldFocus = true) {
     if (dom.authTitle) dom.authTitle.textContent = "Create an account.";
     if (dom.authSubtitle) dom.authSubtitle.textContent = "Create an account with email verification, then unlock your saved trackers from the backend.";
     if (dom.authSubmitBtn) dom.authSubmitBtn.textContent = "Sign Up";
-    
+
     // Show Username field
     document.getElementById("authUsernameFieldWrap")?.classList.remove("hidden");
-    
+
     // Set bottom link for Create Mode
     const toggleLink = document.getElementById("taskyToggleModeLink");
     if (toggleLink) toggleLink.textContent = "Sign In";
     const promptText = document.getElementById("authSwitchPromptText");
     if (promptText) promptText.textContent = "Already have an account?";
-    
+
     if (dom.authNameInput) dom.authNameInput.value = dom.authNameInput.value.trim();
   } else {
     const account = getAccount();
@@ -1889,7 +1889,7 @@ function setAuthMode(mode, shouldFocus = true) {
 
     // Hide Username field
     document.getElementById("authUsernameFieldWrap")?.classList.add("hidden");
-    
+
     // Set bottom link for Login Mode
     const toggleLink = document.getElementById("taskyToggleModeLink");
     if (toggleLink) toggleLink.textContent = "Sign Up";
@@ -1918,7 +1918,7 @@ function setAuthMode(mode, shouldFocus = true) {
   }
   syncAuthOtpUi();
   renderAuthMailPreview();
-  
+
   if (shouldFocus) {
     const fieldToFocus = nextMode === "create" ? dom.authNameInput : dom.authEmailInput;
     if (fieldToFocus && !fieldToFocus.closest('.hidden')) {
@@ -1959,7 +1959,7 @@ function syncAuthUi() {
   dom.authShell.hidden = authenticated || dom.body.dataset.authScreen !== "auth";
 
   const displayName = account?.name || "Guest";
-  
+
   // NEW: Generate automatic user logo
   dom.accountAvatar.innerHTML = `
     <img 
@@ -2747,7 +2747,7 @@ function syncPasswordRecoveryView() {
     // FORCE the auth screen to show, even if the user is already logged in locally
     document.body.dataset.auth = "locked";
     document.getElementById("authShell").hidden = false;
-    
+
     applyPasswordRecoveryView("token", resetToken);
     return true;
   }
@@ -2755,7 +2755,7 @@ function syncPasswordRecoveryView() {
   if (document.body.dataset.authFlow === "reset-request") {
     document.body.dataset.auth = "locked";
     document.getElementById("authShell").hidden = false;
-    
+
     applyPasswordRecoveryView("request");
     return true;
   }
@@ -2782,7 +2782,7 @@ function checkForPasswordResetToken() {
 
 async function handlePasswordResetSubmit() {
   const resetToken = dom.authResetPasswordInput.dataset.resetToken;
-  
+
   // If we have a reset token, this is completing a password reset from the email link
   if (resetToken) {
     const newPassword = dom.authResetPasswordInput.value.trim();
@@ -2806,12 +2806,12 @@ async function handlePasswordResetSubmit() {
     try {
       await apiRequest("/auth/reset-password", {
         method: "POST",
-        body: { 
+        body: {
           token: resetToken,
           password: newPassword
         }
       });
-      
+
       showToast("Password reset successfully. You can now sign in with your new password.", "success");
       dom.authResetPasswordInput.removeAttribute("data-reset-token");
       dom.authResetPasswordInput.value = "";
@@ -2829,7 +2829,7 @@ async function handlePasswordResetSubmit() {
   } else {
     // Otherwise, this is a forgot password request to send a reset email
     const email = normalizeEmail(dom.authForgotEmailInput.value);
-    
+
     if (!email) {
       showToast("Enter your email address first.", "error");
       dom.authForgotEmailInput.focus();
@@ -2847,7 +2847,7 @@ async function handlePasswordResetSubmit() {
           resetUrlBase: getPasswordResetBaseUrl()
         }
       });
-      
+
       showToast("Password reset email sent. Check your inbox for further instructions.", "success");
       closeForgotPasswordFlow();
       setAuthMode("login", false);
@@ -3304,13 +3304,13 @@ function getPersistedState(nextState = state) {
       theme: nextState?.settings?.theme === "light" ? "light" : "dark",
       account: nextState?.settings?.account
         ? {
-            name: nextState.settings.account.name,
-            email: nextState.settings.account.email,
-            emailVerifiedAt: nextState.settings.account.emailVerifiedAt,
-            emailUpdatesEnabled: nextState.settings.account.emailUpdatesEnabled !== false,
-            createdAt: nextState.settings.account.createdAt,
-            lastLoginAt: nextState.settings.account.lastLoginAt
-          }
+          name: nextState.settings.account.name,
+          email: nextState.settings.account.email,
+          emailVerifiedAt: nextState.settings.account.emailVerifiedAt,
+          emailUpdatesEnabled: nextState.settings.account.emailUpdatesEnabled !== false,
+          createdAt: nextState.settings.account.createdAt,
+          lastLoginAt: nextState.settings.account.lastLoginAt
+        }
         : null,
       session: {
         loggedIn: Boolean(nextState?.settings?.session?.loggedIn),
@@ -4169,7 +4169,7 @@ function renderGraphs() {
   const week = getWeeklyChartData();
   const heatmapData = getHeatmapData(35);
   const activeDays = heatmapData.filter((day) => day.total > 0).length;
-  
+
   // FIX: Use weighted completion for the Momentum Gauge
   const avgCompletion = liveTrackers.length ? Math.round(getOverallCompletion(liveTrackers)) : 0;
 
@@ -4199,29 +4199,29 @@ function renderGraphs() {
     gaugeLabel.textContent = `${avgCompletion}%`;
   }
 
- /// 2. Update Multi-Ring Chart (Upgraded to SVG for rounded caps)
+  /// 2. Update Multi-Ring Chart (Upgraded to SVG for rounded caps)
   const radialContainer = document.getElementById('activityRingsContainer');
   if (radialContainer) {
     const size = 150;
     const center = size / 2;
     const strokeWidth = 10;
-    const gap = 3; 
-    
+    const gap = 3;
+
     let svgContent = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform: rotate(-90deg); overflow: visible;">`;
-    
+
     categoryStats.forEach((stat, index) => {
-      const radius = (center - strokeWidth/2) - (index * (strokeWidth + gap));
+      const radius = (center - strokeWidth / 2) - (index * (strokeWidth + gap));
       const circumference = 2 * Math.PI * radius;
       // Cap at 100% so it doesn't overlap itself indefinitely
       const dashOffset = circumference - (Math.min(stat.avgCompletion, 100) / 100) * circumference;
-      
+
       // Empty background track
       svgContent += `<circle cx="${center}" cy="${center}" r="${radius}" fill="none" class="activity-track" stroke-width="${strokeWidth}"></circle>`;
-      
+
       // Colorful progress ring with rounded corners
       svgContent += `<circle cx="${center}" cy="${center}" r="${radius}" fill="none" stroke="${stat.topAccent}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}" style="transition: stroke-dashoffset 1s cubic-bezier(0.2, 0.8, 0.2, 1);"></circle>`;
     });
-    
+
     svgContent += `</svg>`;
     radialContainer.innerHTML = svgContent;
   }
@@ -4230,17 +4230,17 @@ function renderGraphs() {
   const divergingContainer = document.getElementById('divergingChartContainer');
   if (divergingContainer) {
     const allLogs = getAllHistoryEntries().filter(e => !e.log.system);
-    
+
     // Removed .slice(0, 3) so it maps every single category
     divergingContainer.innerHTML = categoryStats.map(stat => {
       const catLogs = allLogs.filter(e => e.tracker.category === stat.category);
       const positive = catLogs.filter(e => e.log.amount > 0).length;
       const negative = catLogs.filter(e => e.log.amount < 0).length;
-      const total = positive + negative || 1; 
-      
+      const total = positive + negative || 1;
+
       const posPercent = Math.round((positive / total) * 100);
       const negPercent = Math.round((negative / total) * 100);
-      
+
       return `
         <div class="diverging-row">
           <span class="diverging-label">${escapeHtml(stat.category)}</span>
@@ -4304,18 +4304,18 @@ function renderGraphs() {
         
         <!-- Grid Lines -->
         <line x1="0" y1="0" x2="${width}" y2="0" class="area-chart-grid"/>
-        <line x1="0" y1="${height/2}" x2="${width}" y2="${height/2}" class="area-chart-grid"/>
+        <line x1="0" y1="${height / 2}" x2="${width}" y2="${height / 2}" class="area-chart-grid"/>
         <line x1="0" y1="${height}" x2="${width}" y2="${height}" class="area-chart-grid"/>
         
         <!-- Y-Axis Labels -->
         <text x="-10" y="5" text-anchor="end" class="area-chart-label">${Math.round(yMax)}</text>
-        <text x="-10" y="${height/2 + 4}" text-anchor="end" class="area-chart-label">${Math.round((yMax+yMin)/2)}</text>
+        <text x="-10" y="${height / 2 + 4}" text-anchor="end" class="area-chart-label">${Math.round((yMax + yMin) / 2)}</text>
         <text x="-10" y="${height + 4}" text-anchor="end" class="area-chart-label">${Math.round(yMin)}</text>
 
         <!-- X-Axis Labels (Start, Middle, End) -->
         <text x="0" y="${height + 25}" text-anchor="start" class="area-chart-label">${points[0].d.label}</text>
-        <text x="${width/2}" y="${height + 25}" text-anchor="middle" class="area-chart-label">${points[Math.floor(days/2)].d.label}</text>
-        <text x="${width}" y="${height + 25}" text-anchor="end" class="area-chart-label">${points[days-1].d.label}</text>
+        <text x="${width / 2}" y="${height + 25}" text-anchor="middle" class="area-chart-label">${points[Math.floor(days / 2)].d.label}</text>
+        <text x="${width}" y="${height + 25}" text-anchor="end" class="area-chart-label">${points[days - 1].d.label}</text>
 
         <!-- Area Fill & Solid Line -->
         <path d="${areaPath}" class="area-chart-fill"></path>
@@ -4710,7 +4710,7 @@ function renderDetailDrawer() {
   dom.detailCategoryLabel.textContent = `${tracker.category} · ${statusLabel(getTrackerStatus(tracker))}`;
   dom.detailTitle.textContent = tracker.title;
   dom.detailSubtitle.textContent = tracker.itemName || tracker.goalType;
-  
+
   // Temporarily clear the heavy sections to prevent previous tracker "ghosting" and layout stutter
   dom.detailHeroCard.innerHTML = "";
   dom.detailProgressVisuals.innerHTML = "";
@@ -4720,24 +4720,24 @@ function renderDetailDrawer() {
   dom.detailDrawer.classList.add("is-open");
   dom.detailDrawer.setAttribute("aria-hidden", "false");
   dom.drawerScrim.hidden = false;
-  
+
   requestAnimationFrame(() => {
     dom.drawerScrim.classList.add("is-open");
-    
+
     // 3. OFFLOAD HEAVY RENDERING
     // Wait 120ms to let the drawer physically slide in *before* we block the phone's CPU with HTML building
     window.setTimeout(() => {
       dom.detailHeroCard.innerHTML = createDetailHero(tracker);
       dom.detailMetaGrid.innerHTML = createDetailMetaCards(tracker);
       dom.detailNotes.innerHTML = createNotesMarkup(tracker);
-      
+
       dom.detailCustomFields.innerHTML = tracker.customFields.length
         ? `
           <div class="note-card">
             <h5>Custom fields</h5>
             <div class="custom-field-list">
               ${tracker.customFields
-                .map((field) => `
+          .map((field) => `
                   <div class="custom-field-pill">
                     <strong>${escapeHtml(field.label)}</strong>
                     <span class="subtle">${escapeHtml(field.value)}</span>
@@ -4746,21 +4746,21 @@ function renderDetailDrawer() {
             </div>
           </div>
         ` : "";
-        
+
       dom.archiveSelectedTrackerBtn.textContent = tracker.archived ? "Restore" : "Archive";
-      
+
       // 4. Split the absolute heaviest renders (Charts & Logs) into another tick so the UI doesn't freeze
       window.setTimeout(() => {
         dom.detailProgressVisuals.innerHTML = createDetailProgressVisuals(tracker);
         dom.detailHistoryCount.textContent = `${tracker.logs.length} entr${tracker.logs.length === 1 ? "y" : "ies"}`;
-        
+
         // OPTIMIZATION: Only render the first 40 logs on load. Rendering 100+ items at once crashes mobile browsers.
         dom.detailLogList.innerHTML = tracker.logs.length
           ? [...tracker.logs]
-              .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-              .slice(0, 40) 
-              .map((log) => createDetailLogEntry(tracker, log))
-              .join("")
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+            .slice(0, 40)
+            .map((log) => createDetailLogEntry(tracker, log))
+            .join("")
           : createEmptyStackItem("No history yet", "Add a progress entry to start tracking movement here.");
 
         animateProgressVisuals(dom.detailDrawer);
@@ -4944,7 +4944,7 @@ function handleTrackerGridClick(event) {
     const card = button.closest(".tracker-card");
     if (!card) return;
     const isCollapsed = card.classList.toggle("is-collapsed");
-    
+
     // Update any label inside the card
     const toggleLabel = card.querySelector(".tracker-card-footer [data-action='toggle-expand'] .toggle-text");
     if (toggleLabel) {
@@ -5056,16 +5056,16 @@ function createLocalTrackerRecord(basePayload, currentValue) {
   const adjustment = roundNumber(currentValue - basePayload.startValue);
   const logs = adjustment !== 0
     ? [
-        normalizeLog({
-          id: createId("log"),
-          amount: adjustment,
-          timestamp: now,
-          note: "Manual setup adjustment",
-          tag: "Setup",
-          createdAt: now,
-          updatedAt: now
-        })
-      ]
+      normalizeLog({
+        id: createId("log"),
+        amount: adjustment,
+        timestamp: now,
+        note: "Manual setup adjustment",
+        tag: "Setup",
+        createdAt: now,
+        updatedAt: now
+      })
+    ]
     : [];
 
   return commitLocalTracker({
@@ -5918,7 +5918,7 @@ function resetDrawerBodyScroll() {
     dom.detailDrawer.scrollTop = 0;
     dom.drawerBody.scrollTop = 0;
   });
-  
+
   // Deleted the 90ms and 220ms timeouts that were causing layout thrashing!
 }
 
@@ -6060,12 +6060,12 @@ function syncOverlayLock() {
 
 function syncTheme() {
   dom.body.dataset.theme = state.settings.theme;
-  
+
   // Safely check for the old icon just in case
   if (dom.themeToggleIcon) {
     dom.themeToggleIcon.textContent = state.settings.theme === "dark" ? "☀" : "☾";
   }
-  
+
   // Update the text of the new dropdown button directly
   if (dom.themeToggleBtn) {
     dom.themeToggleBtn.textContent = state.settings.theme === "dark" ? "☀ Switch to Light Theme" : "☾ Switch to Dark Theme";
@@ -6700,15 +6700,15 @@ function createTrackerTrendMarkup(tracker, variant = "card") {
           <span class="progress-viz-label">Steps</span>
           <div class="progress-step-track">
             ${[25, 50, 75, 100]
-              .map(
-                (milestone, index) => `
+      .map(
+        (milestone, index) => `
                   <span class="progress-step ${percent >= milestone ? "is-active" : ""}" style="--step-index:${index}">
                     <i></i>
                     <small>${milestone}</small>
                   </span>
                 `
-              )
-              .join("")}
+      )
+      .join("")}
           </div>
           <p class="progress-viz-note">${milestoneCount} of 4 milestones reached</p>
         </article>
@@ -6898,6 +6898,27 @@ function showToast(message, tone = "success") {
     window.setTimeout(() => toast.remove(), 220);
   }, 2800);
 }
+
+window.triggerCelebration = function () {
+  // 1. Fire the confetti burst
+  if (typeof confetti === "function") {
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ['#ffeb3b', '#4caf50', '#2196f3', '#f44336']
+    });
+  }
+
+  // 2. Spawn the "You nailed it!" text
+  const overlay = document.createElement("div");
+  overlay.className = "celebration-overlay";
+  overlay.innerHTML = `<div class="celebration-text">You nailed it! 😉</div>`;
+  document.body.appendChild(overlay);
+
+  // 3. Clean up the DOM after the animation finishes
+  setTimeout(() => overlay.remove(), 2500);
+};
 
 function createEmptyStackItem(title, message) {
   return `
@@ -7369,6 +7390,11 @@ if (dom.detailNotes) {
       const lineIndex = parseInt(event.target.dataset.lineIndex, 10);
       const isChecked = event.target.checked;
       await toggleRoadmapItem(trackerId, lineIndex, isChecked);
+
+      // Example of where to put it inside your existing checkbox/progress logic:
+      if (isChecked === true) { // or if (progress === 100)
+        window.triggerCelebration();
+      }
     }
   });
 }
@@ -7379,7 +7405,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
   const lines = tracker.notes.split(/\r?\n/);
   const line = lines[lineIndex];
-  
+
   if (line !== undefined) {
     if (isChecked) {
       lines[lineIndex] = line.replace(/^(\s*- )\[ \]/, '$1[x]');
@@ -7389,10 +7415,10 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
   }
 
   const updatedNotes = lines.join('\n');
-  const updatedTracker = recalculateTracker({ 
-    ...tracker, 
-    notes: updatedNotes, 
-    updatedAt: new Date().toISOString() 
+  const updatedTracker = recalculateTracker({
+    ...tracker,
+    notes: updatedNotes,
+    updatedAt: new Date().toISOString()
   });
 
   try {
@@ -7402,7 +7428,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     } else {
       commitLocalTracker(updatedTracker);
     }
-    
+
     // Re-render the drawer instantly to update the visual strike-through
     renderDetailDrawer();
   } catch (error) {
@@ -7417,7 +7443,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 /* =========================================================
    DIARY MODULE - CLOUD SYNCED (WITH EDIT/DELETE)
    ========================================================= */
-;(function() {
+; (function () {
   const DIARY_KEY = "progress-tracker-diary.v1";
   let diaryEntries = [];
   let editingDiaryId = null;
@@ -7450,12 +7476,12 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     try {
       const stored = localStorage.getItem(DIARY_KEY);
       diaryEntries = stored ? JSON.parse(stored) : [];
-    } catch(e) {
+    } catch (e) {
       diaryEntries = [];
     }
   }
 
-  window.renderDiary = function() {
+  window.renderDiary = function () {
     const lists = document.querySelectorAll("#diaryEntryList");
     const empties = document.querySelectorAll("#diaryEmptyState");
 
@@ -7510,7 +7536,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
       if (dateLabel) dateLabel.textContent = "Editing Entry";
       if (titleInput) titleInput.value = entry.title;
       if (bodyInput) bodyInput.value = entry.body;
-      if (templateSelect) templateSelect.parentElement.classList.add("hidden"); 
+      if (templateSelect) templateSelect.parentElement.classList.add("hidden");
       if (submitBtn) submitBtn.textContent = "Save Changes";
     } else {
       editingDiaryId = null;
@@ -7653,7 +7679,7 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
           }
           if (typeof showToast === 'function') showToast("Diary entry saved.", "success");
         }
-        
+
         localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
         closeDiaryModal();
         window.renderDiary();
