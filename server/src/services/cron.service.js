@@ -1,39 +1,32 @@
 import cron from 'node-cron';
 import webpush from 'web-push';
 import { User } from '../models/User.js';
-import DiaryEntry from '../models/diary.model.js'; // Assuming you check goals or diary
+import { ProgressEntry } from '../models/ProgressEntry.js';
 
-webpush.setVapidDetails(
-  'mailto:your-email@example.com',
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
-
-// Runs every day at 8:00 PM (20:00)
-cron.schedule('0 20 * * *', async () => {
+cron.schedule('0 21 * * *', async () => {
   try {
-    // 1. Find all users who allowed push notifications
     const users = await User.find({ pushSubscription: { $ne: null } });
     
-    const today = new Date().toLocaleDateString();
+    // Create a timestamp for the very start of today (midnight)
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
 
     for (const user of users) {
-      // 2. Check if they logged anything today
-      const logsToday = await DiaryEntry.countDocuments({ 
-        user: user._id, 
-        dateStr: today 
+      // Check if they logged any TRACKER PROGRESS today
+      const logsToday = await ProgressEntry.countDocuments({ 
+        user: user._id, // or userId, depending on your database schema
+        createdAt: { $gte: todayStart } 
       });
 
-      // 3. If no logs today, shoot the notification!
+      // If no tracker progress was logged, send the push
       if (logsToday === 0) {
         const payload = JSON.stringify({
-          title: "You're missing out! 🫣",
-          body: "Hey, where are you? You haven't logged any progress today. Keep your momentum going!",
+          title: "Don't break your streak! 🔥",
+          body: "Hey, where are you? You haven't logged any tracker progress today.",
           url: "/"
         });
 
         await webpush.sendNotification(user.pushSubscription, payload).catch(err => {
-          // If the subscription expired, remove it from the DB
           if (err.statusCode === 410 || err.statusCode === 404) {
              User.updateOne({ _id: user._id }, { $set: { pushSubscription: null } }).exec();
           }
@@ -43,4 +36,6 @@ cron.schedule('0 20 * * *', async () => {
   } catch (error) {
     console.error("Cron Job Error:", error);
   }
+}, {
+  timezone: "Asia/Kolkata" 
 });
