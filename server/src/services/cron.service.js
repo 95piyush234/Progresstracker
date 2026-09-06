@@ -3,9 +3,16 @@ import webpush from 'web-push';
 import { User } from '../models/User.js';
 import { ProgressEntry } from '../models/ProgressEntry.js';
 
-// Scheduled for 16:55 UTC (10:25 PM IST)
-cron.schedule('55 16 * * *', async () => {
-  console.log("CRON TRIGGERED: Starting 10:25 PM check!"); 
+// Configure VAPID keys so Google's push server accepts the notification
+webpush.setVapidDetails(
+  'mailto:piyush6207273710@gmail.com', 
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
+
+// Scheduled for 16:35 UTC (which is exactly 10:35 PM IST)
+cron.schedule('35 16 * * *', async () => {
+  console.log("CRON TRIGGERED: Starting 10:35 PM check!"); 
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
     console.log(`STATUS: Found ${users.length} users with push subscriptions.`);
@@ -31,7 +38,7 @@ cron.schedule('55 16 * * *', async () => {
         await webpush.sendNotification(user.pushSubscription, payload).then(() => {
             console.log("SUCCESS: Notification sent to phone!");
         }).catch(err => {
-          console.error("WEBPUSH FATAL ERROR:", err); // This will reveal the missing keys
+          console.error("WEBPUSH FATAL ERROR:", err); 
           if (err.statusCode === 410 || err.statusCode === 404) {
              User.updateOne({ _id: user._id }, { $set: { pushSubscription: null } }).exec();
           }
