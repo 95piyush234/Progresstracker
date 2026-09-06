@@ -1,4 +1,4 @@
-const CACHE_NAME = "progress-tracker-pro-v88";
+const CACHE_NAME = "progress-tracker-pro-v89";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -43,14 +43,14 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener("push", (event) => {
   const data = event.data ? event.data.json() : {};
   
-  const title = data.title || "Don't break your streak! 🔥";
-  const options = {
-    body: data.body || "Hey, where are you? Did you forget to log your progress today?",
-    icon: "/assets/logo.svg",
-    badge: "/assets/logo.svg",
-    vibrate: [200, 100, 200],
-    data: { url: data.url || "/" }
-  };
+      const title = data.title || "Don't break your streak! 🔥";
+    const options = {
+      body: data.body || "Hey, where are you? Did you forget to log your progress today?",
+      icon: "/assets/logo-192.png", // Changed to PNG
+      badge: "/assets/logo-192.png", // Changed to PNG
+      vibrate: [200, 100, 200],
+      data: { url: data.url || "/" }
+    };
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
