@@ -11526,3 +11526,11 @@ body[data-theme="light"] #accountDropdown .dropdown-item:hover {
   85% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 15px 35px rgba(255, 140, 97, 0.4)); }
   100% { opacity: 0; transform: scale(1.2) translateY(-60px); filter: blur(12px); }
 }
+
+
+/* Target the PWA icons or specific image elements */
+img[src*="logo-192"], 
+img[src*="logo-512"] {
+  border-radius: 22%; /* Adjust this percentage to match your SVG curve perfectly */
+  overflow: hidden;
+}
