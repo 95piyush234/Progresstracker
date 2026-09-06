@@ -6937,7 +6937,7 @@ window.triggerCelebration = function() {
   // 2. Spawn the upgraded text overlay
   const overlay = document.createElement("div");
   overlay.className = "celebration-overlay";
-  overlay.innerHTML = `<div class="celebration-text">You nailed it! 😉</div>`;
+  overlay.innerHTML = `<div class="celebration-text">You nailed it! <span style="-webkit-text-fill-color: initial;">😉</span></div>`;
   document.body.appendChild(overlay);
 
   // 3. Clean up the DOM after 3.5 seconds
