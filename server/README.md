@@ -2,7 +2,7 @@
 
 Production-ready `Node.js + Express + MongoDB` backend for the Progress Tracker SaaS application.
 
-## Included features
+## [Included features]
 
 - JWT auth with access token + refresh cookie
 - Email OTP verification for signup
