@@ -6798,6 +6798,11 @@ function animateNumber(element, target, formatter) {
 function maybeCelebrateCompletion(previousStatus, nextStatus, tracker) {
   if (previousStatus !== "completed" && nextStatus === "completed") {
     showToast(`Goal complete: "${tracker.title}" just crossed the finish line.`, "success");
+    
+    // Trigger the confetti and text animation
+    if (typeof window.triggerCelebration === "function") {
+      window.triggerCelebration();
+    }
   }
 }
 
