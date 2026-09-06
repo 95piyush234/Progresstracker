@@ -3,21 +3,21 @@ import webpush from 'web-push';
 import { User } from '../models/User.js';
 import { ProgressEntry } from '../models/ProgressEntry.js';
 
-cron.schedule('0 22 * * *', async () => {
+// 45 16 is 16:45 UTC, which is exactly 10:15 PM IST.
+cron.schedule('45 16 * * *', async () => {
+  console.log("CRON TRIGGERED: Running daily tracker check!"); 
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
     
-    // Create a timestamp for the very start of today (midnight)
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
     for (const user of users) {
-            // Check if they logged any TRACKER PROGRESS today using entryDate
       const logsToday = await ProgressEntry.countDocuments({ 
         user: user._id, 
         entryDate: { $gte: todayStart } 
       });
-      // If no tracker progress was logged, send the push
+
       if (logsToday === 0) {
         const payload = JSON.stringify({
           title: "Don't break your streak! 🔥",
@@ -35,6 +35,5 @@ cron.schedule('0 22 * * *', async () => {
   } catch (error) {
     console.error("Cron Job Error:", error);
   }
-}, {
-  timezone: "Asia/Kolkata" 
-});
+}); 
+// DELETED the { timezone: "Asia/Kolkata" } block entirely.
