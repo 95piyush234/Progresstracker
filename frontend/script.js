@@ -7755,3 +7755,15 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
 
 
 
+window.addEventListener("DOMContentLoaded", () => {
+  // Your existing app setup code runs here...
+
+  // Hide the splash screen after the app loads
+  setTimeout(() => {
+    const splash = document.getElementById("app-splash-screen");
+    if (splash) {
+      splash.classList.add("fade-out");
+      setTimeout(() => splash.remove(), 500); // Completely remove from DOM after fade
+    }
+  }, 600); // Adjust delay if needed
+});
