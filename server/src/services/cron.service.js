@@ -4,7 +4,7 @@ import { User } from '../models/User.js';
 import { ProgressEntry } from '../models/ProgressEntry.js';
 
 // 45 16 is 16:45 UTC, which is exactly 10:15 PM IST.
-cron.schedule('45 16 * * *', async () => {
+cron.schedule('52 16 * * *', async () => {
   console.log("CRON TRIGGERED: Running daily tracker check!"); 
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
