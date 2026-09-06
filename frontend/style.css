@@ -11483,26 +11483,46 @@ body[data-theme="light"] #accountDropdown .dropdown-item:hover {
 
 
 
+/* =========================================================
+   EPIC CELEBRATION ANIMATION
+   ========================================================= */
 .celebration-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  pointer-events: none; /* Lets clicks pass through */
+  pointer-events: none;
   display: flex; justify-content: center; align-items: center;
   z-index: 999999;
+  /* Adds a subtle spotlight effect to dim the background behind the text */
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, transparent 80%);
+  animation: overlayFade 3.5s ease-in-out forwards;
 }
 
 .celebration-text {
-  font-size: 3.5rem; 
-  font-weight: 800; 
-  color: #ffeb3b;
-  text-shadow: 0 4px 15px rgba(0,0,0,0.4);
-  animation: popInAndFade 2.5s ease-out forwards;
+  font-family: var(--ui-font-display, "Sora", sans-serif);
+  font-size: clamp(3rem, 8vw, 6rem); 
+  font-weight: 800;
+  text-align: center;
+  /* Premium gradient matching your app's accent colors */
+  background: linear-gradient(135deg, #f5c76c, #ff8c61, #ff5fc7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 15px 35px rgba(255, 140, 97, 0.4));
+  /* Uses a custom cubic-bezier for a snappy, elastic bounce effect */
+  animation: epicPop 3.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes popInAndFade {
-  0% { opacity: 0; transform: scale(0.5) translateY(50px); }
-  15% { opacity: 1; transform: scale(1.1) translateY(0); }
-  30% { opacity: 1; transform: scale(1) translateY(0); }
-  80% { opacity: 1; transform: scale(1) translateY(0); }
-  100% { opacity: 0; transform: scale(0.9) translateY(-30px); }
+@keyframes overlayFade {
+  0% { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+  10% { opacity: 1; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  80% { opacity: 1; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  100% { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+}
+
+@keyframes epicPop {
+  0% { opacity: 0; transform: scale(0.3) translateY(80px) rotate(-8deg); }
+  12% { opacity: 1; transform: scale(1.15) translateY(-20px) rotate(4deg); }
+  22% { transform: scale(1) translateY(0) rotate(0deg); }
+  85% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 15px 35px rgba(255, 140, 97, 0.4)); }
+  100% { opacity: 0; transform: scale(1.2) translateY(-60px); filter: blur(12px); }
 }

@@ -6904,25 +6904,44 @@ function showToast(message, tone = "success") {
   }, 2800);
 }
 
-window.triggerCelebration = function () {
-  // 1. Fire the confetti burst
+window.triggerCelebration = function() {
+  // 1. Epic Confetti: Continuous Dual Side Cannons
   if (typeof confetti === "function") {
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#ffeb3b', '#4caf50', '#2196f3', '#f44336']
-    });
+    const duration = 2500;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      // Left Cannon
+      confetti({
+        particleCount: 6,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.8 },
+        colors: ['#5de4c7', '#ff8c61', '#ffc579', '#8758ff', '#ff5fc7']
+      });
+      // Right Cannon
+      confetti({
+        particleCount: 6,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.8 },
+        colors: ['#5de4c7', '#ff8c61', '#ffc579', '#8758ff', '#ff5fc7']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
   }
 
-  // 2. Spawn the "You nailed it!" text
+  // 2. Spawn the upgraded text overlay
   const overlay = document.createElement("div");
   overlay.className = "celebration-overlay";
   overlay.innerHTML = `<div class="celebration-text">You nailed it! 😉</div>`;
   document.body.appendChild(overlay);
 
-  // 3. Clean up the DOM after the animation finishes
-  setTimeout(() => overlay.remove(), 2500);
+  // 3. Clean up the DOM after 3.5 seconds
+  setTimeout(() => overlay.remove(), 3500);
 };
 
 function createEmptyStackItem(title, message) {
