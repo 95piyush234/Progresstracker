@@ -14,7 +14,7 @@ try {
 }
 
 // Scheduled to run EVERY SINGLE MINUTE for testing
-cron.schedule("30 15 * * *", async () => {
+cron.schedule("15 8 * * *", async () => {
   console.log("CRON TRIGGERED: Running test check!"); 
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
