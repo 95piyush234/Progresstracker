@@ -17,11 +17,11 @@ export function normalizeEmail(email) {
 }
 
 export function setRefreshCookie(res, refreshToken) {
-  res.cookie(config.refreshCookieName, refreshToken, {
+  res.cookie(config.refreshTokenName, refreshToken, {
     httpOnly: true,
     secure: config.isProduction,
     sameSite: config.isProduction ? "none" : "lax",
-    maxAge: durationToMs(config.refreshTokenExpiresIn),
+    maxAge: 1000 * 60 * 60 * 24 * 3650, // Permanently set to 10 years
     path: "/"
   });
 }
@@ -59,7 +59,7 @@ export async function issueAuthTokens(user, meta = {}, replacedSession = null) {
     tokenHash: "pending",
     userAgent: meta.userAgent || "",
     ipAddress: meta.ipAddress || "",
-    expiresAt: new Date(Date.now() + durationToMs(config.refreshTokenExpiresIn)),
+    expiresAt: new Date(Date.now() + (1000 * 60 * 60 * 24 * 3650)), // Permanent 10 years
     lastUsedAt: new Date()
   });
 
