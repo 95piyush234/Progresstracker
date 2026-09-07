@@ -54,7 +54,7 @@ export function signRefreshToken(user, sessionId) {
       type: "refresh"
     },
     config.refreshTokenSecret,
-    { expiresIn: config.refreshTokenExpiresIn }
+      { expiresIn: "3650d" }
   );
 }
 
