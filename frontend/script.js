@@ -6934,6 +6934,13 @@ function showToast(message, tone = "success") {
 }
 
 window.triggerCelebration = function() {
+  // --- PASTE THE VIBRATION CODE RIGHT HERE ---
+  if (navigator.vibrate) {
+    // A "Success" double-tap (Vibrate 100ms, pause 50ms, vibrate 100ms)
+    navigator.vibrate([100, 50, 100]); 
+  }
+  // -------------------------------------------
+
   // 1. Epic Confetti: Continuous Dual Side Cannons
   if (typeof confetti === "function") {
     const duration = 2500;
