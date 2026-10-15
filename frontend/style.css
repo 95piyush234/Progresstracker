@@ -11535,3 +11535,149 @@ img[src*="logo-512"] {
   overflow: hidden;
 }
 
+
+
+
+
+
+/* =========================================================
+   CLAYMORPHISM 3D UI OVERRIDE
+   ========================================================= */
+:root {
+  --clay-bg: #1c1c21;
+  --clay-surface: #24242b;
+  --clay-accent: #67f0be;
+  
+  --clay-shadow-outer: 12px 14px 28px rgba(0, 0, 0, 0.45), 4px 6px 14px rgba(0, 0, 0, 0.3);
+  --clay-shadow-inner-light: inset 2px 2px 8px rgba(255, 255, 255, 0.08);
+  --clay-shadow-inner-dark: inset -4px -5px 12px rgba(0, 0, 0, 0.4);
+  --clay-shadow-squish: 4px 6px 16px rgba(0, 0, 0, 0.5), inset 2px 2px 6px rgba(255, 255, 255, 0.1), inset -4px -5px 12px rgba(0, 0, 0, 0.5);
+  
+  --clay-input-shadow: inset 4px 5px 10px rgba(0, 0, 0, 0.5), inset -2px -2px 6px rgba(255, 255, 255, 0.03);
+  --clay-input-focus: inset 2px 2px 6px rgba(0, 0, 0, 0.4), inset -1px -1px 4px rgba(255, 255, 255, 0.04), 0 0 0 2px var(--clay-accent);
+  
+  --clay-radius-panel: 38px;
+  --clay-radius-card: 26px;
+  --clay-radius-btn: 20px;
+}
+
+body[data-theme="light"] {
+  --clay-bg: #e6ecf0;
+  --clay-surface: #f1f5f9;
+  
+  --clay-shadow-outer: 14px 18px 36px rgba(160, 174, 192, 0.4), 6px 8px 16px rgba(160, 174, 192, 0.25);
+  --clay-shadow-inner-light: inset 3px 3px 10px rgba(255, 255, 255, 1);
+  --clay-shadow-inner-dark: inset -5px -6px 14px rgba(175, 188, 205, 0.6);
+  --clay-shadow-squish: 6px 8px 20px rgba(160, 174, 192, 0.5), inset 3px 3px 10px rgba(255, 255, 255, 1), inset -5px -6px 14px rgba(175, 188, 205, 0.7);
+  
+  --clay-input-shadow: inset 5px 6px 12px rgba(170, 184, 200, 0.6), inset -3px -3px 8px rgba(255, 255, 255, 0.9);
+  --clay-input-focus: inset 3px 4px 8px rgba(170, 184, 200, 0.5), inset -2px -2px 6px rgba(255, 255, 255, 0.9), 0 0 0 2px var(--clay-accent);
+}
+
+html, body {
+  background: var(--clay-bg) !important;
+}
+body::before, body::after, .ambient, .ln-glow, .noise {
+  display: none !important;
+}
+
+.panel, .auth-showcase, .auth-panel, .sidebar, .topbar, .priority-card, 
+.hero, .stat-card, .mini-card, .dashboard-panel, .tracker-card, 
+.history-summary-card, .history-timeline-panel, .detail-drawer, 
+.modal-card, .proof-upload-panel, .log-proof-preview, .mail-status-card, 
+.mail-stream-item, .guide-step-card, .auth-showcase-card, .sidebar-card, 
+.focus-timer-shell, .insight-card, .tasky-solo-card, .tasky-visual-panel,
+.dashboard-window-shell, .history-item, .log-entry {
+  background: var(--clay-surface) !important;
+  border: none !important;
+  border-radius: var(--clay-radius-panel) !important;
+  box-shadow: var(--clay-shadow-outer), var(--clay-shadow-inner-light), var(--clay-shadow-inner-dark) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.stat-card, .mini-card, .history-item, .log-entry, .insight-card, .auth-showcase-card, .guide-step-card {
+  border-radius: var(--clay-radius-card) !important;
+}
+
+.panel:hover, .tracker-card:hover, .stat-card:hover, .mini-card:hover, .insight-card:hover, .history-item:hover, .log-entry:hover, .sidebar-card:hover, .auth-showcase-card:hover {
+  transform: translateY(3px) scale(0.99) !important;
+  box-shadow: var(--clay-shadow-squish) !important;
+}
+
+input, select, textarea, .field input, .field select, .field textarea, .tracker-form input, .tasky-floating-field input {
+  background: var(--clay-surface) !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow: var(--clay-input-shadow) !important;
+  padding: 16px 20px !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  box-shadow: var(--clay-input-focus) !important;
+}
+
+.tasky-label-float {
+  background: transparent !important;
+  top: -24px !important;
+  left: 4px !important;
+}
+
+.primary-button, .tasky-submit-btn, .badge, .badge-large, .mail-center-badge, .ln-btn-primary {
+  background: var(--clay-accent) !important;
+  color: #052618 !important;
+  border: none !important;
+  border-radius: var(--clay-radius-btn) !important;
+  box-shadow: 
+    8px 10px 20px rgba(103, 240, 190, 0.3),
+    inset 3px 3px 8px rgba(255, 255, 255, 0.7),
+    inset -4px -5px 12px rgba(20, 100, 70, 0.3) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.primary-button:active, .tasky-submit-btn:active {
+  transform: translateY(4px) scale(0.97) !important;
+  box-shadow: 
+    2px 4px 8px rgba(103, 240, 190, 0.2),
+    inset 4px 4px 10px rgba(20, 100, 70, 0.4),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.5) !important;
+}
+
+.danger-button {
+  background: #ff6f82 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 
+    6px 8px 16px rgba(255, 111, 130, 0.3),
+    inset 3px 3px 8px rgba(255, 255, 255, 0.5),
+    inset -4px -5px 10px rgba(150, 20, 40, 0.3) !important;
+}
+
+.ghost-button, .icon-button, .nav-button, .mobile-tab-button, .auth-toggle-button {
+  background: var(--clay-surface) !important;
+  border: none !important;
+  box-shadow: var(--clay-shadow-outer), var(--clay-shadow-inner-light), var(--clay-shadow-inner-dark) !important;
+  border-radius: var(--clay-radius-btn) !important;
+}
+
+.ghost-button:active, .icon-button:active, .nav-button.is-active, .mobile-tab-button.is-active {
+  box-shadow: var(--clay-input-shadow) !important;
+  transform: translateY(2px) !important;
+  color: var(--clay-accent) !important;
+}
+
+.progress-strip, .mini-progress, .priority-progress, .diverging-track, .day-bar-rail {
+  border: none !important;
+  box-shadow: var(--clay-input-shadow) !important;
+  background: var(--clay-surface) !important;
+}
+
+.progress-strip-fill, .mini-progress-fill, .priority-progress-fill, .day-bar-fill {
+  border-radius: 999px !important;
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5), 
+    inset -2px -2px 4px rgba(0, 0, 0, 0.2) !important;
+}
