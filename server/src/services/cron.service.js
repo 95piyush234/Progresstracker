@@ -3,22 +3,33 @@ import webpush from 'web-push';
 import { User } from '../models/User.js';
 import { ProgressEntry } from '../models/ProgressEntry.js';
 
-cron.schedule('0 21 * * *', async () => {
+try {
+  webpush.setVapidDetails(
+    'mailto:piyush6207273710@gmail.com', 
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+} catch (e) {
+  console.error("VAPID Keys Error:", e.message);
+}
+
+// Scheduled to run EVERY SINGLE MINUTE for testing
+cron.schedule("30 15 * * *", async () => {
+  console.log("CRON TRIGGERED: Running test check!"); 
   try {
     const users = await User.find({ pushSubscription: { $ne: null } });
-    
-    // Create a timestamp for the very start of today (midnight)
+    console.log(`STATUS: Found ${users.length} users with push subscriptions.`);
+
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
     for (const user of users) {
-      // Check if they logged any TRACKER PROGRESS today
       const logsToday = await ProgressEntry.countDocuments({ 
-        user: user._id, // or userId, depending on your database schema
-        createdAt: { $gte: todayStart } 
+        user: user._id, 
+        entryDate: { $gte: todayStart } 
       });
+      console.log(`STATUS: User ${user._id} has ${logsToday} logs today.`);
 
-      // If no tracker progress was logged, send the push
       if (logsToday === 0) {
         const payload = JSON.stringify({
           title: "Don't break your streak! 🔥",
@@ -26,7 +37,11 @@ cron.schedule('0 21 * * *', async () => {
           url: "/"
         });
 
-        await webpush.sendNotification(user.pushSubscription, payload).catch(err => {
+        console.log("STATUS: Attempting to send webpush notification...");
+        await webpush.sendNotification(user.pushSubscription, payload).then(() => {
+            console.log("SUCCESS: Notification sent to phone!");
+        }).catch(err => {
+          console.error("WEBPUSH FATAL ERROR:", err); 
           if (err.statusCode === 410 || err.statusCode === 404) {
              User.updateOne({ _id: user._id }, { $set: { pushSubscription: null } }).exec();
           }
@@ -36,6 +51,4 @@ cron.schedule('0 21 * * *', async () => {
   } catch (error) {
     console.error("Cron Job Error:", error);
   }
-}, {
-  timezone: "Asia/Kolkata" 
-});
+}); 
