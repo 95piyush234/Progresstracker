@@ -1,4 +1,4 @@
-const CACHE_NAME = "progress-tracker-pro-v103";
+const CACHE_NAME = "progress-tracker-pro-v104";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -58,4 +58,32 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   event.waitUntil(clients.openWindow(event.notification.data.url));
+});
+
+
+
+self.addEventListener('notificationclick', function(event) {
+  // 1. Close the notification when the user taps it
+  event.notification.close();
+
+  // 2. The URL you want to open (this targets your main homepage)
+  const urlToOpen = self.location.origin + '/';
+
+  // 3. Check if the app is already open in the background, or open a fresh tab
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(windowClients) {
+      // Loop through all open tabs to see if your site is already open
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        // If it is already open, just bring it to the front!
+        if (client.url === urlToOpen && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // If the website is completely closed, open a new window
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
 });
