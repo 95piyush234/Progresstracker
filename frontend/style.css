@@ -11701,3 +11701,40 @@ input:focus, select:focus, textarea:focus {
     inset 2px 2px 4px rgba(255, 255, 255, 0.4), 
     inset -2px -2px 4px rgba(0, 0, 0, 0.2) !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   MOBILE TAB BAR TEXT OVERFLOW FIX
+   ========================================================= */
+@media (max-width: 900px) {
+  .mobile-tabbar {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important; /* Forces exactly 5 equal columns */
+    gap: 4px !important; /* Shrinks the empty space between buttons */
+    padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .mobile-tab-button {
+    padding: 8px 2px !important; /* Reduces side padding to give text more room */
+    overflow: hidden !important; /* Ensures nothing ever spills out of the button */
+  }
+
+  .mobile-tab-button > span:last-of-type {
+    font-size: 10px !important; /* Shrinks the text slightly to fit */
+    letter-spacing: -0.04em !important; /* Pulls the letters a tiny bit closer together */
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; /* If a screen is incredibly tiny, it will add ... instead of breaking out */
+  }
+}
