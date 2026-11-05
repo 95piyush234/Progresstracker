@@ -3410,21 +3410,13 @@ function createInitialState() {
       account: null,
       session: createSessionState(),
       authOtp: null,
-      guide: {
-        seenAt: null,
-        lastOpenedAt: null
-      },
-      mailFeed: {
-        messages: [],
-        lastOpenedAt: null
-      },
+      guide: { seenAt: null, lastOpenedAt: null },
+      mailFeed: { messages: [], lastOpenedAt: null },
       focusSession: createFocusSessionState(),
       sync: createSyncState()
     },
-    meta: {
-      createdAt: new Date().toISOString()
-    },
-    trackers: []
+    meta: { createdAt: new Date().toISOString() },
+    trackers: createSampleTrackers() // This line injects the actual sample data
   };
 }
 
