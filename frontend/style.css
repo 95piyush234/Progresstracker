@@ -11940,3 +11940,25 @@ input:focus, select:focus, textarea:focus {
     font-size: 0.9rem !important;
   }
 }
+
+
+
+
+
+/* =========================================================
+   FIX: PREVENT STICKY TOPBAR & SIDEBAR RENDERING GLITCH
+   ========================================================= */
+.panel.topbar:hover,
+.panel.sidebar:hover {
+  transform: none !important;
+  background: var(--panel) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+body[data-theme="light"] .panel.topbar:hover,
+body[data-theme="light"] .panel.sidebar:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 246, 255, 0.9)), rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(85, 72, 132, 0.12) !important;
+  box-shadow: 0 28px 80px rgba(80, 63, 124, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
+}
