@@ -823,34 +823,7 @@ function bindEvents() {
     btn.addEventListener("click", () => openAuthFromLanding("create"));
   });
 
-  // Attach listener to all "Try Demo / Try Without Account" buttons
-  document.querySelectorAll(".landing-trigger-demo").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const now = new Date().toISOString();
-      state.settings.account = {
-        name: "Demo User",
-        email: "demo@local.workspace",
-        emailVerifiedAt: now,
-        emailUpdatesEnabled: false,
-        createdAt: now,
-        lastLoginAt: now
-      };
-      state.settings.session = createSessionState({
-        loggedIn: true,
-        lastLoginAt: now,
-        lastActivityAt: now,
-        authProvider: "local"
-      });
-      setSyncMode(LOCAL_SYNC_MODE, "Using local browser storage demo mode.");
-      if (!state.trackers || state.trackers.length === 0) {
-        state.trackers = createSampleTrackers();
-      }
-      saveState();
-      renderApp();
-      resetDocumentScroll();
-      showToast("Demo workspace loaded with sample trackers.", "success");
-    });
-  });
+
 
   // Smooth scroll for landing page links to prevent the "Tap back to exit" popup bug
   document.querySelectorAll('a[href^="#ln-"]').forEach(anchor => {
