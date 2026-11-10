@@ -11738,3 +11738,183 @@ input:focus, select:focus, textarea:focus {
     text-overflow: ellipsis !important; /* If a screen is incredibly tiny, it will add ... instead of breaking out */
   }
 }
+
+
+
+
+
+
+
+/* =========================================================
+   AUDIT FIX: UNIFIED FONTS, SINGLE PALETTE & LIVE PREVIEW UI
+   ========================================================= */
+:root {
+  --font-body: "Inter", system-ui, -apple-system, sans-serif !important;
+  --font-display: "Sora", system-ui, -apple-system, sans-serif !important;
+  --ui-font-body: var(--font-body) !important;
+  --ui-font-display: var(--font-display) !important;
+
+  /* Single Cohesive Teal Accent + Matte Slate Palette */
+  --accent: #5de4c7 !important;
+  --accent-strong: #38c9ab !important;
+  --accent-warm: #5de4c7 !important;
+  --brand-start: #5de4c7 !important;
+  --brand-mid: #38c9ab !important;
+  --brand-end: #1b4d42 !important;
+  --brand-start-rgb: 93, 228, 199 !important;
+  --brand-mid-rgb: 56, 201, 171 !important;
+  --brand-end-rgb: 27, 77, 66 !important;
+}
+
+.ln-badge-dot,
+.ln-check {
+  color: var(--mod-clay-accent) !important;
+}
+.ln-badge-dot {
+  background: var(--mod-clay-accent) !important;
+  box-shadow: 0 0 10px var(--mod-clay-accent) !important;
+}
+
+/* Consistent Lucide SVG Icons */
+.ln-icon-svg {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--mod-clay-surface);
+  box-shadow: var(--mod-clay-pressed);
+  color: var(--mod-clay-accent);
+  margin-bottom: 18px;
+}
+
+.ln-icon-svg svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Live Product Dashboard Preview in Hero */
+.ln-real-preview {
+  height: auto !important;
+  max-width: 980px;
+  padding-bottom: 24px;
+  text-align: left;
+  background: var(--mod-clay-surface) !important;
+  border-radius: var(--mod-clay-rad-lg) !important;
+  box-shadow: var(--mod-clay-out), var(--mod-clay-in) !important;
+}
+
+.ln-preview-url {
+  margin-left: 12px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.ln-preview-dashboard {
+  padding: 24px;
+  display: grid;
+  gap: 20px;
+}
+
+.ln-preview-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ln-preview-tracker-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ln-preview-card,
+.ln-preview-tracker {
+  padding: 18px;
+  border-radius: var(--mod-clay-rad-md);
+  background: var(--mod-clay-surface);
+  box-shadow: var(--mod-clay-pressed);
+  display: grid;
+  gap: 8px;
+}
+
+.ln-preview-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.ln-preview-val {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  color: var(--text);
+}
+
+.ln-preview-tracker-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.ln-preview-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(93, 228, 199, 0.12);
+  color: var(--mod-clay-accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.ln-preview-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.ln-preview-bar > div {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mod-clay-accent);
+}
+
+.ln-proof-code-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--mod-clay-bg);
+}
+
+.ln-code-lines {
+  display: grid;
+  gap: 10px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: var(--mod-clay-accent);
+}
+
+.ln-chart-mockup .ln-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.ln-chart-mockup .ln-bar-active {
+  background: var(--mod-clay-accent) !important;
+  color: #041f14 !important;
+  font-weight: 700;
+  box-shadow: 0 0 20px rgba(93, 228, 199, 0.35);
+}
+
+@media (max-width: 780px) {
+  .ln-preview-stat-row,
+  .ln-preview-tracker-row {
+    grid-template-columns: 1fr;
+  }
+}

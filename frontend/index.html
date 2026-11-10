@@ -4,51 +4,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <!-- PASTE YOUR GOOGLE VERIFICATION TAG HERE -->
   <meta name="google-site-verification" content="IOWVNlkNSdhQMJXTqTeDTTjqyqewLOlAGFJ-zpkQ40c" />
   <meta name="description"
-    content="Progress Tracker Pro is a premium single-page app for tracking any custom goal with manual progress logging, analytics, and local persistence." />
+    content="Log daily progress, attach photo proof, and track your streaks. Works offline in your browser or syncs across devices." />
+
+  <!-- Open Graph & Twitter Preview Tags -->
+  <meta property="og:title" content="Progress Tracker Pro — Log Progress, Attach Proof, See Your Streak" />
+  <meta property="og:description" content="Track study hours, workouts, coding sprints, and custom goals with photo proof and daily streaks." />
+  <meta property="og:image" content="https://progresstracker-1.onrender.com/assets/logo-512.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Progress Tracker Pro" />
+  <meta name="twitter:description" content="Log daily progress, attach photo proof, and track your streaks." />
+  <meta name="twitter:image" content="https://progresstracker-1.onrender.com/assets/logo-512.png" />
+
   <title>Progress Tracker Pro</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#071119" />
+  <meta name="theme-color" content="#121214" />
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
-  <link rel="apple-touch-icon" href="assets/logo.svg" />
+  <link rel="apple-touch-icon" href="assets/logo-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body data-theme="dark" data-auth="loading">
-  <div class="ambient ambient-a"></div>
-  <div class="ambient ambient-b"></div>
-  <div class="ambient ambient-c"></div>
-  <div class="noise"></div>
-
   <section class="landing-shell" id="landingShell">
-    <!-- Ambient Glows -->
-    <div class="ln-glow ln-glow-top"></div>
-    <div class="ln-glow ln-glow-bottom"></div>
-
     <!-- 1. Navbar -->
     <nav class="ln-nav">
       <div class="ln-nav-brand">
         <div class="ln-logo">
-          <img src="assets/logo.svg" alt="Logo" />
+          <img src="assets/logo.svg" alt="Progress Tracker Pro logo" />
         </div>
         <span>Progress Tracker Pro</span>
       </div>
       <div class="ln-nav-links">
         <a href="#ln-features">Features</a>
         <a href="#ln-how-it-works">How It Works</a>
-        <a href="#ln-analytics">Analytics</a>
+        <a href="#ln-analytics">Charts</a>
       </div>
       <div class="ln-nav-actions">
+        <button type="button" class="ln-btn-ghost landing-trigger-demo">Try Demo</button>
         <button type="button" class="ln-btn-ghost landing-trigger-login">Login</button>
-        <button type="button" class="ln-btn-primary landing-trigger-signup">Get Started <span
-            class="ln-arrow">→</span></button>
+        <button type="button" class="ln-btn-primary landing-trigger-signup">Sign Up <span class="ln-arrow">→</span></button>
       </div>
     </nav>
 
@@ -57,69 +58,73 @@
       <header class="ln-section ln-hero">
         <div class="ln-badge">
           <span class="ln-badge-dot"></span>
-          Premium Manual Tracking
+          Log progress, attach a photo, see your streak
         </div>
         <h1 class="ln-hero-title">
-          Turn Your Goals Into<br>
+          Turn Your Daily Work Into<br>
           <span class="ln-text-gradient">Visible Progress.</span>
         </h1>
         <p class="ln-hero-subtitle">
-          Track your goals, build consistent habits, document your achievements, and see exactly how far you've actually
-          come.
+          Log hours, reps, pages, or custom units in seconds. Attach screenshot proof to every entry, track your daily streak, and keep your data in your browser or synced across devices.
         </p>
         <div class="ln-hero-actions">
-          <button type="button" class="ln-btn-primary ln-btn-large landing-trigger-signup">Start Tracking —
-            Free</button>
-          <a href="#ln-how-it-works" class="ln-btn-ghost ln-btn-large">See How It Works</a>
+          <button type="button" class="ln-btn-primary ln-btn-large landing-trigger-demo">
+            Try Without Account — Instant Demo
+          </button>
+          <button type="button" class="ln-btn-ghost ln-btn-large landing-trigger-signup">
+            Create Cloud Account →
+          </button>
         </div>
         <div class="ln-hero-checks">
-          <span><span class="ln-check">✓</span> Any Metric</span>
-          <span><span class="ln-check">✓</span> Deep Analytics</span>
-          <span><span class="ln-check">✓</span> Local-First Privacy</span>
-          <span><span class="ln-check">✓</span> Daily Journal</span>
+          <span><span class="ln-check">✓</span> Preloaded sample goals</span>
+          <span><span class="ln-check">✓</span> Photo proof per log</span>
+          <span><span class="ln-check">✓</span> Works offline in browser</span>
+          <span><span class="ln-check">✓</span> Optional cloud sync</span>
         </div>
 
-        <!-- Abstract UI Mockup -->
-        <div class="ln-hero-mockup">
-          <div class="ln-mockup-header"><span></span><span></span><span></span></div>
-          <div class="ln-mockup-body">
-            <div class="ln-mockup-sidebar"></div>
-            <div class="ln-mockup-content">
-              <div class="ln-mockup-topline">
-                <div class="ln-mockup-block" style="width: 200px; height: 120px;"></div>
-                <div class="ln-mockup-block" style="width: 200px; height: 120px;"></div>
-                <div class="ln-mockup-block" style="flex: 1; height: 120px;"></div>
+        <!-- Real Product Dashboard Preview -->
+        <div class="ln-hero-mockup ln-real-preview">
+          <div class="ln-mockup-header">
+            <span></span><span></span><span></span>
+            <small class="ln-preview-url">Live Workspace Preview (Sample Data)</small>
+          </div>
+          <div class="ln-preview-dashboard">
+            <div class="ln-preview-stat-row">
+              <div class="ln-preview-card">
+                <span class="ln-preview-label">DAILY CHECK-IN</span>
+                <strong class="ln-preview-val">3 tasks logged</strong>
+                <div class="ln-preview-bar"><div style="width: 75%"></div></div>
+                <small>2 trackers updated today</small>
               </div>
-              <div class="ln-mockup-grid">
-                <div class="ln-mockup-block" style="height: 240px;"></div>
-                <div class="ln-mockup-block" style="height: 240px;"></div>
+              <div class="ln-preview-card">
+                <span class="ln-preview-label">CURRENT STREAK</span>
+                <strong class="ln-preview-val">12 days</strong>
+                <small>Consistent daily logs across study & fitness</small>
+              </div>
+              <div class="ln-preview-card">
+                <span class="ln-preview-label">OVERALL COMPLETION</span>
+                <strong class="ln-preview-val">68%</strong>
+                <small>3 active goals in motion</small>
               </div>
             </div>
-          </div>
-          <!-- Floating Labels -->
-          <div class="ln-float-label ln-float-progress" style="top: 20%; right: -5%;">87% Goal Progress</div>
-          <div class="ln-float-label ln-float-streak" style="bottom: 30%; left: -5%;">24 Day Streak</div>
-        </div>
-        <!-- Infinite Feature Marquee -->
-        <div class="ln-marquee-section">
-          <div class="ln-marquee-content">
-            <span>🎯 GOAL TRACKING</span><span>•</span>
-            <span>📈 DEEP ANALYTICS</span><span>•</span>
-            <span>📸 VISUAL PROOF</span><span>•</span>
-            <span>📓 DAILY JOURNAL</span><span>•</span>
-            <span>🔥 CONSISTENCY STREAKS</span><span>•</span>
-            <span>🏆 MILESTONE MAPPING</span><span>•</span>
-            <span>📅 ACTIVITY HISTORY</span><span>•</span>
-          </div>
-          <!-- Duplicate for seamless infinite scrolling -->
-          <div class="ln-marquee-content" aria-hidden="true">
-            <span>🎯 GOAL TRACKING</span><span>•</span>
-            <span>📈 DEEP ANALYTICS</span><span>•</span>
-            <span>📸 VISUAL PROOF</span><span>•</span>
-            <span>📓 DAILY JOURNAL</span><span>•</span>
-            <span>🔥 CONSISTENCY STREAKS</span><span>•</span>
-            <span>🏆 MILESTONE MAPPING</span><span>•</span>
-            <span>📅 ACTIVITY HISTORY</span><span>•</span>
+            <div class="ln-preview-tracker-row">
+              <div class="ln-preview-tracker">
+                <div class="ln-preview-tracker-head">
+                  <strong>Data Structures Sprint</strong>
+                  <span class="ln-preview-pill">42 / 60 hours</span>
+                </div>
+                <p>Algorithms + mock tests • Due in 8 days</p>
+                <div class="ln-preview-bar"><div style="width: 70%"></div></div>
+              </div>
+              <div class="ln-preview-tracker">
+                <div class="ln-preview-tracker-head">
+                  <strong>Half Marathon Block</strong>
+                  <span class="ln-preview-pill">64 / 80 km</span>
+                </div>
+                <p>10K to 21K plan • +12 km logged with GPS photo proof</p>
+                <div class="ln-preview-bar"><div style="width: 80%"></div></div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -127,32 +132,37 @@
       <!-- 3. Problem -> Solution -->
       <section class="ln-section ln-problem-solution">
         <div class="ln-section-head">
-          <h2>Goals Are Easy to Set.<br><span class="ln-text-gradient">Progress Is Hard to See.</span></h2>
-          <p>You start with motivation. Then days pass, progress gets scattered across notes, apps, screenshots and your
-            memory.<br><strong>Progress Tracker Pro brings everything together.</strong></p>
+          <h2>Goals Are Easy to Set. Progress Is Hard to See.</h2>
+          <p>Stop scattering your work across random notes and screenshots. Keep your numbers, photo proof, and daily reflections in one place.</p>
         </div>
         <div class="ln-bento-3">
           <div class="ln-bento-card">
-            <div class="ln-icon">🎯</div>
-            <h3>Set</h3>
-            <p>Define exactly what you want to accomplish with custom units.</p>
+            <div class="ln-icon-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <h3>Set Custom Units</h3>
+            <p>Track hours, chapters, kilometers, trades, or any custom unit with a start value, target, and deadline.</p>
           </div>
           <div class="ln-bento-card">
-            <div class="ln-icon">📈</div>
-            <h3>Track</h3>
-            <p>Record your progress as you move forward, step by step.</p>
+            <div class="ln-icon-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3>Log & Correct</h3>
+            <p>Add daily progress entries or negative corrections with timestamps, tags, and session notes.</p>
           </div>
           <div class="ln-bento-card">
-            <div class="ln-icon">📸</div>
-            <h3>Prove</h3>
-            <p>Keep visual evidence of your achievements and milestones.</p>
+            <div class="ln-icon-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <h3>Attach Photo Proof</h3>
+            <p>Attach a screenshot or workout photo to any log entry so your timeline shows real evidence.</p>
           </div>
-          <!-- Diary Feature Card -->
           <div class="ln-bento-card">
-            <div class="ln-icon">📓</div>
-            <h3>Private Journal</h3>
-            <p>Your thoughts, isolated and secure. Use built-in templates for daily standups, evening reflections, and
-              gratitude without ever leaving your workspace.</p>
+            <div class="ln-icon-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <h3>Daily Journal</h3>
+            <p>Write standups, evening reflections, or freeform notes right alongside your quantitative trackers.</p>
           </div>
         </div>
       </section>
@@ -160,38 +170,38 @@
       <!-- 4. Features Section -->
       <section id="ln-features" class="ln-section">
         <div class="ln-section-head">
-          <h2>Everything You Need to<br><span class="ln-text-gradient">Stay on Track.</span></h2>
+          <h2>Built for Daily Execution</h2>
         </div>
         <div class="ln-bento-grid">
           <div class="ln-feature-card">
-            <div class="ln-icon">🎯</div>
-            <h4>Goal Tracking</h4>
-            <p>Create goals and monitor your progress from one place.</p>
+            <div class="ln-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></div>
+            <h4>30+ Starter Templates</h4>
+            <p>Start immediately with pre-tuned templates for DSA study, coding sprints, gym splits, or savings.</p>
           </div>
           <div class="ln-feature-card">
-            <div class="ln-icon">📊</div>
-            <h4>Progress Analytics</h4>
-            <p>Understand your progress through clear charts and statistics.</p>
+            <div class="ln-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <h4>Built-In Focus Timer</h4>
+            <p>Run a live session timer that automatically logs the completed time into your chosen tracker.</p>
           </div>
           <div class="ln-feature-card">
-            <div class="ln-icon">📸</div>
-            <h4>Progress Proof</h4>
-            <p>Upload images and evidence to document your achievements.</p>
+            <div class="ln-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+            <h4>Sub-Task Checklists</h4>
+            <p>Turn tracker notes into interactive markdown checklists (`- [ ] task`) that you can tick off as you go.</p>
           </div>
           <div class="ln-feature-card">
-            <div class="ln-icon">🔥</div>
-            <h4>Consistency Tracking</h4>
-            <p>See your activity heatmaps and maintain daily momentum.</p>
+            <div class="ln-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <h4>28-Day Activity Heatmap</h4>
+            <p>Spot missed days and your strongest weekdays at a glance with an automatic consistency grid.</p>
           </div>
           <div class="ln-feature-card">
-            <div class="ln-icon">🏆</div>
-            <h4>Milestones</h4>
-            <p>Break large goals into meaningful, actionable milestones.</p>
+            <div class="ln-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+            <h4>Full JSON Backup</h4>
+            <p>Export your entire workspace to a JSON file anytime, or import a backup with one click.</p>
           </div>
           <div class="ln-feature-card">
-            <div class="ln-icon">📅</div>
-            <h4>Progress History</h4>
-            <p>Look back and see how your journey has evolved over time.</p>
+            <div class="ln-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h4>Offline & Cloud Modes</h4>
+            <p>Use it 100% locally in your browser without an account, or sign in to sync across phone and desktop.</p>
           </div>
         </div>
       </section>
@@ -204,117 +214,126 @@
         <div class="ln-pipeline">
           <div class="ln-step">
             <span class="ln-step-num">01</span>
-            <h4>Create Your Goal</h4>
-            <p>Tell Progress Tracker what you want to achieve.</p>
+            <h4>Pick a Goal</h4>
+            <p>Use a preloaded sample tracker or create your own target.</p>
           </div>
           <div class="ln-step-arrow">→</div>
           <div class="ln-step">
             <span class="ln-step-num">02</span>
-            <h4>Track Progress</h4>
-            <p>Update your progress as you work toward the goal.</p>
+            <h4>Log Numbers</h4>
+            <p>Enter today's progress or run the built-in focus timer.</p>
           </div>
           <div class="ln-step-arrow">→</div>
           <div class="ln-step">
             <span class="ln-step-num">03</span>
-            <h4>Add Proof</h4>
-            <p>Upload screenshots, images or other evidence.</p>
+            <h4>Attach Proof</h4>
+            <p>Add a screenshot or photo to verify the milestone.</p>
           </div>
           <div class="ln-step-arrow">→</div>
           <div class="ln-step">
             <span class="ln-step-num">04</span>
-            <h4>Analyze Journey</h4>
-            <p>Use your dashboard to understand your growth.</p>
+            <h4>Review Trends</h4>
+            <p>Check your weekly velocity, streaks, and completion charts.</p>
           </div>
         </div>
       </section>
 
-      <!-- 7. Progress Proof -->
+      <!-- 6. Progress Proof Preview -->
       <section id="ln-proof" class="ln-section ln-split">
         <div class="ln-split-content">
-          <h2>Don't Just Track Progress.<br><span class="ln-text-gradient">Prove It.</span></h2>
-          <p>Save visual evidence of your journey and create a permanent record of the hard work behind every
-            achievement.</p>
+          <h2>Every Entry Has a Timeline and Photo Proof.</h2>
+          <p>Instead of an empty number counter, attach screenshots of your code commits, test scores, or workout summaries directly to your log history.</p>
         </div>
         <div class="ln-split-visual">
           <div class="ln-proof-mockup">
-            <div class="ln-proof-img"></div>
+            <div class="ln-proof-img ln-proof-code-preview">
+              <div class="ln-code-lines">
+                <span>✓ Solved: Dynamic Programming #42</span>
+                <span>Runtime: 48ms (Beats 94.2%)</span>
+                <span>Attachment: leetcode-proof.jpg</span>
+              </div>
+            </div>
             <div class="ln-proof-meta">
-              <strong>10K Run Completed</strong>
-              <span>+10 km • Today</span>
+              <div>
+                <strong>Data Structures Sprint</strong>
+                <p style="margin:4px 0 0; font-size:0.82rem; color:var(--muted);">Tag: Deep work • Graphs & DP</p>
+              </div>
+              <span>+2.5 hours</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 8. Analytics -->
+      <!-- 7. Analytics Preview -->
       <section id="ln-analytics" class="ln-section ln-split ln-split-reverse">
         <div class="ln-split-content">
-          <h2>See the<br><span class="ln-text-gradient">Bigger Picture.</span></h2>
-          <p>Your progress becomes more meaningful when you can see it over time. Track growth trends, weekly velocity,
-            and goal completion across your entire workspace.</p>
+          <h2>Clear Weekly Charts Without the Fluff.</h2>
+          <p>Compare completion percentages across categories, inspect your 14-day cumulative growth curve, and see your net positive logs versus corrections.</p>
         </div>
         <div class="ln-split-visual">
           <div class="ln-chart-mockup">
-            <div class="ln-bar" style="height: 30%"></div>
-            <div class="ln-bar" style="height: 50%"></div>
-            <div class="ln-bar" style="height: 40%"></div>
-            <div class="ln-bar" style="height: 80%"></div>
-            <div class="ln-bar ln-bar-active" style="height: 100%"></div>
+            <div class="ln-bar" style="height: 35%"><span>Mon</span></div>
+            <div class="ln-bar" style="height: 55%"><span>Tue</span></div>
+            <div class="ln-bar" style="height: 45%"><span>Wed</span></div>
+            <div class="ln-bar" style="height: 80%"><span>Thu</span></div>
+            <div class="ln-bar ln-bar-active" style="height: 100%"><span>Fri</span></div>
           </div>
         </div>
       </section>
 
-      <!-- 9. Motivation -->
-      <section class="ln-section ln-motivation">
-        <div class="ln-motivation-box">
-          <h2>"Small Progress. Repeated Consistently. Creates Big Results."</h2>
-          <p>Your journey isn't defined by one perfect day. It's defined by the progress you keep making.</p>
-        </div>
-      </section>
-
-      <!-- 10. Security -->
+      <!-- 8. Data Transparency & Trust -->
       <section class="ln-section ln-security">
         <div class="ln-section-head">
-          <h2>Your Progress<br>Belongs to You.</h2>
+          <h2>How Your Data Is Stored</h2>
+          <p>Transparent storage so you always know where your workspace lives:</p>
         </div>
-        <div class="ln-security-grid">
-          <div class="ln-sec-item"><span>🔒</span> Secure authentication</div>
-          <div class="ln-sec-item"><span>🛡️</span> Protected user data</div>
-          <div class="ln-sec-item"><span>☁️</span> Secure image storage</div>
-          <div class="ln-sec-item"><span>🔐</span> Private personal progress</div>
+        <div class="ln-bento-3">
+          <div class="ln-bento-card">
+            <h4>1. Local-Only Demo Mode</h4>
+            <p>When you click "Try Without Account", all trackers, logs, and compressed proof images stay inside your browser's localStorage on your device.</p>
+          </div>
+          <div class="ln-bento-card">
+            <h4>2. Cloud Sync Account</h4>
+            <p>When you create an account, your goals and logs sync over HTTPS to our Express/MongoDB backend and Cloudinary image storage for cross-device access.</p>
+          </div>
+          <div class="ln-bento-card">
+            <h4>3. Portable JSON</h4>
+            <p>You are never locked in. Export your full tracker history to a standard .json file at any time with one click.</p>
+          </div>
         </div>
       </section>
 
-      <!-- 11. Final CTA -->
+      <!-- 9. Final CTA -->
       <section class="ln-section ln-final-cta">
         <div class="ln-cta-box">
-          <h2>Ready to Start Tracking?</h2>
-          <p>Stop wondering how far you've come. Start documenting it.</p>
-          <button type="button" class="ln-btn-primary ln-btn-huge landing-trigger-signup">Create Your Free Account <span
-              class="ln-arrow">→</span></button>
-          <small>Start building your progress history today.</small>
+          <h2>See the Dashboard in Action</h2>
+          <p>Explore the preloaded sample trackers right now—no sign-up required.</p>
+          <div class="ln-hero-actions">
+            <button type="button" class="ln-btn-primary ln-btn-huge landing-trigger-demo">Launch Instant Demo →</button>
+            <button type="button" class="ln-btn-ghost ln-btn-huge landing-trigger-signup">Create Synced Account</button>
+          </div>
         </div>
       </section>
     </main>
 
-    <!-- 12. Footer -->
+    <!-- 10. Footer -->
     <footer class="ln-footer">
       <div class="ln-footer-grid">
         <div class="ln-footer-brand">
-          <div class="ln-logo"><img src="assets/logo.svg" alt="Logo" /></div>
+          <div class="ln-logo"><img src="assets/logo.svg" alt="Progress Tracker Pro logo" /></div>
           <strong>Progress Tracker Pro</strong>
-          <p>Track it. Prove it. Improve it.</p>
+          <p>Log progress. Attach proof. Build streaks.</p>
         </div>
         <div class="ln-footer-links">
           <strong>Product</strong>
-          <a href="#ln-features">Features</a>
-          <a href="#ln-how-it-works">How It Works</a>
-          <a href="#ln-analytics">Analytics</a>
+          <a href="/index.html#ln-features">Features</a>
+          <a href="/index.html#ln-how-it-works">How It Works</a>
+          <a href="/index.html#ln-analytics">Charts</a>
         </div>
         <div class="ln-footer-links">
           <strong>Company</strong>
           <a href="/about.html" class="legal-trigger" data-target="modalAbout">About</a>
-          <a href="mailto:support@progresstracker.com" class="legal-trigger" data-target="modalContact">Contact</a>
+          <a href="mailto:support@progresstracker.app" class="legal-trigger" data-target="modalContact">Contact</a>
         </div>
         <div class="ln-footer-links">
           <strong>Legal</strong>
@@ -760,7 +779,6 @@
               <div class="hero-actions">
                 <button class="primary-button" type="button" id="heroCreateBtn">Create Tracker</button>
                 <button class="ghost-button" type="button" id="heroTrackersBtn">Browse Trackers</button>
-                <button class="ghost-button notion-button" type="button" id="openNotionBtn">Open Notion</button>
               </div>
 
               <div class="hero-chips">
@@ -1086,7 +1104,7 @@
               </header>
               <div class="gauge-chart-container">
                 <!-- Change --progress to adjust the needle -->
-                <div class="gauge-chart" style="--progress: 75%;">
+                <div class="gauge-chart" style="--progress: 0%;">
                   <div class="gauge-dial"></div>
                   <div class="gauge-needle"></div>
                   <div class="gauge-center-pin"></div>
@@ -2152,7 +2170,7 @@
       <h2>Contact Us</h2>
       <p>Have questions, feedback, or need technical support? We are here to help you get the most out of your tracking
         experience.</p>
-      <p><strong>Email:</strong> piyush62870@gmail.com</p>
+      <p><strong>Support Email:</strong> <a href="mailto:support@progresstracker.app" style="color: var(--accent);">support@progresstracker.app</a></p>
     </div>
   </div>
 
