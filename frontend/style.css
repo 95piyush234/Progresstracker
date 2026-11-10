@@ -3739,15 +3739,6 @@ body[data-theme="light"] .toast {
     display: none;
   }
 
-  .reveal-on-scroll,
-  .reveal-on-scroll.is-revealed {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    transition: none;
-    animation: none;
-  }
-
   .stat-card,
   .dashboard-panel,
   .history-summary-card,
