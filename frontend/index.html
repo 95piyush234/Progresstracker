@@ -11,12 +11,14 @@
   <!-- Open Graph & Twitter Preview Tags -->
   <meta property="og:title" content="Progress Tracker Pro — Log Progress, Attach Proof, See Your Streak" />
   <meta property="og:description" content="Track study hours, workouts, coding sprints, and custom goals with photo proof and daily streaks." />
-  <meta property="og:image" content="https://progresstracker-1.onrender.com/assets/logo-512.png" />
+  <meta property="og:image" content="https://progresstracker-chi.vercel.app/assets/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Progress Tracker Pro" />
   <meta name="twitter:description" content="Log daily progress, attach photo proof, and track your streaks." />
-  <meta name="twitter:image" content="https://progresstracker-1.onrender.com/assets/logo-512.png" />
+  <meta name="twitter:image" content="https://progresstracker-chi.vercel.app/assets/og-preview.png" />
 
   <title>Progress Tracker Pro</title>
   <link rel="manifest" href="manifest.json" />
@@ -309,17 +311,13 @@
           <h2>How Your Data Is Stored</h2>
           <p>Transparent storage so you always know where your workspace lives:</p>
         </div>
-        <div class="ln-bento-3">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; width: 100%;">
           <div class="ln-bento-card">
-            <h4>1. Local-Only Demo Mode</h4>
-            <p>When you click "Try Without Account", all trackers, logs, and compressed proof images stay inside your browser's localStorage on your device.</p>
-          </div>
-          <div class="ln-bento-card">
-            <h4>2. Cloud Sync Account</h4>
+            <h4>1. Cloud Sync Account</h4>
             <p>When you create an account, your goals and logs sync over HTTPS to our Express/MongoDB backend and Cloudinary image storage for cross-device access.</p>
           </div>
           <div class="ln-bento-card">
-            <h4>3. Portable JSON</h4>
+            <h4>2. Portable JSON</h4>
             <p>You are never locked in. Export your full tracker history to a standard .json file at any time with one click.</p>
           </div>
         </div>
@@ -375,7 +373,7 @@
         <!-- Top Branding Header matching reference -->
         <div class="tasky-brand-top">
           <div class="tasky-logo-icon">
-            <img src="assets/logo.svg" alt="Logo" />
+            <img src="assets/logo.svg" alt="Progress Tracker Pro logo" />
           </div>
           <span class="tasky-brand-name">Progress Tracker</span>
         </div>
@@ -566,40 +564,24 @@
     <aside class="sidebar panel" aria-label="Sidebar">
       <div class="brand">
         <div class="brand-mark">
-          <img src="assets/logo.svg" alt="Progress Tracker logo" />
+          <img src="assets/logo.svg" alt="Progress Tracker Pro logo" />
         </div>
         <div>
-          <p class="eyebrow">Premium Manual Tracking</p>
-          <h1>Progress Tracker Pro</h1>
+          <p class="eyebrow">Personal Workspace</p>
+          <h1>Progress Tracker</h1>
         </div>
       </div>
 
       <section class="sidebar-card sidebar-card-highlight">
-        <p class="eyebrow">Workspace Pulse</p>
+        <p class="eyebrow">Overall Completion</p>
         <div class="sidebar-pulse">
           <div class="progress-ring progress-ring-small" id="sidebarRing" aria-label="Overall completion">
             <span id="sidebarCompletionLabel">0%</span>
           </div>
           <div>
             <h2 id="sidebarTrackerCount">0 trackers</h2>
-            <p class="subtle" id="sidebarSummary">
-              Your custom progress system is ready for anything.
-            </p>
+            <p class="subtle" id="sidebarSummary">Track your daily goals.</p>
           </div>
-        </div>
-        <button class="primary-button wide-button" type="button" id="sidebarCreateBtn">
-          Create Tracker
-        </button>
-      </section>
-
-      <section class="sidebar-card sidebar-card-backup">
-        <p class="eyebrow">Backup & Restore</p>
-        <p class="subtle">
-          Export your workspace anytime or import a saved snapshot with one click.
-        </p>
-        <div class="sidebar-actions">
-          <button class="ghost-button" type="button" id="sidebarExportBtn">Export JSON</button>
-          <button class="ghost-button" type="button" id="sidebarImportBtn">Import JSON</button>
         </div>
       </section>
     </aside>
@@ -607,13 +589,12 @@
     <div class="workspace">
       <header class="topbar panel">
         <div class="topbar-copy">
-          <p class="eyebrow">Manual progress, premium interface</p>
           <div class="topbar-title-row">
-            <h2>Track absolutely anything.</h2>
+            <h2 id="topbarGreeting">Hi there, here's today</h2>
             <span class="date-chip" id="todayChip"></span>
           </div>
           <p class="subtle" id="topbarSubtitle">
-            A flexible system for goals, ranks, workouts, syllabi, habits, skills, and custom milestones.
+            Log your daily progress, attach proof photos, and review your streak.
           </p>
         </div>
 
@@ -693,9 +674,9 @@
 
         <div class="topbar-actions">
           <!-- Keep Mail and Create Tracker outside for quick access -->
-          <button class="icon-button mail-center-button" type="button" id="mailCenterBtn" aria-label="Open secure mail"
-            title="Open secure mail">
-            <span>✉</span>
+          <button class="icon-button mail-center-button" type="button" id="mailCenterBtn" aria-label="Open updates"
+            title="Open updates">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             <span class="mail-center-badge hidden" id="mailCenterUnreadCount">0</span>
           </button>
           <button class="primary-button" type="button" id="openTrackerModalBtn">
@@ -755,7 +736,7 @@
                 <span class="priority-progress-fill" id="todayProgressFill"></span>
               </div>
               <div class="priority-card-foot">
-                <span class="priority-warning" id="todayProgressWarning">Warning: no activity today</span>
+                <span class="priority-warning" id="todayProgressWarning">Nothing logged yet today</span>
                 <button class="ghost-button" type="button" id="todayQuickLogBtn">Quick Add</button>
               </div>
             </article>
@@ -766,7 +747,7 @@
                   <p class="eyebrow">Consistency</p>
                   <h4>Current Streak</h4>
                 </div>
-                <span class="panel-pill streak-pill" id="globalStreakPill">🔥 0 days</span>
+                <span class="panel-pill streak-pill" id="globalStreakPill">0 days</span>
               </div>
               <strong class="priority-value" id="globalStreakValue">0 days</strong>
               <p class="priority-note" id="globalStreakNote">Log progress today to start your streak.</p>
@@ -785,65 +766,59 @@
             </article>
           </section>
 
-          <section class="hero panel">
-            <div class="hero-copy">
-              <p class="eyebrow">Welcome aboard</p>
-              <h3 id="dashboardHeading">
-                A polished command center for progress that never forces you into rigid categories.
-              </h3>
-              <p class="subtle">
-                Sample gaming, study, and exercise trackers are preloaded so the product feels alive on first launch.
-                Keep them, edit them, or create fully custom trackers with your own units, targets, colors, fields, and
-                notes.
-              </p>
-
-              <div class="hero-actions">
-                <button class="primary-button" type="button" id="heroCreateBtn">Create Tracker</button>
-                <button class="ghost-button" type="button" id="heroTrackersBtn">Browse Trackers</button>
+          <!-- Small Dismissible Getting Started Checklist -->
+          <section class="panel onboarding-checklist-bar hidden" id="onboardingChecklistBar" aria-label="Getting started checklist">
+            <div class="onboarding-checklist-head">
+              <div>
+                <strong>Getting Started</strong>
+                <span class="subtle" style="margin-left: 8px;">3 quick steps to set up your workspace</span>
               </div>
+              <button class="ghost-button ghost-button-small" type="button" id="dismissChecklistBtn">Dismiss</button>
+            </div>
+            <div class="onboarding-checklist-steps">
+              <span class="checklist-pill" id="checkStepTracker">1. Create a tracker</span>
+              <span class="checklist-pill" id="checkStepLog">2. Log your first progress</span>
+              <span class="checklist-pill" id="checkStepProof">3. Attach a proof photo</span>
+            </div>
+          </section>
 
-              <div class="hero-chips">
-                <span class="hero-chip">Unlimited custom trackers</span>
-                <span class="hero-chip">Manual logs and corrections</span>
-                <span class="hero-chip">Local-first persistence</span>
-                <span class="hero-chip">Clean activity history</span>
+          <!-- Shown ONLY when user has 0 trackers -->
+          <section class="hero panel hidden" id="emptyWorkspaceHero">
+            <div class="hero-copy">
+              <p class="eyebrow">First Step</p>
+              <h3 id="dashboardHeading">What do you want to track?</h3>
+              <p class="subtle">
+                Pick a category below to create your first tracker in one click, or set up a custom goal.
+              </p>
+              <div class="quick-start-grid" id="oneStepTrackerGrid">
+                <button class="ghost-button quick-start-btn" type="button" data-quick-template="Study">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                  <span>Study</span>
+                </button>
+                <button class="ghost-button quick-start-btn" type="button" data-quick-template="Fitness">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>
+                  <span>Workout</span>
+                </button>
+                <button class="ghost-button quick-start-btn" type="button" data-quick-template="Coding">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  <span>Coding</span>
+                </button>
+                <button class="primary-button quick-start-btn" type="button" data-quick-template="Custom">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>Custom Goal</span>
+                </button>
               </div>
             </div>
-
-            <div class="hero-visual">
-              <article class="hero-metric-card">
-                <div class="progress-ring progress-ring-hero" id="heroRing" aria-label="Overall completion percentage">
-                  <span id="heroRingLabel">0%</span>
-                </div>
-                <div>
-                  <p class="metric-overline">Overall completion</p>
-                  <strong class="hero-metric-value" id="heroCompletionValue">0%</strong>
-                  <p class="subtle" id="heroCompletionNote">Across all live trackers</p>
-                </div>
-              </article>
-
-              <div class="hero-mini-grid">
-                <article class="mini-card">
-                  <span>Today</span>
-                  <strong id="heroTodayMetric">0</strong>
-                  <p id="heroTodayNote">No progress logged yet</p>
-                </article>
-                <article class="mini-card">
-                  <span>Due Soon</span>
-                  <strong id="heroDueSoonMetric">0</strong>
-                  <p id="heroDueSoonNote">No pressing deadlines</p>
-                </article>
-                <article class="mini-card">
-                  <span>Top Category</span>
-                  <strong id="heroTopCategoryMetric">-</strong>
-                  <p id="heroTopCategoryNote">Starts once you log data</p>
-                </article>
-                <article class="mini-card">
-                  <span>Weekly Push</span>
-                  <strong id="heroWeeklyMetric">0</strong>
-                  <p id="heroWeeklyNote">Fresh week, fresh momentum</p>
-                </article>
-              </div>
+            <div class="hidden">
+              <div id="heroRing"><span id="heroRingLabel">0%</span></div>
+              <strong id="heroCompletionValue">0%</strong>
+              <p id="heroCompletionNote"></p>
+              <strong id="heroTodayMetric">0</strong><p id="heroTodayNote"></p>
+              <strong id="heroDueSoonMetric">0</strong><p id="heroDueSoonNote"></p>
+              <strong id="heroTopCategoryMetric">-</strong><p id="heroTopCategoryNote"></p>
+              <strong id="heroWeeklyMetric">0</strong><p id="heroWeeklyNote"></p>
+              <button type="button" id="heroCreateBtn"></button>
+              <button type="button" id="heroTrackersBtn"></button>
             </div>
           </section>
 
@@ -1335,34 +1310,24 @@
 
   <nav class="mobile-tabbar" id="mobileTabbar" aria-label="Mobile navigation">
     <button class="mobile-tab-button is-active" type="button" data-view-target="dashboard">
-      <span class="mobile-tab-icon" aria-hidden="true">◫</span>
+      <span class="mobile-tab-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg></span>
       <span>Dashboard</span>
-      <small>Overview</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="trackers">
-      <span class="mobile-tab-icon" aria-hidden="true">▤</span>
+      <span class="mobile-tab-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h6"/><path d="M7 16h8"/></svg></span>
       <span>Trackers</span>
-      <small>Manage</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="graphs">
-      <span class="mobile-tab-icon" aria-hidden="true">◔</span>
+      <span class="mobile-tab-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
       <span>Graph</span>
-      <small>Visuals</small>
-    </button>
-    <button class="mobile-tab-button" type="button" id="mobileCreateBtn">
-      <span class="mobile-tab-icon" aria-hidden="true">＋</span>
-      <span>Create</span>
-      <small>New tracker</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="history">
-      <span class="mobile-tab-icon" aria-hidden="true">◷</span>
+      <span class="mobile-tab-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></span>
       <span>History</span>
-      <small>Activity</small>
     </button>
     <button class="mobile-tab-button" type="button" data-view-target="diary">
-      <span class="mobile-tab-icon" aria-hidden="true">📓</span>
+      <span class="mobile-tab-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
       <span>Diary</span>
-      <small>Notes</small>
     </button>
   </nav>
 
@@ -2127,9 +2092,8 @@
   <input type="file" id="importFileInput" accept="application/json" hidden />
 
   <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
-  <script src="script.js?v=999"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script defer src="script.js?v=1000"></script>
 
   <!-- DIARY ENTRY MODAL -->
   <section class="modal-shell" id="diaryModal" role="dialog" aria-modal="true" aria-hidden="true">

@@ -503,25 +503,25 @@ function bindEvents() {
     dom.trackersCreateBtn,
     dom.emptyCreateBtn,
     dom.mobileCreateBtn
-  ].forEach((button) => {
+  ].filter(Boolean).forEach((button) => {
     button.addEventListener("click", () => openTrackerModal("create"));
   });
-  dom.todayQuickLogBtn.addEventListener("click", handleTodayQuickLog);
+  dom.todayQuickLogBtn?.addEventListener("click", handleTodayQuickLog);
 
-  dom.heroTrackersBtn.addEventListener("click", () => setView("trackers"));
+  dom.heroTrackersBtn?.addEventListener("click", () => setView("trackers"));
   if (dom.openNotionBtn) {
     dom.openNotionBtn.addEventListener("click", () => {
       window.open("https://www.notion.so/", "_blank", "noopener,noreferrer");
     });
   }
-  dom.graphsOpenTrackersBtn.addEventListener("click", () => setView("trackers"));
-  dom.logoutBtn.addEventListener("click", handleLogoutRequest);
+  dom.graphsOpenTrackersBtn?.addEventListener("click", () => setView("trackers"));
+  dom.logoutBtn?.addEventListener("click", handleLogoutRequest);
 
-  [dom.exportBtn, dom.sidebarExportBtn, dom.historyExportBtn].forEach((button) => {
+  [dom.exportBtn, dom.sidebarExportBtn, dom.historyExportBtn].filter(Boolean).forEach((button) => {
     button.addEventListener("click", exportStateSnapshot);
   });
 
-  [dom.importBtn, dom.sidebarImportBtn].forEach((button) => {
+  [dom.importBtn, dom.sidebarImportBtn].filter(Boolean).forEach((button) => {
     button.addEventListener("click", () => dom.importFileInput.click());
   });
 
@@ -863,6 +863,53 @@ function bindEvents() {
       if (e.target === this) {
         this.classList.remove('is-open');
       }
+    });
+  });
+
+  // Dismiss inline onboarding checklist
+  document.getElementById("dismissChecklistBtn")?.addEventListener("click", () => {
+    rememberGuideOpened();
+    document.getElementById("onboardingChecklistBar")?.classList.add("hidden");
+  });
+
+  // One-step tracker creation ("What do you want to track?")
+  document.querySelectorAll("[data-quick-template]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const type = btn.dataset.quickTemplate;
+      if (type === "Custom" || !TRACKER_TEMPLATE_LIBRARY[type]) {
+        openTrackerModal("create");
+        return;
+      }
+      const tpl = TRACKER_TEMPLATE_LIBRARY[type];
+      const basePayload = {
+        title: getTemplateStarterName(type),
+        createdBy: getAccountName(),
+        category: tpl.category,
+        itemName: getTemplateStarterItem(type),
+        goalType: tpl.goalType,
+        unitType: tpl.unitType,
+        unitLabel: tpl.unitType === "custom" ? tpl.unitLabel || "units" : tpl.unitType,
+        startValue: 0,
+        targetValue: type === "Study" ? 40 : type === "Fitness" ? 16 : 25,
+        deadline: dateOnlyFromDaysOffset(14),
+        priority: "High",
+        notes: tpl.notes,
+        accentColor: "#5de4c7",
+        icon: type.slice(0, 2).toUpperCase(),
+        customFields: normalizeCustomFields(tpl.customFields)
+      };
+
+      const created = createLocalTrackerRecord(basePayload, 0);
+      if (isBackendAuthSession() && !isLocalOnlyMode()) {
+        try {
+          await createBackendTracker(created);
+          await syncWorkspaceFromBackend();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      renderApp();
+      showToast(`Created "${basePayload.title}" tracker.`, "success");
     });
   });
 
@@ -3134,19 +3181,7 @@ function handleGuideKeydown(e) {
 }
 
 function maybeOpenGuideOnboarding() {
-  const guide = getGuideState();
-  if (!isAuthenticated() || guide.seenAt || ui.guideAutoQueued || dom.body.classList.contains("is-locked")) {
-    return;
-  }
-
-  ui.guideAutoQueued = true;
-  window.setTimeout(() => {
-    ui.guideAutoQueued = false;
-    if (!isAuthenticated() || getGuideState().seenAt || dom.body.classList.contains("is-locked")) {
-      return;
-    }
-    openGuideModal("auto");
-  }, 220);
+  return;
 }
 
 function markMailFeedRead() {
@@ -3835,6 +3870,31 @@ function renderViewState() {
 }
 
 function renderHeaderAndHero() {
+  const greetingEl = document.getElementById("topbarGreeting");
+  if (greetingEl) {
+    greetingEl.textContent = `Hi ${getAccountName()}, here's today`;
+  }
+
+  const emptyHero = document.getElementById("emptyWorkspaceHero");
+  if (emptyHero) {
+    emptyHero.classList.toggle("hidden", state.trackers.length > 0);
+  }
+
+  const checklistBar = document.getElementById("onboardingChecklistBar");
+  if (checklistBar) {
+    const dismissed = Boolean(getGuideState().seenAt);
+    const hasTracker = state.trackers.length > 0;
+    const allLogs = getAllHistoryEntries().filter((e) => !e.log.system);
+    const hasLog = allLogs.length > 0;
+    const hasProof = allLogs.some((e) => Boolean(e.log.proofImage));
+
+    document.getElementById("checkStepTracker")?.classList.toggle("is-done", hasTracker);
+    document.getElementById("checkStepLog")?.classList.toggle("is-done", hasLog);
+    document.getElementById("checkStepProof")?.classList.toggle("is-done", hasProof);
+
+    checklistBar.classList.toggle("hidden", dismissed || (hasTracker && hasLog && hasProof));
+  }
+
   const overview = getOverview();
   const liveTrackers = getLiveTrackers();
   const categories = getCategoryStats();
@@ -4015,9 +4075,9 @@ function renderPriorityStrip() {
     : "No activity logged yet today. A quick check-in keeps momentum visible.";
   dom.todayProgressFill.style.setProperty("--today-progress", `${daily.progressPercent}%`);
   dom.todayProgressWarning.classList.toggle("is-active", !daily.hasActivity);
-  dom.todayProgressWarning.textContent = daily.hasActivity ? "Activity logged today" : "Warning: no activity today";
+  dom.todayProgressWarning.textContent = daily.hasActivity ? "Activity logged today" : "Nothing logged yet today";
 
-  dom.globalStreakPill.textContent = `🔥 ${globalStreak} day${globalStreak === 1 ? "" : "s"}`;
+  dom.globalStreakPill.textContent = `${globalStreak} day${globalStreak === 1 ? "" : "s"}`;
   dom.globalStreakValue.textContent = `${globalStreak} day${globalStreak === 1 ? "" : "s"}`;
   dom.globalStreakNote.textContent = globalStreak
     ? `You're carrying a ${globalStreak}-day consistency streak across the workspace.`
@@ -7004,16 +7064,13 @@ function getBadgeContent(tracker) {
   );
 }
 
-function guessIcon(title = "", category = "", itemName = "") {
-  const combined = `${title} ${category} ${itemName}`.toLowerCase();
-  if (combined.includes("game") || combined.includes("rank") || combined.includes("valorant") || combined.includes("mission")) return "🎮";
-  if (combined.includes("study") || combined.includes("exam") || combined.includes("chapter") || combined.includes("syllabus")) return "📚";
-  if (combined.includes("exercise") || combined.includes("workout") || combined.includes("run") || combined.includes("gym")) return "🏃";
-  if (combined.includes("habit") || combined.includes("routine")) return "🌿";
-  if (combined.includes("project") || combined.includes("build")) return "🛠️";
-  if (combined.includes("skill") || combined.includes("learn")) return "🧠";
-  if (combined.includes("read") || combined.includes("book")) return "📖";
-  return "🎯";
+function guessIcon(title = "", category = "") {
+  const source = sanitizeText(title || category || "PT", 20);
+  return source
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || "")
+    .join("") || "PT";
 }
 
 function buildTrackerSearchText(tracker) {
@@ -7660,22 +7717,25 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     const deleteBtn = e.target.closest('[data-action="delete-diary"]');
     if (deleteBtn) {
       const id = deleteBtn.dataset.id;
-      const confirmDelete = window.confirm("Are you sure you want to delete this diary entry?");
-      if (confirmDelete) {
-        try {
-          const isLocal = id.toString().startsWith('diary-');
-          if (!isLocal && typeof isBackendAuthSession === 'function' && isBackendAuthSession()) {
-            await apiRequest(`/diary/${id}`, { method: 'DELETE', token: getSession().accessToken });
+      openConfirm({
+        title: "Delete journal entry",
+        message: "Delete this journal entry permanently? This cannot be undone.",
+        action: async () => {
+          try {
+            const isLocal = id.toString().startsWith("diary-");
+            if (!isLocal && typeof isBackendAuthSession === "function" && isBackendAuthSession()) {
+              await apiRequest(`/diary/${id}`, { method: "DELETE", token: getSession().accessToken });
+            }
+            diaryEntries = diaryEntries.filter((entry) => (entry._id || entry.id) !== id);
+            localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+            window.renderDiary();
+            if (typeof showToast === "function") showToast("Journal entry deleted.", "success");
+          } catch (err) {
+            console.error("Delete failed:", err);
+            if (typeof showToast === "function") showToast("Could not delete entry.", "error");
           }
-          diaryEntries = diaryEntries.filter(e => (e._id || e.id) !== id);
-          localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
-          window.renderDiary();
-          if (typeof showToast === 'function') showToast("Diary entry deleted.", "success");
-        } catch (err) {
-          console.error("Delete failed:", err);
-          if (typeof showToast === 'function') showToast("Could not delete entry.", "error");
         }
-      }
+      });
       return;
     }
 

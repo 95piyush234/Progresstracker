@@ -11962,3 +11962,159 @@ body[data-theme="light"] .panel.sidebar:hover {
   border-color: rgba(85, 72, 132, 0.12) !important;
   box-shadow: 0 28px 80px rgba(80, 63, 124, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.88) !important;
 }
+
+
+
+
+/* =========================================================
+   CONSOLIDATED DESIGN SYSTEM (1 PALETTE, 2 FONTS, UNIFORM SPACING)
+   ========================================================= */
+:root {
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Sora", system-ui, -apple-system, sans-serif;
+  --ui-font-body: var(--font-body);
+  --ui-font-display: var(--font-display);
+
+  /* Single Palette: Slate Neutrals + Teal Accent */
+  --mod-clay-bg: #0d1117;
+  --mod-clay-surface: #161b22;
+  --mod-clay-accent: #5de4c7;
+  --bg-deep: #0d1117;
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel-strong: #1f2630;
+  --panel-solid: #161b22;
+  --text: #f0f6fc;
+  --text-soft: #c9d1d9;
+  --muted: #8b949e;
+  --muted-strong: #b1bac4;
+  --border: rgba(240, 246, 252, 0.1);
+  --border-strong: rgba(240, 246, 252, 0.18);
+
+  --accent: #5de4c7;
+  --accent-strong: #38c9ab;
+  --accent-warm: #5de4c7;
+  --brand-start: #5de4c7;
+  --brand-mid: #38c9ab;
+  --brand-end: #1b4d42;
+
+  /* Consistent Corner Radius */
+  --mod-clay-rad-lg: 16px;
+  --mod-clay-rad-md: 16px;
+  --mod-clay-rad-sm: 12px;
+  --ui-radius-card: 16px;
+  --ui-radius-input: 12px;
+}
+
+/* Visible Keyboard Focus Outlines (Accessibility) */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #5de4c7 !important;
+  outline-offset: 2px !important;
+}
+
+/* High-Contrast Buttons & 44px Minimum Touch Target */
+.primary-button,
+.tasky-submit-btn,
+.ln-btn-primary {
+  background: #5de4c7 !important;
+  color: #041f14 !important;
+  font-weight: 700 !important;
+  min-height: 44px !important;
+  border-radius: 12px !important;
+}
+
+.ghost-button,
+.danger-button,
+.icon-button,
+.mobile-tab-button {
+  min-height: 44px !important;
+  border-radius: 12px !important;
+}
+
+/* Unhide Export & Import JSON inside Account Settings Dropdown */
+#accountDropdown #importBtn,
+#accountDropdown #exportBtn {
+  display: block !important;
+}
+
+/* Dismissible Onboarding Checklist & 1-Step Starter */
+.onboarding-checklist-bar {
+  padding: 16px 20px !important;
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.onboarding-checklist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.onboarding-checklist-steps {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.checklist-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.checklist-pill.is-done {
+  border-color: rgba(93, 228, 199, 0.4);
+  color: #5de4c7;
+  text-decoration: line-through;
+}
+
+.quick-start-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.quick-start-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px !important;
+}
+
+
+
+/* Hide app and auth shells completely while deferred scripts load */
+body[data-auth="loading"] .auth-shell,
+body[data-auth="loading"] .app-shell,
+body[data-auth="loading"] .mobile-tabbar {
+  display: none !important;
+}
+
+body[data-auth="locked"] {
+  padding-bottom: 0 !important;
+}
+
+
+
+/* Make landing page top navbar transparent */
+.ln-nav {
+  background: transparent !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: none !important;
+}
