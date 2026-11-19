@@ -4,7 +4,7 @@ import { User } from "../models/User.js";
 import { v2 as cloudinary } from "cloudinary";
 import { Goal } from "../models/Goal.js";
 import { ProgressEntry as Progress } from "../models/ProgressEntry.js";
-import { Diary } from "../models/diary.model.js";
+import Diary from "../models/diary.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { sendSuccess } from "../utils/response.js";
 import { hashToken } from "../utils/token.utils.js";
