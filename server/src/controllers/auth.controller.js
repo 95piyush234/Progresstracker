@@ -1,6 +1,10 @@
 import { EmailVerificationOtp } from "../models/EmailVerificationOtp.js";
 import { PasswordResetToken } from "../models/PasswordResetToken.js";
 import { User } from "../models/User.js";
+import { v2 as cloudinary } from "cloudinary";
+import { Goal } from "../models/Goal.js";
+import { ProgressEntry as Progress } from "../models/ProgressEntry.js";
+import { Diary } from "../models/diary.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { sendSuccess } from "../utils/response.js";
 import { hashToken } from "../utils/token.utils.js";
@@ -15,6 +19,8 @@ import {
   rotateRefreshToken,
   setRefreshCookie
 } from "../services/auth.service.js";
+
+
 import { config, isMailConfigured } from "../config/env.js";
 import { sendPasswordResetEmail, sendVerificationOtpEmail } from "../services/email.service.js";
 
@@ -337,5 +343,53 @@ export async function resetPassword(req, res) {
 
   sendSuccess(res, {
     message: "Password reset successfully. Please sign in again."
+  });
+}
+
+
+
+
+function extractCloudinaryPublicId(url) {
+  if (!url || !url.includes("cloudinary.com")) return null;
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)\.[a-zA-Z0-9]+$/);
+  return match ? match[1] : null;
+}
+
+export async function deleteAccount(req, res) {
+  const userId = req.user._id;
+
+  // 1. Find all progress entries with uploaded proof images
+  const entriesWithProof = await Progress.find({
+    user: userId,
+    "attachment.url": { $exists: true, $ne: "" }
+  }).select("attachment");
+
+  // 2. Collect Cloudinary public_ids
+  const publicIds = entriesWithProof
+    .map((entry) => entry.attachment?.publicId || extractCloudinaryPublicId(entry.attachment?.url))
+    .filter(Boolean);
+
+  // 3. Delete images from Cloudinary in batches of 100
+  for (let i = 0; i < publicIds.length; i += 100) {
+    const batch = publicIds.slice(i, i + 100);
+    await cloudinary.api.delete_resources(batch, { resource_type: "image" });
+  }
+
+  // 4. Revoke sessions and wipe all MongoDB records for this user
+  await revokeAllUserSessions(userId);
+  await Promise.all([
+    Progress.deleteMany({ user: userId }),
+    Goal.deleteMany({ user: userId }),
+    Diary.deleteMany({ user: userId }),
+    EmailVerificationOtp.deleteMany({ user: userId }),
+    PasswordResetToken.deleteMany({ user: userId }),
+    User.findByIdAndDelete(userId)
+  ]);
+
+  // 5. Clear the refresh cookie using your existing helper
+  clearRefreshCookie(res);
+
+  sendSuccess(res, {
+    message: "Account, workspace data, and uploaded images permanently deleted."
   });
 }

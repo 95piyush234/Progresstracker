@@ -2,6 +2,7 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { config } from "../config/env.js";
 import {
+  deleteAccount,
   forgotPassword,
   login,
   logout,
@@ -46,6 +47,7 @@ authRouter.post("/verify-email", authLimiter, validate(verifyEmailSchema), async
 authRouter.post("/resend-verification", authLimiter, validate(resendVerificationSchema), asyncHandler(resendVerification));
 authRouter.post("/login", authLimiter, validate(loginSchema), asyncHandler(login));
 authRouter.post("/refresh", validate(refreshSchema), asyncHandler(refresh));
+authRouter.delete("/me", requireAuth, asyncHandler(deleteAccount));
 authRouter.post("/forgot-password", authLimiter, validate(forgotPasswordSchema), asyncHandler(forgotPassword));
 authRouter.post("/reset-password", authLimiter, validate(resetPasswordSchema), asyncHandler(resetPassword));
 authRouter.post("/logout", asyncHandler(logout));
