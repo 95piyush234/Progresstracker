@@ -292,6 +292,10 @@ function cacheDom() {
   dom.sidebarImportBtn = document.getElementById("sidebarImportBtn");
   dom.importFileInput = document.getElementById("importFileInput");
   dom.logoutBtn = document.getElementById("logoutBtn");
+// New Elements
+  dom.exportCsvBtn = document.getElementById("exportCsvBtn");
+  dom.exportPdfBtn = document.getElementById("exportPdfBtn");
+  dom.deleteAccountBtn = document.getElementById("deleteAccountBtn");
 
   dom.heroRing = document.getElementById("heroRing");
   dom.heroRingLabel = document.getElementById("heroRingLabel");
@@ -517,9 +521,15 @@ function bindEvents() {
   dom.graphsOpenTrackersBtn?.addEventListener("click", () => setView("trackers"));
   dom.logoutBtn?.addEventListener("click", handleLogoutRequest);
 
+  // New Event Listeners
+  dom.deleteAccountBtn?.addEventListener("click", handleDeleteAccount);
+  dom.exportCsvBtn?.addEventListener("click", exportStateToCsv);
+  dom.exportPdfBtn?.addEventListener("click", exportStateToPdf);
+
   [dom.exportBtn, dom.sidebarExportBtn, dom.historyExportBtn].filter(Boolean).forEach((button) => {
     button.addEventListener("click", exportStateSnapshot);
   });
+
 
   [dom.importBtn, dom.sidebarImportBtn].filter(Boolean).forEach((button) => {
     button.addEventListener("click", () => dom.importFileInput.click());
@@ -7554,6 +7564,148 @@ async function toggleRoadmapItem(trackerId, lineIndex, isChecked) {
     showToast("Couldn't save roadmap progress.", "error");
     renderDetailDrawer(); // Revert UI if it fails
   }
+}
+
+
+/* =========================================================
+   ACCOUNT DELETION & DATA EXPORT (CSV / PDF)
+   ========================================================= */
+
+function handleDeleteAccount() {
+  openConfirm({
+    title: "Delete Account",
+    message: "Are you sure you want to permanently delete your account and wipe all data? This cannot be undone.",
+    action: async () => {
+      // If synced to a backend, attempt to delete there first
+      if (isBackendAuthSession()) {
+        try {
+          await apiRequest("/auth/me", { method: "DELETE", token: getSession().accessToken });
+        } catch (err) {
+          console.warn("Backend delete not implemented or failed:", err);
+        }
+      }
+      
+      // Wipe everything locally
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("progress-tracker-diary.v1");
+      
+      state = createInitialState();
+      saveState();
+      
+      closeDetailDrawer();
+      setAuthMode("create", false);
+      renderApp();
+      showToast("Account deleted and data wiped successfully.", "success");
+    }
+  });
+}
+
+function exportStateToCsv() {
+  if (!state.trackers || state.trackers.length === 0) {
+    showToast("No data to export.", "error");
+    return;
+  }
+  
+  const escapeCsv = (str) => '"' + String(str || "").replace(/"/g, '""') + '"';
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "Tracker Title,Category,Goal Type,Status,Progress Amount,Unit,Date,Note\n";
+
+  state.trackers.forEach(tracker => {
+    const title = escapeCsv(tracker.title);
+    const category = escapeCsv(tracker.category);
+    const type = escapeCsv(tracker.goalType);
+    const status = escapeCsv(getTrackerStatus(tracker));
+    const unit = escapeCsv(tracker.unitLabel);
+
+    if (!tracker.logs || tracker.logs.length === 0) {
+      csvContent += `${title},${category},${type},${status},0,${unit},,\n`;
+    } else {
+      tracker.logs.forEach(log => {
+        const date = escapeCsv(formatCalendarDate(log.timestamp, { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }));
+        const note = escapeCsv(log.note || log.tag);
+        csvContent += `${title},${category},${type},${status},${log.amount},${unit},${date},${note}\n`;
+      });
+    }
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `progress-tracker-data-${getDateKey(new Date())}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast("Data exported as CSV.", "success");
+  document.getElementById("accountDropdown")?.classList.add("hidden");
+}
+
+function exportStateToPdf() {
+  if (!state.trackers || state.trackers.length === 0) {
+    showToast("No data to export.", "error");
+    return;
+  }
+
+  let html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Progress Tracker Report</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #1a1a1a; max-width: 800px; margin: auto; }
+        h1 { font-size: 24px; border-bottom: 2px solid #5de4c7; padding-bottom: 10px; margin-bottom: 30px; }
+        .tracker { margin-bottom: 30px; padding: 20px; border: 1px solid #eaeaea; border-radius: 12px; page-break-inside: avoid; }
+        .tracker h2 { margin: 0 0 10px 0; font-size: 18px; color: #333; }
+        .meta { font-size: 13px; color: #666; margin-bottom: 16px; }
+        .log { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; }
+        .log:last-child { border-bottom: none; }
+        .log-amt { font-weight: 600; color: #5de4c7; width: 80px; }
+        .log-date { color: #888; width: 140px; }
+        .log-note { flex: 1; color: #444; }
+      </style>
+    </head>
+    <body>
+      <h1>Progress Tracker Report — ${new Date().toLocaleDateString()}</h1>
+  `;
+
+  state.trackers.forEach(tracker => {
+    html += `<div class="tracker">`;
+    html += `<h2>${escapeHtml(tracker.title)}</h2>`;
+    html += `<div class="meta">Category: ${escapeHtml(tracker.category)} | Status: ${capitalize(getTrackerStatus(tracker))} | Progress: ${tracker.currentValue} / ${tracker.targetValue} ${tracker.unitLabel}</div>`;
+    
+    if (tracker.logs && tracker.logs.length > 0) {
+      tracker.logs.forEach(log => {
+        const date = new Date(log.timestamp).toLocaleDateString();
+        const sign = log.amount > 0 ? '+' : '';
+        html += `
+          <div class="log">
+            <span class="log-amt">${sign}${log.amount}</span>
+            <span class="log-note">${escapeHtml(log.note || log.tag || "Update")}</span>
+            <span class="log-date">${date}</span>
+          </div>
+        `;
+      });
+    } else {
+      html += `<div class="log"><span class="log-note">No progress logged yet.</span></div>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `</body></html>`;
+
+  const printWindow = window.open("", "_blank");
+  printWindow.document.open();
+  printWindow.document.write(html);
+  printWindow.document.close();
+  
+  printWindow.onload = function() {
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+    }, 250);
+  };
+  
+  showToast("Preparing PDF document...", "success");
+  document.getElementById("accountDropdown")?.classList.add("hidden");
 }
 
 

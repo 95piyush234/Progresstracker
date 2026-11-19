@@ -12036,9 +12036,12 @@ textarea:focus-visible,
   border-radius: 12px !important;
 }
 
-/* Unhide Export & Import JSON inside Account Settings Dropdown */
+/* Unhide Export & Import Actions inside Account Settings Dropdown */
 #accountDropdown #importBtn,
-#accountDropdown #exportBtn {
+#accountDropdown #exportBtn,
+#accountDropdown #exportCsvBtn,
+#accountDropdown #exportPdfBtn,
+#accountDropdown #deleteAccountBtn {
   display: block !important;
 }
 
@@ -12118,3 +12121,4 @@ body[data-auth="locked"] {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
   box-shadow: none !important;
 }
+
