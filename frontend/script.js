@@ -2022,7 +2022,7 @@ function syncAuthUi() {
   // NEW: Generate automatic user logo
   dom.accountAvatar.innerHTML = `
   <img 
-    src="https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=2078CF&textColor=ffffff" 
+    src="https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=5046E5&textColor=F5F7FF" 
     alt="User logo" 
     style="width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block;" 
   />

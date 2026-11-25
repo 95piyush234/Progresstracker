@@ -12128,91 +12128,92 @@ body[data-auth="locked"] {
 
 
 /* =========================================================
-   DEEP COBALT CLAYMORPHISM THEME (#2078CF -> #000521)
+   MIDNIGHT INDIGO CLAYMORPHISM THEME (#0B0F1A -> #F5F7FF)
    ========================================================= */
 :root {
-  /* Core 5-Stop Blue Palette */
-  --blue-bright: #2078CF;
-  --blue-cobalt: #0E4EB2;
-  --blue-elevated: #011F65;
-  --blue-surface: #020C47;
-  --blue-abyss: #000521;
+  /* Core 6-Stop Indigo Palette */
+  --indigo-abyss: #0B0F1A;
+  --indigo-surface: #1E1B4B;
+  --indigo-primary: #5046E5;
+  --indigo-glow: #8B7CF6;
+  --indigo-lavender: #C7C1FF;
+  --indigo-mist: #F5F7FF;
 
   /* Theme & Clay Variables */
-  --mod-clay-bg: #000521;
-  --mod-clay-surface: #020C47;
-  --mod-clay-accent: #2078CF;
+  --mod-clay-bg: #0B0F1A;
+  --mod-clay-surface: #1E1B4B;
+  --mod-clay-accent: #5046E5;
 
-  --bg-deep: #000521;
-  --bg: #000521;
-  --bg-soft: #020C47;
-  --bg-mid: #011F65;
-  --bg-elevated: #011F65;
+  --bg-deep: #0B0F1A;
+  --bg: #0B0F1A;
+  --bg-soft: #141236;
+  --bg-mid: #1E1B4B;
+  --bg-elevated: #26225E;
 
-  --panel: #020C47;
-  --panel-strong: #011F65;
-  --panel-solid: #020C47;
-  --ui-bg-deep: #000521;
-  --ui-bg-base: #000521;
-  --ui-bg-surface: #020C47;
-  --ui-bg-elevated: #011F65;
-  --ui-bg-hover: #011F65;
+  --panel: #1E1B4B;
+  --panel-strong: #26225E;
+  --panel-solid: #1E1B4B;
+  --ui-bg-deep: #0B0F1A;
+  --ui-bg-base: #0B0F1A;
+  --ui-bg-surface: #1E1B4B;
+  --ui-bg-elevated: #26225E;
+  --ui-bg-hover: #26225E;
 
-  --text: #F0F6FF;
-  --text-soft: #C8DCFA;
-  --muted: #7FA2D6;
-  --muted-strong: #A6C3ED;
-  --ui-text-primary: #F0F6FF;
-  --ui-text-secondary: #8EB0E0;
+  --text: #F5F7FF;
+  --text-soft: #C7C1FF;
+  --muted: #938EC4;
+  --muted-strong: #B4B0E3;
+  --ui-text-primary: #F5F7FF;
+  --ui-text-secondary: #9E99D1;
 
-  --border: rgba(32, 120, 207, 0.22);
-  --border-strong: rgba(32, 120, 207, 0.42);
-  --ui-border: rgba(32, 120, 207, 0.22);
-  --ui-border-hover: rgba(32, 120, 207, 0.45);
-  --ui-border-focus: #2078CF;
+  --border: rgba(139, 124, 246, 0.2);
+  --border-strong: rgba(199, 193, 255, 0.35);
+  --ui-border: rgba(139, 124, 246, 0.2);
+  --ui-border-hover: rgba(199, 193, 255, 0.4);
+  --ui-border-focus: #8B7CF6;
 
-  --accent: #2078CF;
-  --accent-strong: #0E4EB2;
-  --accent-warm: #2078CF;
-  --ui-accent: #2078CF;
-  --brand-start: #2078CF;
-  --brand-mid: #0E4EB2;
-  --brand-end: #011F65;
-  --brand-start-rgb: 32, 120, 207;
-  --brand-mid-rgb: 14, 78, 178;
-  --brand-end-rgb: 1, 31, 101;
+  --accent: #8B7CF6;
+  --accent-strong: #5046E5;
+  --accent-warm: #C7C1FF;
+  --ui-accent: #8B7CF6;
+  --brand-start: #8B7CF6;
+  --brand-mid: #5046E5;
+  --brand-end: #1E1B4B;
+  --brand-start-rgb: 139, 124, 246;
+  --brand-mid-rgb: 80, 70, 229;
+  --brand-end-rgb: 30, 27, 75;
 
-  /* 3D Clay Shadows with Crisp Top-Edge Blue Rim Highlight */
-  --mod-clay-out: 0 14px 28px rgba(0, 5, 33, 0.78), 0 4px 10px rgba(0, 5, 33, 0.6);
-  --mod-clay-in: inset 0 1px 1px rgba(32, 120, 207, 0.36), inset 2px 3px 8px rgba(14, 78, 178, 0.24), inset -3px -5px 12px rgba(0, 5, 33, 0.85);
-  --mod-clay-hover: 0 18px 34px rgba(0, 5, 33, 0.88), inset 0 1px 1px rgba(32, 120, 207, 0.55), inset 2px 3px 10px rgba(14, 78, 178, 0.34), inset -3px -5px 12px rgba(0, 5, 33, 0.88);
-  --mod-clay-pressed: inset 4px 4px 10px rgba(0, 5, 33, 0.9), inset -2px -2px 6px rgba(14, 78, 178, 0.25);
-  --mod-clay-focus: inset 3px 3px 8px rgba(0, 5, 33, 0.85), 0 0 0 2px #2078CF;
+  /* 3D Clay Shadows with Soft Lavender Top-Edge Rim Light */
+  --mod-clay-out: 0 14px 30px rgba(4, 6, 14, 0.72), 0 4px 10px rgba(4, 6, 14, 0.55);
+  --mod-clay-in: inset 0 1px 1px rgba(199, 193, 255, 0.24), inset 2px 3px 8px rgba(139, 124, 246, 0.14), inset -3px -5px 12px rgba(11, 15, 26, 0.75);
+  --mod-clay-hover: 0 18px 36px rgba(4, 6, 14, 0.82), inset 0 1px 1px rgba(199, 193, 255, 0.38), inset 2px 3px 10px rgba(139, 124, 246, 0.22), inset -3px -5px 12px rgba(11, 15, 26, 0.8);
+  --mod-clay-pressed: inset 4px 4px 10px rgba(6, 8, 16, 0.88), inset -2px -2px 6px rgba(139, 124, 246, 0.14);
+  --mod-clay-focus: inset 3px 3px 8px rgba(6, 8, 16, 0.85), 0 0 0 2px #8B7CF6;
 }
 
-/* Harmonized Ice-Blue Clay Light Mode */
+/* Light Mode Built Directly from #F5F7FF & #C7C1FF */
 body[data-theme="light"] {
-  --mod-clay-bg: #dce8f8;
-  --mod-clay-surface: #eef5ff;
-  --mod-clay-accent: #0E4EB2;
-  --bg-deep: #dce8f8;
-  --bg: #dce8f8;
-  --panel: #eef5ff;
-  --panel-strong: #ffffff;
-  --panel-solid: #eef5ff;
-  --ui-bg-deep: #dce8f8;
-  --ui-bg-base: #dce8f8;
-  --ui-bg-surface: #eef5ff;
-  --text: #000521;
-  --text-soft: #011F65;
-  --muted: #3b5984;
-  --muted-strong: #1e3c68;
-  --accent: #0E4EB2;
-  --accent-strong: #2078CF;
-  --mod-clay-out: 8px 16px 32px rgba(1, 31, 101, 0.14), 3px 5px 10px rgba(1, 31, 101, 0.08);
-  --mod-clay-in: inset 2px 2px 6px rgba(255, 255, 255, 0.95), inset -3px -4px 10px rgba(14, 78, 178, 0.18);
-  --mod-clay-hover: 6px 12px 24px rgba(1, 31, 101, 0.18), inset 2px 2px 8px rgba(255, 255, 255, 1), inset -3px -4px 12px rgba(14, 78, 178, 0.24);
-  --mod-clay-pressed: inset 4px 4px 10px rgba(1, 31, 101, 0.2), inset -3px -3px 8px rgba(255, 255, 255, 0.9);
+  --mod-clay-bg: #E6E8FF;
+  --mod-clay-surface: #F5F7FF;
+  --mod-clay-accent: #5046E5;
+  --bg-deep: #E6E8FF;
+  --bg: #E6E8FF;
+  --panel: #F5F7FF;
+  --panel-strong: #FFFFFF;
+  --panel-solid: #F5F7FF;
+  --ui-bg-deep: #E6E8FF;
+  --ui-bg-base: #E6E8FF;
+  --ui-bg-surface: #F5F7FF;
+  --text: #0B0F1A;
+  --text-soft: #1E1B4B;
+  --muted: #524E82;
+  --muted-strong: #343063;
+  --accent: #5046E5;
+  --accent-strong: #8B7CF6;
+  --mod-clay-out: 8px 16px 32px rgba(30, 27, 75, 0.12), 3px 5px 10px rgba(30, 27, 75, 0.06);
+  --mod-clay-in: inset 2px 2px 6px rgba(255, 255, 255, 1), inset -3px -4px 10px rgba(139, 124, 246, 0.18);
+  --mod-clay-hover: 6px 12px 24px rgba(30, 27, 75, 0.16), inset 2px 2px 8px rgba(255, 255, 255, 1), inset -3px -4px 12px rgba(139, 124, 246, 0.25);
+  --mod-clay-pressed: inset 4px 4px 10px rgba(30, 27, 75, 0.15), inset -3px -3px 8px rgba(255, 255, 255, 0.95);
 }
 
 /* Base Canvas & Landing Page Surfaces */
@@ -12225,18 +12226,18 @@ body,
 }
 
 .ln-nav {
-  background: rgba(0, 5, 33, 0.65) !important;
-  border-bottom: 1px solid rgba(32, 120, 207, 0.2) !important;
+  background: rgba(11, 15, 26, 0.72) !important;
+  border-bottom: 1px solid rgba(139, 124, 246, 0.16) !important;
 }
 
 .ln-text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #2078CF 100%) !important;
+  background: linear-gradient(135deg, #F5F7FF 0%, #C7C1FF 48%, #8B7CF6 100%) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
 }
 
 .ln-cta-box {
-  background: radial-gradient(circle at center, rgba(14, 78, 178, 0.28) 0%, #020C47 100%) !important;
+  background: radial-gradient(circle at center, rgba(80, 70, 229, 0.24) 0%, #1E1B4B 100%) !important;
   box-shadow: var(--mod-clay-out), var(--mod-clay-in) !important;
 }
 
@@ -12274,7 +12275,7 @@ body,
 .ln-chart-mockup,
 .history-item,
 .log-entry {
-  background: linear-gradient(165deg, #011F65 0%, #020C47 100%) !important;
+  background: linear-gradient(165deg, #232057 0%, #17143B 100%) !important;
   border: none !important;
   box-shadow: var(--mod-clay-out), var(--mod-clay-in) !important;
 }
@@ -12288,49 +12289,49 @@ body,
 .log-entry:hover,
 .ln-bento-card:hover,
 .ln-feature-card:hover {
-  background: linear-gradient(165deg, #0E4EB2 0%, #011F65 100%) !important;
+  background: linear-gradient(165deg, #2B2769 0%, #1E1B4B 100%) !important;
   box-shadow: var(--mod-clay-hover) !important;
 }
 
 .panel.topbar:hover,
 .panel.sidebar:hover,
 .panel.tasky-solo-card:hover {
-  background: linear-gradient(165deg, #011F65 0%, #020C47 100%) !important;
+  background: linear-gradient(165deg, #232057 0%, #17143B 100%) !important;
   box-shadow: var(--mod-clay-out), var(--mod-clay-in) !important;
 }
 
 /* Elevated Account Dropdown */
 #accountDropdown,
 .account-dropdown {
-  background: #011F65 !important;
-  border: 1px solid rgba(32, 120, 207, 0.35) !important;
-  box-shadow: 0 24px 50px rgba(0, 5, 33, 0.9), inset 0 1px 1px rgba(32, 120, 207, 0.4) !important;
+  background: #1E1B4B !important;
+  border: 1px solid rgba(199, 193, 255, 0.25) !important;
+  box-shadow: 0 24px 50px rgba(6, 8, 16, 0.9), inset 0 1px 1px rgba(199, 193, 255, 0.3) !important;
 }
 
-/* Primary 3D Blue Clay Buttons */
+/* Primary 3D Indigo Clay Buttons */
 .primary-button,
 .tasky-submit-btn,
 .ln-btn-primary,
 .badge,
 .badge-large {
-  background: linear-gradient(180deg, #2078CF 0%, #0E4EB2 100%) !important;
-  color: #ffffff !important;
+  background: linear-gradient(180deg, #6258F5 0%, #5046E5 100%) !important;
+  color: #F5F7FF !important;
   border: none !important;
   box-shadow:
-    0 8px 20px rgba(14, 78, 178, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -3px 8px rgba(1, 31, 101, 0.65) !important;
+    0 8px 20px rgba(80, 70, 229, 0.42),
+    inset 0 1px 1px rgba(245, 247, 255, 0.45),
+    inset 0 -3px 8px rgba(30, 27, 75, 0.65) !important;
   font-weight: 700 !important;
 }
 
 .primary-button:hover,
 .tasky-submit-btn:hover,
 .ln-btn-primary:hover {
-  background: linear-gradient(180deg, #2b86e0 0%, #135bc7 100%) !important;
+  background: linear-gradient(180deg, #746BF7 0%, #5B51EC 100%) !important;
   box-shadow:
-    0 10px 24px rgba(32, 120, 207, 0.55),
-    inset 0 1px 1px rgba(255, 255, 255, 0.55),
-    inset 0 -3px 8px rgba(1, 31, 101, 0.65) !important;
+    0 10px 24px rgba(139, 124, 246, 0.5),
+    inset 0 1px 1px rgba(245, 247, 255, 0.55),
+    inset 0 -3px 8px rgba(30, 27, 75, 0.65) !important;
 }
 
 .primary-button:active,
@@ -12345,17 +12346,17 @@ body,
 .mobile-tab-button,
 .auth-toggle-button,
 .account-chip {
-  background: #020C47 !important;
-  color: var(--text) !important;
+  background: #1E1B4B !important;
+  color: #F5F7FF !important;
   box-shadow: var(--mod-clay-out), var(--mod-clay-in) !important;
 }
 
 .nav-button.is-active,
 .mobile-tab-button.is-active,
 .ghost-button:active {
-  background: #000521 !important;
+  background: #0B0F1A !important;
   box-shadow: var(--mod-clay-pressed) !important;
-  color: #2078CF !important;
+  color: #C7C1FF !important;
 }
 
 /* Debossed Clay Inputs */
@@ -12368,8 +12369,8 @@ textarea,
 .tracker-form input,
 .tasky-floating-field input,
 #trackerTemplateSelect {
-  background: #000521 !important;
-  color: var(--text) !important;
+  background: #0B0F1A !important;
+  color: #F5F7FF !important;
   box-shadow: var(--mod-clay-pressed) !important;
 }
 
@@ -12388,7 +12389,7 @@ textarea:focus {
 .ln-preview-card,
 .ln-preview-tracker,
 .ln-icon-svg {
-  background: #000521 !important;
+  background: #0B0F1A !important;
   box-shadow: var(--mod-clay-pressed) !important;
 }
 
@@ -12398,37 +12399,44 @@ textarea:focus {
 .day-bar-fill,
 .ln-preview-bar > div,
 .ln-chart-mockup .ln-bar-active {
-  background: linear-gradient(90deg, #0E4EB2 0%, #2078CF 100%) !important;
-  color: #ffffff !important;
+  background: linear-gradient(90deg, #5046E5 0%, #8B7CF6 100%) !important;
+  color: #F5F7FF !important;
   box-shadow:
-    0 0 14px rgba(32, 120, 207, 0.5),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+    0 0 14px rgba(139, 124, 246, 0.45),
+    inset 0 1px 1px rgba(245, 247, 255, 0.4) !important;
 }
 
 .progress-ring::after,
 .progress-board-donut::after {
-  background: #020C47 !important;
+  background: #1E1B4B !important;
 }
 
 .ln-preview-pill,
 .checklist-pill.is-done {
-  background: rgba(32, 120, 207, 0.16) !important;
-  border-color: rgba(32, 120, 207, 0.45) !important;
-  color: #2078CF !important;
+  background: rgba(139, 124, 246, 0.16) !important;
+  border-color: rgba(199, 193, 255, 0.35) !important;
+  color: #C7C1FF !important;
 }
 
 .tasky-text-link,
-.ln-icon-svg {
-  color: #2078CF !important;
+.ln-icon-svg,
+.ln-badge-dot,
+.ln-check {
+  color: #8B7CF6 !important;
+}
+
+.ln-badge-dot {
+  background: #8B7CF6 !important;
+  box-shadow: 0 0 10px #8B7CF6 !important;
 }
 
 .mobile-tabbar {
-  background: #011F65 !important;
-  border-top: 1px solid rgba(32, 120, 207, 0.3) !important;
-  box-shadow: 0 -10px 30px rgba(0, 5, 33, 0.85) !important;
+  background: #17143B !important;
+  border-top: 1px solid rgba(139, 124, 246, 0.25) !important;
+  box-shadow: 0 -10px 30px rgba(6, 8, 16, 0.85) !important;
 }
 
-/* Override Mobile Flat Gray Fallback so Mobile Keeps the Blue Clay Look */
+/* Keep Indigo Clay Look on Mobile */
 @media (max-width: 780px) {
   .panel,
   .tracker-card,
@@ -12440,12 +12448,12 @@ textarea:focus {
   .auth-panel,
   .sidebar,
   .topbar {
-    background: linear-gradient(165deg, #011F65 0%, #020C47 100%) !important;
+    background: linear-gradient(165deg, #232057 0%, #17143B 100%) !important;
     box-shadow: var(--mod-clay-out), var(--mod-clay-in) !important;
   }
 
   .detail-drawer {
-    background: #000521 !important;
+    background: #0B0F1A !important;
   }
 }
 
@@ -12455,6 +12463,6 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid #2078CF !important;
+  outline: 2px solid #8B7CF6 !important;
   outline-offset: 2px !important;
 }

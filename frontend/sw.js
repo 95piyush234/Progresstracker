@@ -1,4 +1,4 @@
-const CACHE_NAME = "progress-tracker-pro-v122";
+const CACHE_NAME = "progress-tracker-pro-v123";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
